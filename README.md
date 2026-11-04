@@ -4,6 +4,7 @@
 Допомагає підібрати гастрономічну пару «сир + вино» під страву, бюджет чи настрій і залишити запит на консультацію.
 
 **Live demo (Netlify):** https://gourmet-info.netlify.app  
+**GitHub Pages:** https://olegshotyk.github.io/Gourmet-Info/  
 **Репозиторій:** https://github.com/OlegShotyk/Gourmet-Info
 
 ## Можливості
