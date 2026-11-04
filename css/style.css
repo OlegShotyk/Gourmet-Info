@@ -1,0 +1,102 @@
+/* ==========================================================================
+   Gourmet-Info — власні стилі поверх Tailwind CSS
+   Розкладку, відступи, типографіку, кольори, стани й адаптивність задають
+   утилітарні класи Tailwind у HTML (тема — tailwind.config.js). Цей файл не підключається напряму:
+   src/input.css імпортує його у мінімізовану збірку css/tailwind.css (npm run build:css).
+   Тут лишилося лише те, що недоцільно виражати класами:
+   1. Глобальний контур фокусу бренду
+   2. Фонове зображення першого екрана
+   3. Медіафрейми (відео, карта): адаптивні iframe на CSS-змінних
+   4. Мобільне меню: плавна поява
+   ========================================================================== */
+
+
+/* 1. Глобальний контур фокусу
+   Одне правило для всіх інтерактивних елементів замість
+   focus-visible:outline-… на кожному посиланні, кнопці й полі.
+   ========================================================================== */
+
+:focus-visible {
+  outline: 2px solid #6b1e2b;
+  outline-offset: 2px;
+}
+
+
+/* 2. Перший екран
+   Зображення — постер відео й запасний фон, коли відео вимкнено
+   (prefers-reduced-motion). Шлях до файлу — частина бренду, а не розкладки.
+   ========================================================================== */
+
+.hero-media {
+  background: #f5ede1 url("../assets/images/hero.webp") center / cover no-repeat;
+}
+
+
+/* 3. Медіафрейми: відео YouTube і карта Google Maps
+   Вбудовані <iframe> мають фіксовані width/height «з коробки» і виходять за межі
+   мобільного екрана. Один клас для обох (DRY): ширина 100 %, висота з aspect-ratio.
+   Розміри, радіус і тінь — змінні в :root; Tailwind відповідає за розкладку навколо.
+   ========================================================================== */
+
+:root {
+  --media-max-width: 56rem;                       /* 896 px — відео не ширше за текстову колонку */
+  --media-radius: 1.25rem;                        /* radius/panel з дизайн-системи */
+  --media-shadow: 0 4px 12px rgb(43 33 28 / 0.08); /* shadow/raised */
+  --media-bg: #ede2d0;                            /* тло, поки iframe завантажується */
+}
+
+.media-frame {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  max-width: var(--media-max-width);
+  overflow: hidden;
+  border-radius: var(--media-radius);
+  background-color: var(--media-bg);
+  box-shadow: var(--media-shadow);
+}
+
+.media-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Карта: на телефоні вища (4/3), щоб її було зручно рухати пальцем; на всю ширину колонки */
+.media-frame--map {
+  aspect-ratio: 4 / 3;
+  max-width: none;
+}
+
+@media (min-width: 48rem) {
+  .media-frame--map {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+
+/* 4. Мобільне меню
+   Панель з'являється зверху вниз; без анімації, якщо користувач просить менше руху.
+   ========================================================================== */
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.mobile-menu:not([hidden]) {
+  animation: menu-in 300ms cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu:not([hidden]) {
+    animation: none;
+  }
+}

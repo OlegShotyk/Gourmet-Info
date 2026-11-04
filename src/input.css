@@ -1,0 +1,6 @@
+/* Вхідний файл Tailwind CLI → css/tailwind.css (npm run build:css).
+   Власні стилі (css/style.css) вбудовуються в ту саму мінімізовану збірку — один CSS-запит замість двох. */
+@import "../css/style.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
