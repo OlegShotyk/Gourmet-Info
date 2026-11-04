@@ -1,0 +1,8 @@
+# Однакові закінчення рядків (LF) у репозиторії незалежно від ОС
+* text=auto eol=lf
+
+# Двійкові файли не перетворюються
+*.png binary
+*.webp binary
+*.jpg binary
+*.mp4 binary
