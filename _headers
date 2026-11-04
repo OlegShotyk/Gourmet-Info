@@ -1,0 +1,10 @@
+# Заголовки кешування для Netlify (файл у корені опублікованої папки).
+# Зображення, відео й SVG змінюються рідко — 30 днів; CSS і JS — 7 днів.
+/assets/*
+  Cache-Control: public, max-age=2592000
+
+/css/*
+  Cache-Control: public, max-age=604800
+
+/js/*
+  Cache-Control: public, max-age=604800
