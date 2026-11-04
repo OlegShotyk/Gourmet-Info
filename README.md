@@ -3,7 +3,8 @@
 Односторінковий адаптивний лендинг каталогу крафтових сирів та вина «Гурман-Інфо» (Gourmet-Info).
 Допомагає підібрати гастрономічну пару «сир + вино» під страву, бюджет чи настрій і залишити запит на консультацію.
 
-**Live demo (Netlify):** https://gourmet-info.netlify.app
+**Live demo (Netlify):** https://gourmet-info.netlify.app  
+**Репозиторій:** https://github.com/OlegShotyk/Gourmet-Info
 
 ## Можливості
 
