@@ -1,0 +1,16 @@
+# Залежності npm — відновлюються командою npm install
+node_modules/
+
+# Журнали та тимчасові файли
+npm-debug.log*
+*.log
+.DS_Store
+Thumbs.db
+
+# Налаштування редакторів
+.vscode/
+.idea/
+
+# Локальні змінні середовища
+.env
+.env.*
