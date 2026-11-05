@@ -66,7 +66,7 @@
       field.classList.add('outline', 'outline-2', 'outline-red-500');
     }
     successIcon(field)?.classList.add('hidden');
-    box.textContent = '⚠ ' + message; // textContent: введений користувачем текст ніколи не виконується як HTML
+    box.textContent = message; // textContent: введений користувачем текст ніколи не виконується як HTML
     box.classList.remove('hidden');
     field.setAttribute('aria-invalid', 'true');
   }
@@ -187,7 +187,8 @@
   const modal = document.getElementById('successModal');
   const modalTitle = document.getElementById('successTitle');
   const closeBtn = modal.querySelector('[data-modal-close]');
-  const background = document.querySelectorAll('body > header, body > main, body > footer');
+  // Усе, що на сторінці поза модальним вікном (посилання «Перейти до вмісту», header, main, footer)
+  const background = [...document.body.children].filter((el) => el !== modal && el.tagName !== 'SCRIPT');
   let lastFocused = null;
 
   function openModal(name) {

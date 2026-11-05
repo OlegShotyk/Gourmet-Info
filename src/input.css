@@ -18,6 +18,11 @@
   .form-error {
     @apply flex items-start gap-1.5 text-sm font-medium text-red-700;
   }
+  /* Іконка помилки — декоративна: порожній альтернативний текст після «/», щоб читач екрана її не вимовляв */
+  .form-error::before {
+    content: "⚠";
+    content: "⚠" / "";
+  }
   .form-success-icon {
     @apply pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 fill-green-600;
   }
