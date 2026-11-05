@@ -3,6 +3,8 @@
    Vanilla JS, без бібліотек.
 
    UX-правило: поля перевіряються при натисканні «Надіслати» (submit).
+   Виняток — телефон: код +380 / +38 дописується автоматично, а коли введено достатньо
+   символів, поле одразу перевіряється на літери, пробіли й інші сторонні символи.
    Поки користувач виправляє поле з помилкою, червоний стан знімається (clearError),
    а повторна перевірка відбувається під час наступного натискання «Надіслати».
 
@@ -28,6 +30,8 @@
   const NAME_MAX = 50;
   const MESSAGE_MIN = 10;
   const MESSAGE_MAX = 1000;
+  // Телефон: з якої довжини введення перевіряти сторонні символи (найкоротший повний запис — 9 цифр без коду)
+  const PHONE_CHECK_LENGTH = 9;
 
   /* ---------- 2. Елементи форми ---------- */
 
@@ -110,7 +114,21 @@
   function validatePhone() {
     const value = fields.phone.value.trim();
     if (value === '') return 'Введіть номер телефону.';
+    const problem = phoneCharsProblem(value);
+    if (problem) return problem;
     if (!REGEX_PHONE.test(value)) return 'Номер має бути у форматі +380XXXXXXXXX (12 цифр після «+»).';
+    return '';
+  }
+
+  // Сторонні символи та зайві цифри: повертає зрозумілий опис проблеми або ''
+  function phoneCharsProblem(value) {
+    const found = [];
+    if (/\p{L}/u.test(value)) found.push('літери');
+    if (/\s/.test(value)) found.push('пробіли');
+    if (/[^\p{L}\s\d+]/u.test(value) || /.\+/.test(value)) found.push('інші символи (дужки, дефіси тощо)');
+    if (found.length) return `Номер містить недопустимі символи: ${found.join(', ')}. Залиште лише цифри та «+» на початку.`;
+    if (/^\+380\d{10,}$/.test(value)) return 'Забагато цифр: після +380 має бути рівно 9 цифр.';
+    if (/^\+(?!380)/.test(value) && value.length >= PHONE_CHECK_LENGTH) return 'Номер має починатися з +380.';
     return '';
   }
 
@@ -168,13 +186,55 @@
     fields.phone.focus();
   });
 
-  /* ---------- 6. Під час введення — лише зняти червоний стан ---------- */
+  /* ---------- 6. Телефон під час введення: автодоповнення коду та перевірка символів ----------
+     Коли введено достатньо цифр, код країни дописується автоматично:
+       501234567    (9 цифр, без 0)  → +380501234567
+       0501234567   (10 цифр, з 0)   → +38 + 0501234567
+       380501234567 (12 цифр)        → + 380501234567
+     9 цифр, що починаються з 38, не доповнюються: так починається й номер 380…, який ще набирають
+     (кодів операторів на 38 в Україні немає).
+     Щойно довжина введення досягає PHONE_CHECK_LENGTH, поле перевіряється на літери, пробіли
+     та інші сторонні символи; повний правильний номер одразу позначається як успішний. */
+
+  function autoPrefixPhone(value) {
+    if (/^0\d{9}$/.test(value)) return '+38' + value;
+    if (/^380\d{9}$/.test(value)) return '+' + value;
+    if (/^[1-9]\d{8}$/.test(value) && !value.startsWith('38')) return '+380' + value;
+    return '';
+  }
+
+  fields.phone.addEventListener('input', (event) => {
+    const phone = fields.phone;
+    updatePhoneFix(false);
+
+    // Під час видалення нічого не дописуємо — інакше користувач не зміг би стерти код
+    if (!event.inputType || !event.inputType.startsWith('delete')) {
+      const completed = autoPrefixPhone(phone.value);
+      if (completed) {
+        phone.value = completed;
+        phone.setSelectionRange(completed.length, completed.length);
+        status.textContent = `Номер доповнено кодом країни: ${completed}`; // озвучення для читачів екрана
+      }
+    }
+
+    const value = phone.value;
+    if (value.length < PHONE_CHECK_LENGTH) {
+      if (phone.hasAttribute('aria-invalid')) clearError(phone); // ще набирає — без нагадувань
+      return;
+    }
+    const problem = phoneCharsProblem(value);
+    if (problem) { showError(phone, problem); updatePhoneFix(true); }
+    else if (REGEX_PHONE.test(value)) showSuccess(phone);
+    else if (phone.hasAttribute('aria-invalid')) clearError(phone);
+  });
+
+  /* ---------- 7. Інші поля під час введення — лише зняти червоний стан ---------- */
 
   for (const field of Object.values(fields)) {
+    if (field === fields.phone) continue;
     const event = field.type === 'checkbox' || field.tagName === 'SELECT' ? 'change' : 'input';
     field.addEventListener(event, () => {
       if (field.getAttribute('aria-invalid') === 'true') clearError(field);
-      if (field === fields.phone) updatePhoneFix(false);
     });
   }
 
@@ -182,7 +242,7 @@
   const updateCounter = () => { counter.textContent = `${fields.message.value.length} / ${MESSAGE_MAX}`; };
   fields.message.addEventListener('input', updateCounter);
 
-  /* ---------- 7. Модальне вікно ---------- */
+  /* ---------- 8. Модальне вікно ---------- */
 
   const modal = document.getElementById('successModal');
   const modalTitle = document.getElementById('successTitle');
@@ -221,7 +281,7 @@
   // Оверлей — окремий елемент поруч із карткою, тож клік по картці сюди не потрапляє
   modal.querySelector('[data-modal-overlay]').addEventListener('click', closeModal);
 
-  /* ---------- 8. Submit: перевірка всіх полів ---------- */
+  /* ---------- 9. Submit: перевірка всіх полів ---------- */
 
   let isSubmitting = false;
 
