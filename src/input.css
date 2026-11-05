@@ -4,3 +4,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ЛР №9 — повторювані класи полів форми (DRY): базовий стан Normal + Hover + Focus.
+   Стани Error / Success додає js/validation.js утилітами border-red-500 / border-green-600:
+   шар utilities іде після components, тому вони перекривають border-border. */
+@layer components {
+  .form-control {
+    @apply block min-h-12 w-full rounded-lg border border-border bg-white px-4 pr-11 text-base text-content
+      transition-[border-color,box-shadow] duration-150 ease-standard
+      hover:border-content-muted
+      focus-visible:border-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20;
+  }
+  .form-error {
+    @apply flex items-start gap-1.5 text-sm font-medium text-red-700;
+  }
+  .form-success-icon {
+    @apply pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 fill-green-600;
+  }
+}

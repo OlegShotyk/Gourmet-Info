@@ -24,6 +24,7 @@
   <script src="js/menu.js" defer></script>
   <script src="js/bg-video.js" defer></script>
   <script src="js/lazy-embeds.js" defer></script>
+  <script src="js/validation.js" defer></script>
   <!-- Іконки: Font Awesome Free 6.6.0 (CC BY 4.0), вбудовані як SVG -->
 </head>
 <body id="top" class="flex min-h-screen flex-col bg-background font-sans text-base text-content antialiased">
@@ -261,28 +262,102 @@
     <section class="scroll-mt-20 py-12 md:scroll-mt-24 lg:py-16" id="contact" aria-labelledby="cta-title">
       <div class="mx-auto flex max-w-container flex-col gap-6 px-4 md:gap-8 md:px-8 lg:px-12">
 
-        <!-- Форма запиту — цільова дія лендингу. data-netlify: обробка форми хостингом Netlify без власного бекенду -->
-        <div class="rounded-panel bg-primary p-6 text-on-primary md:p-10 lg:p-12">
-          <h2 class="font-heading text-h2 font-semibold lg:text-h2-lg" id="cta-title">Знайдіть свій ідеальний дует</h2>
-          <p class="mt-2 max-w-2xl">Ви вказуєте страву, бюджет чи настрій — ми підбираємо безпрограшну пару.</p>
-          <form class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2" method="post" name="pairing-request" data-netlify="true" data-netlify-honeypot="bot-field">
-            <input type="hidden" name="form-name" value="pairing-request">
-            <p class="hidden"><label>Не заповнюйте це поле: <input name="bot-field"></label></p>
-            <div class="flex flex-col gap-2">
-              <label class="text-sm font-medium" for="name">Ім’я</label>
-              <input class="min-h-12 rounded-lg border border-border bg-surface px-4 text-content placeholder:text-content-muted focus-visible:outline-on-primary" type="text" id="name" name="name" placeholder="Ваше ім’я" autocomplete="name" required minlength="2">
+        <!-- ===== ФОРМА ЗВОРОТНОГО ЗВ'ЯЗКУ (ЛР №9) =====
+             Цільова дія лендингу. novalidate вимикає стандартні підказки браузера:
+             перевірку виконує js/validation.js при натисканні «Надіслати».
+             Реального надсилання на сервер немає — після успішної клієнтської валідації
+             показується модальне вікно «Демонстрація успішного надсилання».
+             mobile: заголовок над формою, поля в одну колонку → md: поля попарно → lg: текст 2/5 + форма 3/5 -->
+        <div class="grid grid-cols-1 gap-8 rounded-panel bg-primary p-6 text-on-primary md:p-10 lg:grid-cols-5 lg:gap-12 lg:p-12">
+          <div class="lg:col-span-2">
+            <h2 class="font-heading text-h2 font-semibold lg:text-h2-lg" id="cta-title">Знайдіть свій ідеальний дует</h2>
+            <p class="mt-2 max-w-2xl">Ви вказуєте страву, бюджет чи настрій — ми підбираємо безпрограшну пару сиру та вина.</p>
+            <ul class="mt-6 flex flex-col gap-3 text-sm">
+              <li class="flex gap-3"><span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-on-primary text-caption font-semibold text-primary" aria-hidden="true">1</span>Заповніть форму — це займе хвилину.</li>
+              <li class="flex gap-3"><span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-on-primary text-caption font-semibold text-primary" aria-hidden="true">2</span>Сомельє уточнить деталі телефоном або листом.</li>
+              <li class="flex gap-3"><span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-on-primary text-caption font-semibold text-primary" aria-hidden="true">3</span>Ви отримуєте підбір пари та рекомендації до подачі.</li>
+            </ul>
+          </div>
+
+          <form class="rounded-xl bg-surface p-5 text-content shadow-overlay md:p-8 lg:col-span-3" id="feedbackForm" name="feedback" method="post" novalidate aria-labelledby="form-title">
+            <h3 class="font-heading text-h3 font-semibold" id="form-title">Форма зворотного зв’язку</h3>
+            <p class="mt-1 text-sm text-content-muted">Усі поля обов’язкові.</p>
+
+            <div class="mt-6 grid grid-cols-1 gap-x-4 gap-y-5 md:grid-cols-2">
+              <!-- Ім'я -->
+              <div class="flex flex-col gap-2" data-field>
+                <label class="text-sm font-medium" for="username">Ім’я</label>
+                <div class="relative">
+                  <input class="form-control" type="text" id="username" name="name" autocomplete="name" required aria-describedby="usernameError">
+                  <svg class="form-success-icon hidden" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.7 5.3a1 1 0 0 1 0 1.4l-8 8a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.4L8 12.6l7.3-7.3a1 1 0 0 1 1.4 0z"/></svg>
+                </div>
+                <p class="form-error hidden" id="usernameError"></p>
+              </div>
+
+              <!-- Емейл -->
+              <div class="flex flex-col gap-2" data-field>
+                <label class="text-sm font-medium" for="email">Електронна пошта</label>
+                <div class="relative">
+                  <input class="form-control" type="email" id="email" name="email" autocomplete="email" inputmode="email" spellcheck="false" required aria-describedby="emailError">
+                  <svg class="form-success-icon hidden" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.7 5.3a1 1 0 0 1 0 1.4l-8 8a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.4L8 12.6l7.3-7.3a1 1 0 0 1 1.4 0z"/></svg>
+                </div>
+                <p class="form-error hidden" id="emailError"></p>
+              </div>
+
+              <!-- Телефон: type="tel" відкриває цифрову клавіатуру на смартфоні -->
+              <div class="flex flex-col gap-2" data-field>
+                <label class="text-sm font-medium" for="phone">Телефон</label>
+                <div class="relative">
+                  <input class="form-control" type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" required aria-describedby="phoneHint phoneError">
+                  <svg class="form-success-icon hidden" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.7 5.3a1 1 0 0 1 0 1.4l-8 8a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.4L8 12.6l7.3-7.3a1 1 0 0 1 1.4 0z"/></svg>
+                </div>
+                <p class="text-caption text-content-muted" id="phoneHint">Формат: +380XXXXXXXXX, без пробілів</p>
+                <p class="form-error hidden" id="phoneError"></p>
+                <button class="hidden min-h-11 self-start rounded-lg border border-primary px-3 text-sm font-medium text-primary transition-colors duration-150 ease-standard hover:bg-background-alt" type="button" id="phoneFix"></button>
+              </div>
+
+              <!-- Тема звернення -->
+              <div class="flex flex-col gap-2" data-field>
+                <label class="text-sm font-medium" for="topic">Тема звернення</label>
+                <div class="relative">
+                  <select class="form-control cursor-pointer pr-3" id="topic" name="topic" required aria-describedby="topicError">
+                    <option value="">Оберіть тему</option>
+                    <option value="pairing">Підбір пари до страви</option>
+                    <option value="tasting">Дегустація для компанії</option>
+                    <option value="gift">Подарунковий набір</option>
+                    <option value="other">Інше питання</option>
+                  </select>
+                </div>
+                <p class="form-error hidden" id="topicError"></p>
+              </div>
+
+              <!-- Повідомлення -->
+              <div class="flex flex-col gap-2 md:col-span-2" data-field>
+                <div class="flex items-baseline justify-between gap-4">
+                  <label class="text-sm font-medium" for="message">Повідомлення</label>
+                  <span class="text-caption text-content-muted" id="messageCounter" aria-hidden="true">0 / 1000</span>
+                </div>
+                <textarea class="form-control min-h-32 resize-y py-3" id="message" name="message" rows="4" maxlength="1000" required aria-describedby="messageHint messageError"></textarea>
+                <p class="text-caption text-content-muted" id="messageHint">Страва, бюджет чи настрій — щонайменше 10 символів.</p>
+                <p class="form-error hidden" id="messageError"></p>
+              </div>
+
+              <!-- Згода: увесь рядок — зона натискання (label обгортає чекбокс) -->
+              <div class="flex flex-col gap-2 md:col-span-2" data-field>
+                <label class="flex min-h-11 cursor-pointer items-start gap-3 text-sm" for="agreement">
+                  <input class="mt-0.5 h-5 w-5 shrink-0 cursor-pointer rounded accent-primary" type="checkbox" id="agreement" name="agreement" value="yes" required aria-describedby="agreementError">
+                  <span>Погоджуюся з обробкою персональних даних відповідно до політики конфіденційності «Гурман-Інфо».</span>
+                </label>
+                <p class="form-error hidden" id="agreementError"></p>
+              </div>
             </div>
-            <div class="flex flex-col gap-2">
-              <label class="text-sm font-medium" for="email">Електронна пошта</label>
-              <input class="min-h-12 rounded-lg border border-border bg-surface px-4 text-content placeholder:text-content-muted focus-visible:outline-on-primary" type="email" id="email" name="email" placeholder="Ваша електронна пошта" autocomplete="email" required>
+
+            <div class="mt-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <p class="text-caption text-content-muted">Навчальна демонстрація: дані не передаються на сервер.</p>
+              <button class="inline-flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary px-8 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none disabled:cursor-wait disabled:opacity-70 md:w-auto" type="submit" id="submitBtn">Надіслати</button>
             </div>
-            <div class="flex flex-col gap-2 md:col-span-2">
-              <label class="text-sm font-medium" for="message">Страва, бюджет чи настрій (необов’язково)</label>
-              <textarea class="min-h-24 resize-y rounded-lg border border-border bg-surface px-4 py-3 text-content placeholder:text-content-muted focus-visible:outline-on-primary" id="message" name="message" rows="3" placeholder="Наприклад: вечеря на шістьох, витримана гауда, до 1500 грн"></textarea>
-            </div>
-            <div class="md:col-span-2">
-              <button class="min-h-12 w-full cursor-pointer rounded-lg bg-on-primary px-6 text-sm font-semibold text-primary transition duration-150 ease-standard hover:bg-background-alt hover:shadow-raised active:bg-border active:shadow-none focus-visible:outline-on-primary md:w-auto" type="submit">Отримати підбір пари</button>
-            </div>
+            <!-- Підсумок перевірки для програм читання з екрана -->
+            <p class="sr-only" id="formStatus" role="status" aria-live="polite"></p>
           </form>
         </div>
 
@@ -361,5 +436,20 @@
     </div>
   </footer>
 
+  <!-- ===== МОДАЛЬНЕ ВІКНО: імітація успішного надсилання (ЛР №9) =====
+       fixed inset-0 + затемнений оверлей перекривають сторінку; header/main/footer отримують inert,
+       тож під вікном нічого не можна натиснути чи сфокусувати. Закриття: кнопка, Escape, клік по оверлею.
+       Оверлей і картка — сусідні елементи, тому клік усередині картки не доходить до оверлею. -->
+  <div class="fixed inset-0 z-[60] hidden items-center justify-center p-4" id="successModal">
+    <div class="absolute inset-0 bg-content/60 backdrop-blur-sm" data-modal-overlay></div>
+    <div class="relative w-full max-w-md rounded-xl bg-surface p-6 text-center text-content shadow-overlay md:p-8" role="dialog" aria-modal="true" aria-labelledby="successTitle" aria-describedby="successText">
+      <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-green-700" aria-hidden="true">
+        <svg class="h-7 w-7 fill-current" viewBox="0 0 20 20" focusable="false"><path d="M16.7 5.3a1 1 0 0 1 0 1.4l-8 8a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.4L8 12.6l7.3-7.3a1 1 0 0 1 1.4 0z"/></svg>
+      </span>
+      <h2 class="mt-4 font-heading text-h3 font-semibold" id="successTitle">Дякуємо!</h2>
+      <p class="mt-2 text-content-muted" id="successText">Форма успішно пройшла клієнтську валідацію. Це демонстрація успішного надсилання: дані не передаються на сервер.</p>
+      <button class="mt-6 inline-flex min-h-12 w-full cursor-pointer items-center justify-center rounded-lg bg-primary px-8 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover active:bg-primary-pressed sm:w-auto" type="button" data-modal-close>Закрити</button>
+    </div>
+  </div>
 </body>
 </html>
