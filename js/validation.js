@@ -11,7 +11,8 @@
    ========================================================================== */
 
 (() => {
-  /* ---------- 1. Регулярні вирази та обмеження ---------- */
+  /* ---------- 1. Регулярні вирази та обмеження ----------
+     Обов'язкові: ім'я, емейл, телефон, тема, згода. Повідомлення — необов'язкове. */
 
   // Ім'я: літери української/латинської абеток; між частинами — пробіл, апостроф або дефіс
   // (Ірина, Анна-Марія, Мар'яна, Олег Шотик). Цифри, емоджі й HTML-символи не проходять.
@@ -117,9 +118,11 @@
     return fields.topic.value === '' ? 'Оберіть тему звернення.' : '';
   }
 
+  // Повідомлення необов'язкове: порожнє поле (або лише пробіли) проходить перевірку,
+  // а введений текст має бути змістовним — щонайменше 10 символів
   function validateMessage() {
     const length = fields.message.value.trim().length;
-    if (length === 0) return 'Напишіть повідомлення.';
+    if (length === 0) return '';
     if (length < MESSAGE_MIN) return `Повідомлення закоротке: ${length} з ${MESSAGE_MIN} символів.`;
     if (length > MESSAGE_MAX) return `Повідомлення задовге: максимум ${MESSAGE_MAX} символів.`;
     return '';
@@ -229,6 +232,7 @@
     for (const [field, validate] of validators) {
       const message = validate();
       if (message) { showError(field, message); invalid.push(field); }
+      else if (field === fields.message && field.value.trim() === '') clearError(field); // порожнє необов'язкове поле — нейтральний стан
       else showSuccess(field);
     }
     updatePhoneFix(invalid.includes(fields.phone));
