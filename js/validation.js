@@ -3,7 +3,8 @@
    Vanilla JS, без бібліотек.
 
    UX-правило: поля перевіряються при натисканні «Надіслати» (submit).
-   Виняток — телефон: код +380 / +38 дописується автоматично, а коли введено достатньо
+   Ім'я перевіряється після кожного введеного символу (розділ 7).
+   Телефон: код +380 / +38 дописується автоматично, а коли введено достатньо
    символів, поле одразу перевіряється на літери, пробіли й інші сторонні символи.
    Поки користувач виправляє поле з помилкою, червоний стан знімається (clearError),
    а повторна перевірка відбувається під час наступного натискання «Надіслати».
@@ -100,6 +101,8 @@
     if (value === '') return 'Введіть ваше ім’я.';
     if (value.length < NAME_MIN) return `Ім’я має містити щонайменше ${NAME_MIN} літери.`;
     if (value.length > NAME_MAX) return `Ім’я не може бути довшим за ${NAME_MAX} символів.`;
+    // «Анна-», «Мар’» — під час набору нейтральні (розділ 7), а на submit отримують зрозуміле пояснення
+    if (/['’ʼ-]$/.test(value) && REGEX_NAME.test(value.replace(/['’ʼ-]+$/, ''))) return 'Ім’я не може закінчуватися дефісом або апострофом.';
     if (!REGEX_NAME.test(value)) return 'Використовуйте лише літери, пробіл, апостроф або дефіс.';
     return '';
   }
@@ -228,10 +231,36 @@
     else if (phone.hasAttribute('aria-invalid')) clearError(phone);
   });
 
-  /* ---------- 7. Інші поля під час введення — лише зняти червоний стан ---------- */
+  /* ---------- 7. Ім'я: перевірка після кожного введеного символу ----------
+     Неправильний символ (цифра, емоджі, «<») підсвічується одразу — користувач виправляє його,
+     не чекаючи «Надіслати»; правильне ім'я одразу стає зеленим.
+     Без помилки лишаються стани «ще набирає»: порожнє поле, одна літера,
+     ім'я з роздільником у кінці (Анна- → Анна-Марія, Мар' → Мар'яна).
+     Ці винятки перевіряються при натисканні «Надіслати» (validateName у submit). */
+
+  const NAME_SEPARATOR_END = /['’ʼ-]+$/;
+
+  function isNameInProgress(value) {
+    if (value === '') return true;
+    if (value.length < NAME_MIN && REGEX_NAME.test(value)) return true;
+    return NAME_SEPARATOR_END.test(value) && REGEX_NAME.test(value.replace(NAME_SEPARATOR_END, ''));
+  }
+
+  fields.username.addEventListener('input', () => {
+    const field = fields.username;
+    if (isNameInProgress(field.value.trim())) {
+      if (field.hasAttribute('aria-invalid')) clearError(field);
+      return;
+    }
+    const message = validateName();
+    if (message) showError(field, message);
+    else showSuccess(field);
+  });
+
+  /* ---------- 8. Інші поля під час введення — лише зняти червоний стан ---------- */
 
   for (const field of Object.values(fields)) {
-    if (field === fields.phone) continue;
+    if (field === fields.phone || field === fields.username) continue;
     const event = field.type === 'checkbox' || field.tagName === 'SELECT' ? 'change' : 'input';
     field.addEventListener(event, () => {
       if (field.getAttribute('aria-invalid') === 'true') clearError(field);
@@ -242,7 +271,7 @@
   const updateCounter = () => { counter.textContent = `${fields.message.value.length} / ${MESSAGE_MAX}`; };
   fields.message.addEventListener('input', updateCounter);
 
-  /* ---------- 8. Модальне вікно ---------- */
+  /* ---------- 9. Модальне вікно ---------- */
 
   const modal = document.getElementById('successModal');
   const modalTitle = document.getElementById('successTitle');
@@ -281,7 +310,7 @@
   // Оверлей — окремий елемент поруч із карткою, тож клік по картці сюди не потрапляє
   modal.querySelector('[data-modal-overlay]').addEventListener('click', closeModal);
 
-  /* ---------- 9. Submit: перевірка всіх полів ---------- */
+  /* ---------- 10. Submit: перевірка всіх полів ---------- */
 
   let isSubmitting = false;
 
