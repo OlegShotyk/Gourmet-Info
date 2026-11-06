@@ -285,13 +285,13 @@
     });
   }
 
-  /* ---------- 9. Інші поля під час введення — лише зняти червоний стан ---------- */
+  /* ---------- 9. Інші поля під час введення — зняти стан Error / Success до наступної перевірки ---------- */
 
   for (const field of Object.values(fields)) {
     if (field === fields.phone || field === fields.username) continue;
     const event = field.type === 'checkbox' || field.tagName === 'SELECT' ? 'change' : 'input';
     field.addEventListener(event, () => {
-      if (field.getAttribute('aria-invalid') === 'true') clearError(field);
+      if (field.hasAttribute('aria-invalid')) clearError(field); // змінене поле — знову нейтральне (і після помилки, і після успіху)
     });
   }
 
