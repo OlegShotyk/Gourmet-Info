@@ -3,7 +3,8 @@
    Vanilla JS, без бібліотек.
 
    UX-правило: поля перевіряються при натисканні «Надіслати» (submit).
-   Ім'я перевіряється після кожного введеного символу (розділ 7).
+   Ім'я перевіряється після кожного введеного символу (розділ 7),
+   емейл і повідомлення — ще й при втраті фокусу (розділ 8).
    Телефон: код +380 / +38 дописується автоматично, а коли введено достатньо
    символів, поле одразу перевіряється на літери, пробіли й інші сторонні символи.
    Поки користувач виправляє поле з помилкою, червоний стан знімається (clearError),
@@ -259,7 +260,32 @@
     else showSuccess(field);
   });
 
-  /* ---------- 8. Інші поля під час введення — лише зняти червоний стан ---------- */
+  /* ---------- 8. Емейл і повідомлення: перевірка при втраті фокусу (blur) ----------
+     Коли користувач виходить із заповненого поля, він одразу бачить результат: помилку або зелену рамку.
+     Порожнє поле при blur не підсвічується — прохід клавішею Tab крізь форму не засипає помилками;
+     порожній емейл перевіряється при натисканні «Надіслати», порожнє повідомлення — необов'язкове. */
+
+  // Фокус знято натисканням миші (наприклад, клік по чекбоксу під повідомленням): якщо показати помилку одразу,
+  // текст під полем зсуне елементи і клік «промахнеться». Тому перевірку відкладаємо до завершення кліку.
+  let pointerIsDown = false;
+  document.addEventListener('pointerdown', () => { pointerIsDown = true; }, true);
+  document.addEventListener('pointerup', () => { pointerIsDown = false; }, true);
+
+  for (const [field, validate] of [[fields.email, validateEmail], [fields.message, validateMessage]]) {
+    const check = () => {
+      if (field.value.trim() === '') return;
+      const message = validate();
+      if (message) showError(field, message);
+      else showSuccess(field);
+    };
+    field.addEventListener('blur', () => {
+      if (!pointerIsDown) { check(); return; }
+      // pointerup → mouseup → click; setTimeout виконає перевірку вже після click
+      document.addEventListener('pointerup', () => setTimeout(check), { once: true, capture: true });
+    });
+  }
+
+  /* ---------- 9. Інші поля під час введення — лише зняти червоний стан ---------- */
 
   for (const field of Object.values(fields)) {
     if (field === fields.phone || field === fields.username) continue;
@@ -273,7 +299,7 @@
   const updateCounter = () => { counter.textContent = `${fields.message.value.length} / ${MESSAGE_MAX}`; };
   fields.message.addEventListener('input', updateCounter);
 
-  /* ---------- 9. Модальне вікно ---------- */
+  /* ---------- 10. Модальне вікно ---------- */
 
   const modal = document.getElementById('successModal');
   const modalTitle = document.getElementById('successTitle');
@@ -312,7 +338,7 @@
   // Оверлей — окремий елемент поруч із карткою, тож клік по картці сюди не потрапляє
   modal.querySelector('[data-modal-overlay]').addEventListener('click', closeModal);
 
-  /* ---------- 10. Submit: перевірка всіх полів ---------- */
+  /* ---------- 11. Submit: перевірка всіх полів ---------- */
 
   let isSubmitting = false;
 
