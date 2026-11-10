@@ -70,11 +70,13 @@
 /* До ініціалізації (і якщо CDN недоступний): слайди вже мають ширину за брейкпоінтами — без «стрибка» макета (FOUC/CLS),
    а стрічку можна прокрутити пальцем чи тачпадом */
 .pairs-swiper:not(.swiper-initialized) .swiper-wrapper {
+  display: flex; /* не залежить від того, чи вже завантажився CSS Swiper */
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   gap: 16px;
 }
 .pairs-swiper:not(.swiper-initialized) .swiper-slide {
+  flex-shrink: 0;
   width: 100%;
   scroll-snap-align: start;
 }

@@ -19,12 +19,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap">
-  <!-- ЛР №10: CSS плагінів з CDN jsDelivr (версії зафіксовано) — у <head>, щоб слайдер і галерея мали стилі
-       ще до першого відмальовування (без FOUC). Підключено перед власними стилями, щоб тема сайту їх перевизначала. -->
+  <!-- ЛР №10: CSS плагінів з CDN jsDelivr (версії зафіксовано) — у <head>, перед власними стилями (тема сайту їх перевизначає).
+       Неблокуюче завантаження (media="print" → "all"): слайдер і галерея — далеко нижче першого екрана, тому браузер
+       не чекає на сторонній CDN перед першим відмальовуванням (Lighthouse: render-blocking resources).
+       Вигляд слайдера до завантаження стилів і запуску Swiper задає власний CSS (src/input.css) — без FOUC і зсуву макета. -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://images.unsplash.com">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.css">
+  </noscript>
   <!-- Tailwind CSS: скомпільовано Tailwind CLI з теми tailwind.config.js (npm run build:css) -->
   <link rel="stylesheet" href="css/tailwind.css">
   <script src="js/menu.js" defer></script>
