@@ -19,6 +19,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap">
+  <!-- ЛР №10: CSS плагінів з CDN jsDelivr (версії зафіксовано) — у <head>, щоб слайдер і галерея мали стилі
+       ще до першого відмальовування (без FOUC). Підключено перед власними стилями, щоб тема сайту їх перевизначала. -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css">
   <!-- Tailwind CSS: скомпільовано Tailwind CLI з теми tailwind.config.js (npm run build:css) -->
   <link rel="stylesheet" href="css/tailwind.css">
   <script src="js/menu.js" defer></script>
@@ -44,6 +50,8 @@
           <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#benefits">Переваги</a></li>
           <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#services">Послуги</a></li>
           <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#how-it-works">Як це працює</a></li>
+          <!-- 6-й пункт — з lg: на планшеті (768 px) шапка з шістьма пунктами виходила за ширину екрана -->
+          <li class="hidden lg:block"><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#collection">Колекція</a></li>
           <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#about">Про нас</a></li>
           <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#contact">Контакти</a></li>
         </ul>
@@ -57,13 +65,14 @@
       </button>
     </div>
 
-    <!-- Мобільне меню (до md): 5 пунктів, CTA і блок «Потрібна порада?» -->
+    <!-- Мобільне меню (до md): 6 пунктів, CTA і блок «Потрібна порада?» -->
     <div class="mobile-menu max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-border bg-surface md:hidden" id="mobile-menu" hidden>
       <nav class="mx-auto max-w-container px-4 pb-6 pt-2" aria-label="Мобільна навігація">
         <ul class="divide-y divide-border">
           <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#benefits">Переваги</a></li>
           <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#services">Послуги</a></li>
           <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#how-it-works">Як це працює</a></li>
+          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#collection">Колекція</a></li>
           <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#about">Про нас</a></li>
           <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#contact">Контакти</a></li>
         </ul>
@@ -85,6 +94,12 @@
         <div>
           <p class="mb-3 text-caption font-medium uppercase tracking-caps text-primary">Сир і вино · Гурман-Інфо</p>
           <h1 class="font-heading text-h1 font-semibold lg:text-h1-lg" id="hero-title">Ідеальна гастрономічна пара для вашого вечора</h1>
+          <!-- Typed.js: друкований рядок декоративний (aria-hidden), повний текст — для читачів екрана;
+               без JS або з prefers-reduced-motion лишається статичний текст. min-h — без зсуву макета -->
+          <p class="mt-3 min-h-7 font-heading text-lg text-primary lg:min-h-8 lg:text-2xl">
+            <span class="sr-only">Підберемо вино до витриманої гауди, пармезану, брі та рокфору.</span>
+            <span aria-hidden="true">Підберемо вино до <span class="font-semibold" data-typed>витриманої гауди.</span></span>
+          </p>
           <p class="mt-4 max-w-xl text-content-muted lg:text-lg">Відкрийте понад 500 видів крафтових сирів та добірних вин із професійними рекомендаціями щодо поєднання, подачі та гастрономічних поєднань.</p>
           <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap md:mt-8">
             <a class="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-primary px-6 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none sm:w-auto" href="#contact">Підібрати смакову пару</a>
@@ -217,6 +232,106 @@
          Вбудоване відео з YouTube (режим youtube-nocookie без рекламних cookie до натискання «Відтворити»).
          Адаптивність — клас .media-frame у css/style.css: aspect-ratio 16/9, ширина 100 %,
          max-width / радіус / тінь — змінні в :root. loading="lazy": плеєр вантажиться, лише коли секція близько. -->
+    <!-- ===== КОЛЕКЦІЯ ПАР (ЛР №10): Swiper.js + Fancybox v5 через CDN =====
+         Слайдер: 6 класичних пар, бейджі — іконки з ЛР №3 (assets/icons). Брейкпоінти Swiper:
+         телефон — 1 слайд, від 768 px — 2, від 1024 px — 3 (js/plugins.js).
+         Без JavaScript слайди лишаються горизонтальною стрічкою з прокручуванням — контент доступний.
+         Фото: Unsplash (Unsplash License), підвантажуються ліниво. -->
+    <section class="scroll-mt-20 bg-background-alt py-12 md:scroll-mt-24 lg:py-16" id="collection" aria-labelledby="collection-title">
+      <div class="mx-auto max-w-container px-4 md:px-8 lg:px-12">
+        <p class="text-caption font-medium uppercase tracking-caps text-primary">Колекція</p>
+        <div class="mt-2 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 class="font-heading text-h2 font-semibold lg:text-h2-lg" id="collection-title">Перевірені пари для початку</h2>
+            <p class="mt-2 max-w-2xl text-content-muted">Класичні поєднання, з яких сомельє радять починати знайомство з крафтовим сиром.</p>
+          </div>
+          <!-- Керування слайдером: стрілки та пауза автопрогортання (WCAG 2.2.2 — рух, що триває понад 5 с, можна зупинити) -->
+          <div class="flex shrink-0 items-center gap-2">
+            <button class="pairs-autoplay inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-border bg-surface px-4 text-sm font-semibold text-primary transition duration-150 ease-standard hover:bg-background" type="button" aria-pressed="false" data-autoplay-toggle>
+              <svg class="h-3.5 w-3.5 fill-current" data-icon="pause" viewBox="0 0 320 512" aria-hidden="true" focusable="false"><path d="M48 64C21.5 64 0 85.5 0 112L0 400c0 26.5 21.5 48 48 48l32 0c26.5 0 48-21.5 48-48l0-288c0-26.5-21.5-48-48-48L48 64zm192 0c-26.5 0-48 21.5-48 48l0 288c0 26.5 21.5 48 48 48l32 0c26.5 0 48-21.5 48-48l0-288c0-26.5-21.5-48-48-48l-32 0z"/></svg>
+              <svg class="hidden h-3.5 w-3.5 fill-current" data-icon="play" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80L0 432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg>
+              <span data-label>Пауза</span>
+            </button>
+            <button class="pairs-prev inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-1.5 border-primary text-primary transition-colors duration-150 ease-standard hover:bg-surface" type="button" aria-label="Попередня пара">
+              <svg class="h-4 w-4 fill-current" viewBox="0 0 320 512" aria-hidden="true" focusable="false"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>
+            </button>
+            <button class="pairs-next inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-primary text-on-primary transition-colors duration-150 ease-standard hover:bg-primary-hover" type="button" aria-label="Наступна пара">
+              <svg class="h-4 w-4 fill-current" viewBox="0 0 320 512" aria-hidden="true" focusable="false"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Swiper: .swiper > .swiper-wrapper > .swiper-slide — обов'язкова структура бібліотеки -->
+        <div class="swiper pairs-swiper mt-8" aria-label="Колекція пар сиру та вина">
+          <div class="swiper-wrapper">
+            <article class="swiper-slide pair-card">
+              <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1589881133595-a3c085cb731d?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Скибочки витриманого сиру на тарілці поруч із келихом вина" width="600" height="450" loading="lazy">
+              <div class="flex flex-1 flex-col gap-3 p-5">
+                <span class="pair-badge"><img src="assets/icons/icon-2-expert-matched-flavor.svg" alt="" width="20" height="20">Вибір сомельє</span>
+                <h3 class="font-heading text-h3 font-semibold">Витримана гауда + тоні-портвейн</h3>
+                <p class="text-sm text-content-muted">Карамельні кристали сиру й горіхові тони портвейну підсилюють одне одного.</p>
+              </div>
+            </article>
+            <article class="swiper-slide pair-card">
+              <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1700760933443-84ef4f5feac4?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Дерев’яна дошка з сирами та виноградом" width="600" height="450" loading="lazy">
+              <div class="flex flex-1 flex-col gap-3 p-5">
+                <span class="pair-badge"><img src="assets/icons/icon-3-verified-craft-origin.svg" alt="" width="20" height="20">Крафтове походження</span>
+                <h3 class="font-heading text-h3 font-semibold">Брі + шампанське брют</h3>
+                <p class="text-sm text-content-muted">Бульбашки й кислотність «очищують» смак після вершкової текстури.</p>
+              </div>
+            </article>
+            <article class="swiper-slide pair-card">
+              <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1707037489765-1a12e1f90164?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Стіл з різними видами сиру" width="600" height="450" loading="lazy">
+              <div class="flex flex-1 flex-col gap-3 p-5">
+                <span class="pair-badge"><img src="assets/icons/icon-1-regional-pairing.svg" alt="" width="20" height="20">Регіональна пара</span>
+                <h3 class="font-heading text-h3 font-semibold">Пармезан 24 міс. + ламбруско</h3>
+                <p class="text-sm text-content-muted">Обидва з Емілії-Романьї: легке ігристе червоне врівноважує солоність і умами.</p>
+              </div>
+            </article>
+            <article class="swiper-slide pair-card">
+              <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1719996155228-bbac3f5a8843?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Дошка з сирами, серед них — блакитний сир, і келих червоного вина" width="600" height="450" loading="lazy">
+              <div class="flex flex-1 flex-col gap-3 p-5">
+                <span class="pair-badge"><img src="assets/icons/icon-2-expert-matched-flavor.svg" alt="" width="20" height="20">Вибір сомельє</span>
+                <h3 class="font-heading text-h3 font-semibold">Рокфор + сотерн</h3>
+                <p class="text-sm text-content-muted">Класика контрасту: солодке вино проти пікантної блакитної плісняви.</p>
+              </div>
+            </article>
+            <article class="swiper-slide pair-card">
+              <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1696081249685-dfaee74913a5?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Келих білого вина поруч із м’яким білим сиром і виноградом" width="600" height="450" loading="lazy">
+              <div class="flex flex-1 flex-col gap-3 p-5">
+                <span class="pair-badge"><img src="assets/icons/icon-1-regional-pairing.svg" alt="" width="20" height="20">Регіональна пара</span>
+                <h3 class="font-heading text-h3 font-semibold">Козячий сир + совіньйон блан</h3>
+                <p class="text-sm text-content-muted">Обидва з долини Луари: трав’яна свіжість вина повторює кислинку молодого сиру.</p>
+              </div>
+            </article>
+            <article class="swiper-slide pair-card">
+              <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1598306442928-4d90f32c6866?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Келихи вина, сир і крекери на дошці у виноградниках" width="600" height="450" loading="lazy">
+              <div class="flex flex-1 flex-col gap-3 p-5">
+                <span class="pair-badge"><img src="assets/icons/icon-3-verified-craft-origin.svg" alt="" width="20" height="20">Крафтове походження</span>
+                <h3 class="font-heading text-h3 font-semibold">Конте + шардоне з Юри</h3>
+                <p class="text-sm text-content-muted">Горіхова глибина сиру й вершкова текстура вина з того самого регіону.</p>
+              </div>
+            </article>
+          </div>
+          <div class="swiper-pagination pairs-pagination"></div>
+        </div>
+
+        <!-- Галерея дегустацій: Fancybox v5. Однаковий data-fancybox об'єднує фото в один альбом;
+             data-srcset — телефон завантажує версію 800 px, а не 1800 px (швидше відкриття на мобільному) -->
+        <h3 class="mt-12 font-heading text-h3 font-semibold lg:text-2xl" id="gallery-title">Галерея дегустацій</h3>
+        <p class="mt-1 text-sm text-content-muted">Натисніть на фото, щоб переглянути у повному розмірі, наблизити й погортати.</p>
+        <ul class="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4" aria-labelledby="gallery-title">
+          <li><a class="gallery-item" href="https://images.unsplash.com/photo-1553653760-d787a53b4bbe?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75" data-srcset="https://images.unsplash.com/photo-1553653760-d787a53b4bbe?w=800&amp;h=600&amp;fit=crop&amp;auto=format&amp;q=75 800w, https://images.unsplash.com/photo-1553653760-d787a53b4bbe?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75 1200w, https://images.unsplash.com/photo-1553653760-d787a53b4bbe?w=1800&amp;h=1350&amp;fit=crop&amp;auto=format&amp;q=75 1800w" data-sizes="100vw" data-fancybox="tasting-gallery" data-caption="Сирна тарілка до червоного вина"><img src="https://images.unsplash.com/photo-1553653760-d787a53b4bbe?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Сирна тарілка до червоного вина — відкрити фото" width="600" height="450" loading="lazy"></a></li>
+          <li><a class="gallery-item" href="https://images.unsplash.com/photo-1644302406517-4f87a6e34b27?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75" data-srcset="https://images.unsplash.com/photo-1644302406517-4f87a6e34b27?w=800&amp;h=600&amp;fit=crop&amp;auto=format&amp;q=75 800w, https://images.unsplash.com/photo-1644302406517-4f87a6e34b27?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75 1200w, https://images.unsplash.com/photo-1644302406517-4f87a6e34b27?w=1800&amp;h=1350&amp;fit=crop&amp;auto=format&amp;q=75 1800w" data-sizes="100vw" data-fancybox="tasting-gallery" data-caption="Вечірня дегустація"><img src="https://images.unsplash.com/photo-1644302406517-4f87a6e34b27?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Вечірня дегустація — відкрити фото" width="600" height="450" loading="lazy"></a></li>
+          <li><a class="gallery-item" href="https://images.unsplash.com/photo-1646296586390-723f37ba380a?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75" data-srcset="https://images.unsplash.com/photo-1646296586390-723f37ba380a?w=800&amp;h=600&amp;fit=crop&amp;auto=format&amp;q=75 800w, https://images.unsplash.com/photo-1646296586390-723f37ba380a?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75 1200w, https://images.unsplash.com/photo-1646296586390-723f37ba380a?w=1800&amp;h=1350&amp;fit=crop&amp;auto=format&amp;q=75 1800w" data-sizes="100vw" data-fancybox="tasting-gallery" data-caption="Подача на двох"><img src="https://images.unsplash.com/photo-1646296586390-723f37ba380a?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Подача на двох — відкрити фото" width="600" height="450" loading="lazy"></a></li>
+          <li><a class="gallery-item" href="https://images.unsplash.com/photo-1688100781833-aa9760ab4b48?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75" data-srcset="https://images.unsplash.com/photo-1688100781833-aa9760ab4b48?w=800&amp;h=600&amp;fit=crop&amp;auto=format&amp;q=75 800w, https://images.unsplash.com/photo-1688100781833-aa9760ab4b48?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75 1200w, https://images.unsplash.com/photo-1688100781833-aa9760ab4b48?w=1800&amp;h=1350&amp;fit=crop&amp;auto=format&amp;q=75 1800w" data-sizes="100vw" data-fancybox="tasting-gallery" data-caption="Сирна дошка з пляшкою вина"><img src="https://images.unsplash.com/photo-1688100781833-aa9760ab4b48?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Сирна дошка з пляшкою вина — відкрити фото" width="600" height="450" loading="lazy"></a></li>
+          <li><a class="gallery-item" href="https://images.unsplash.com/photo-1706586345580-b9a7ca95630e?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75" data-srcset="https://images.unsplash.com/photo-1706586345580-b9a7ca95630e?w=800&amp;h=600&amp;fit=crop&amp;auto=format&amp;q=75 800w, https://images.unsplash.com/photo-1706586345580-b9a7ca95630e?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75 1200w, https://images.unsplash.com/photo-1706586345580-b9a7ca95630e?w=1800&amp;h=1350&amp;fit=crop&amp;auto=format&amp;q=75 1800w" data-sizes="100vw" data-fancybox="tasting-gallery" data-caption="Асорті для компанії"><img src="https://images.unsplash.com/photo-1706586345580-b9a7ca95630e?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Асорті для компанії — відкрити фото" width="600" height="450" loading="lazy"></a></li>
+          <li><a class="gallery-item" href="https://images.unsplash.com/photo-1612120177832-442df0f45d6e?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75" data-srcset="https://images.unsplash.com/photo-1612120177832-442df0f45d6e?w=800&amp;h=600&amp;fit=crop&amp;auto=format&amp;q=75 800w, https://images.unsplash.com/photo-1612120177832-442df0f45d6e?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75 1200w, https://images.unsplash.com/photo-1612120177832-442df0f45d6e?w=1800&amp;h=1350&amp;fit=crop&amp;auto=format&amp;q=75 1800w" data-sizes="100vw" data-fancybox="tasting-gallery" data-caption="Свіжий сир з томатами й базиліком"><img src="https://images.unsplash.com/photo-1612120177832-442df0f45d6e?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Свіжий сир з томатами й базиліком — відкрити фото" width="600" height="450" loading="lazy"></a></li>
+        </ul>
+        <p class="mt-3 text-caption text-content-muted">Фото: <a class="underline underline-offset-2 hover:text-primary" href="https://unsplash.com/license" rel="noopener">Unsplash (Unsplash License)</a>.</p>
+      </div>
+    </section>
+
     <section class="scroll-mt-20 py-12 md:scroll-mt-24 lg:py-16" id="video" aria-labelledby="video-title">
       <div class="mx-auto max-w-container px-4 md:px-8 lg:px-12">
         <p class="mb-2 text-caption font-medium uppercase tracking-caps text-primary">Відео</p>
@@ -451,5 +566,11 @@
       <button class="mt-6 inline-flex min-h-12 w-full cursor-pointer items-center justify-center rounded-lg bg-primary px-8 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover active:bg-primary-pressed sm:w-auto" type="button" data-modal-close>Закрити</button>
     </div>
   </div>
+  <!-- ЛР №10: JS-бібліотеки з CDN — у кінці <body> з defer: не блокують розбір сторінки,
+       виконуються по черзі (спершу бібліотеки, потім js/plugins.js з ініціалізацією) -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.js" defer></script>
+  <script src="js/plugins.js" defer></script>
 </body>
 </html>

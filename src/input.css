@@ -27,3 +27,68 @@
     @apply pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 fill-green-600;
   }
 }
+
+/* ЛР №10 — Swiper.js «Колекція пар» і галерея Fancybox */
+@layer components {
+  .pair-card {
+    @apply flex flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-subtle;
+  }
+  .pair-badge {
+    @apply inline-flex items-center gap-2 self-start rounded-full bg-background-alt px-3 py-1 text-caption font-semibold text-primary;
+  }
+  .pair-badge img {
+    @apply h-5 w-5;
+  }
+  .gallery-item {
+    @apply block overflow-hidden rounded-xl;
+  }
+  .gallery-item img {
+    @apply aspect-4/3 w-full cursor-zoom-in object-cover transition-transform duration-300 ease-standard motion-reduce:transition-none;
+  }
+  .gallery-item:hover img {
+    @apply scale-105 motion-reduce:scale-100;
+  }
+}
+
+/* Тема Swiper через CSS-змінні бібліотеки: крапки пагінації в кольорах бренду */
+.pairs-swiper {
+  --swiper-theme-color: #6b1e2b;
+  --swiper-pagination-bullet-inactive-color: #6b5d52;
+  --swiper-pagination-bullet-inactive-opacity: 0.45;
+  --swiper-pagination-bullet-size: 10px;
+  --swiper-pagination-bullet-horizontal-gap: 6px;
+}
+/* Картки однакової висоти (Swiper за замовчуванням задає слайду height: 100%) */
+.pairs-swiper .swiper-slide {
+  height: auto;
+}
+.pairs-pagination.swiper-pagination {
+  position: static;
+  margin-top: 1.5rem;
+}
+
+/* До ініціалізації (і якщо CDN недоступний): слайди вже мають ширину за брейкпоінтами — без «стрибка» макета (FOUC/CLS),
+   а стрічку можна прокрутити пальцем чи тачпадом */
+.pairs-swiper:not(.swiper-initialized) .swiper-wrapper {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 16px;
+}
+.pairs-swiper:not(.swiper-initialized) .swiper-slide {
+  width: 100%;
+  scroll-snap-align: start;
+}
+@media (min-width: 48rem) {
+  .pairs-swiper:not(.swiper-initialized) .swiper-wrapper { gap: 24px; }
+  .pairs-swiper:not(.swiper-initialized) .swiper-slide { width: calc((100% - 24px) / 2); }
+}
+@media (min-width: 64rem) {
+  .pairs-swiper:not(.swiper-initialized) .swiper-wrapper { gap: 32px; }
+  .pairs-swiper:not(.swiper-initialized) .swiper-slide { width: calc((100% - 64px) / 3); }
+}
+
+/* Курсор Typed.js у кольорі бренду */
+.typed-cursor {
+  color: #6b1e2b;
+  font-weight: 400;
+}
