@@ -12,10 +12,23 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   document.addEventListener('DOMContentLoaded', () => {
-    initPairsSwiper();
+    whenNearViewport(document.querySelector('.pairs-swiper'), initPairsSwiper);
     initGallery();
     initTyped();
   });
+
+  /* ---------- Відкладений запуск: секція далеко нижче першого екрана ----------
+     Ініціалізація Swiper (клонування слайдів для loop, розрахунок розмірів, автопрогортання)
+     займала основний потік під час завантаження сторінки (Lighthouse: main-thread work).
+     Тепер слайдер запускається, коли до секції лишається ~400 px прокручування. */
+  function whenNearViewport(el, callback) {
+    if (!el) return;
+    if (!('IntersectionObserver' in window)) { callback(); return; }
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) { observer.disconnect(); callback(); }
+    }, { rootMargin: '400px 0px' });
+    observer.observe(el);
+  }
 
   /* ---------- Swiper.js: об'єкт конфігурації слайдера ---------- */
   function initPairsSwiper() {
@@ -49,6 +62,14 @@
     const toggle = document.querySelector('[data-autoplay-toggle]');
     if (!toggle) return;
     if (reduceMotion || !swiper.autoplay) { toggle.hidden = true; return; }
+
+    // Поза екраном слайдер не перегортається (зайва робота браузера); повертається до руху,
+    // лише якщо користувач сам не натиснув «Пауза»
+    new IntersectionObserver(([entry]) => {
+      const pausedByUser = toggle.getAttribute('aria-pressed') === 'true';
+      if (!entry.isIntersecting) swiper.autoplay.stop();
+      else if (!pausedByUser) swiper.autoplay.start();
+    }).observe(swiper.el);
 
     toggle.addEventListener('click', () => {
       const paused = toggle.getAttribute('aria-pressed') === 'true';
