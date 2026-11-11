@@ -55,8 +55,9 @@
           <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#benefits">Переваги</a></li>
           <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#services">Послуги</a></li>
           <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#how-it-works">Як це працює</a></li>
-          <!-- 6-й пункт — з lg: на планшеті (768 px) шапка з шістьма пунктами виходила за ширину екрана -->
+          <!-- «Колекція» — з lg, «Калькулятор» — з xl: на вужчих екранах шапка з усіма пунктами виходила за ширину екрана (768 px, 1024 px) -->
           <li class="hidden lg:block"><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#collection">Колекція</a></li>
+          <li class="hidden xl:block"><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#planner">Калькулятор</a></li>
           <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#about">Про нас</a></li>
           <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#contact">Контакти</a></li>
         </ul>
@@ -70,7 +71,7 @@
       </button>
     </div>
 
-    <!-- Мобільне меню (до md): 6 пунктів, CTA і блок «Потрібна порада?» -->
+    <!-- Мобільне меню (до md): 7 пунктів, CTA і блок «Потрібна порада?» -->
     <div class="mobile-menu max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-border bg-surface md:hidden" id="mobile-menu" hidden>
       <nav class="mx-auto max-w-container px-4 pb-6 pt-2" aria-label="Мобільна навігація">
         <ul class="divide-y divide-border">
@@ -78,6 +79,7 @@
           <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#services">Послуги</a></li>
           <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#how-it-works">Як це працює</a></li>
           <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#collection">Колекція</a></li>
+          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#planner">Калькулятор</a></li>
           <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#about">Про нас</a></li>
           <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#contact">Контакти</a></li>
         </ul>
@@ -337,6 +339,105 @@
       </div>
     </section>
 
+    <!-- ===== КАЛЬКУЛЯТОР СИРНОЇ ТАРІЛКИ (ЛР №11): інтерактивний віджет, js/widget.js =====
+         5 параметрів впливають на результат: кількість гостей (number + кнопки −/+), формат події (select),
+         рівень сирів (radio), вино / супровід / сомельє (checkbox). Перерахунок миттєвий — події input і change.
+         Захист від Edge Cases: HTML5 (min / max / step / required) → перевірка в JS → вивід лише через textContent.
+         Без JavaScript видно форму й текст-заглушку замість суми.
+         mobile: параметри, під ними результат → lg: параметри 3/5 + результат 2/5 (липкий) -->
+    <section class="scroll-mt-20 py-12 md:scroll-mt-24 lg:py-16" id="planner" aria-labelledby="planner-title">
+      <div class="mx-auto max-w-container px-4 md:px-8 lg:px-12">
+        <p class="text-caption font-medium uppercase tracking-caps text-primary">Калькулятор</p>
+        <h2 class="mt-2 font-heading text-h2 font-semibold lg:text-h2-lg" id="planner-title">Сплануйте сирну тарілку</h2>
+        <p class="mt-2 max-w-2xl text-content-muted">Вкажіть кількість гостей і формат вечора — порахуємо, скільки сиру та вина знадобиться і скільки це орієнтовно коштуватиме.</p>
+
+        <div class="mt-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-5 lg:gap-8" data-widget="cheese-board">
+          <form class="flex flex-col gap-6 rounded-xl border border-border bg-surface p-5 shadow-subtle md:p-8 lg:col-span-3" id="board-form" novalidate aria-label="Параметри сирної тарілки">
+
+            <!-- 1. Кількість гостей: ціле число 1–50 -->
+            <div class="flex flex-col gap-2">
+              <label class="text-sm font-medium" for="board-guests">Кількість гостей</label>
+              <div class="flex gap-2">
+                <button class="board-step" type="button" aria-label="Менше гостей" aria-controls="board-guests" data-cb="minus">
+                  <svg class="h-4 w-4 fill-current" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
+                </button>
+                <input class="form-control max-w-32 px-4 text-center tabular-nums" type="number" id="board-guests" name="guests" value="6" min="1" max="50" step="1" required inputmode="numeric" aria-describedby="board-guests-hint board-guests-error" data-cb="guests">
+                <button class="board-step" type="button" aria-label="Більше гостей" aria-controls="board-guests" data-cb="plus">
+                  <svg class="h-4 w-4 fill-current" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
+                </button>
+              </div>
+              <p class="text-caption text-content-muted" id="board-guests-hint">Від 1 до 50 осіб. Для більшої компанії сплануємо подачу індивідуально.</p>
+              <p class="form-error hidden" id="board-guests-error" data-cb="guests-error"></p>
+            </div>
+
+            <!-- 2. Формат події: скільки сиру на гостя -->
+            <div class="flex flex-col gap-2">
+              <label class="text-sm font-medium" for="board-format">Формат вечора</label>
+              <select class="form-control cursor-pointer pr-3" id="board-format" name="format" data-cb="format">
+                <option value="aperitif">Аперитив — 60 г сиру на гостя</option>
+                <option value="tasting" selected>Дегустація — 100 г на гостя</option>
+                <option value="dinner">Сирна вечеря — 150 г на гостя</option>
+              </select>
+            </div>
+
+            <!-- 3. Рівень сирів: ціна за 100 г -->
+            <fieldset class="flex flex-col gap-2">
+              <legend class="mb-2 text-sm font-medium">Рівень сирів</legend>
+              <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
+                <label class="board-option">
+                  <input class="h-5 w-5 shrink-0 cursor-pointer accent-primary" type="radio" name="board-tier" value="classic" data-cb="tier">
+                  <span><span class="block font-semibold">Класика</span><span class="block text-sm text-content-muted">90 грн / 100 г</span></span>
+                </label>
+                <label class="board-option">
+                  <input class="h-5 w-5 shrink-0 cursor-pointer accent-primary" type="radio" name="board-tier" value="craft" checked data-cb="tier">
+                  <span><span class="block font-semibold">Крафт</span><span class="block text-sm text-content-muted">140 грн / 100 г</span></span>
+                </label>
+                <label class="board-option">
+                  <input class="h-5 w-5 shrink-0 cursor-pointer accent-primary" type="radio" name="board-tier" value="premium" data-cb="tier">
+                  <span><span class="block font-semibold">Преміум</span><span class="block text-sm text-content-muted">220 грн / 100 г</span></span>
+                </label>
+              </div>
+            </fieldset>
+
+            <!-- 4–6. Додаткові опції -->
+            <fieldset class="flex flex-col gap-2">
+              <legend class="mb-2 text-sm font-medium">Додатково</legend>
+              <label class="board-option">
+                <input class="h-5 w-5 shrink-0 cursor-pointer rounded accent-primary" type="checkbox" id="board-wine" name="wine" checked data-cb="wine">
+                <span><span class="block font-semibold">Вино в пару</span><span class="block text-sm text-content-muted">1 пляшка 0,75 л на 3 гостей — 450 грн</span></span>
+              </label>
+              <label class="board-option">
+                <input class="h-5 w-5 shrink-0 cursor-pointer rounded accent-primary" type="checkbox" id="board-extras" name="extras" data-cb="extras">
+                <span><span class="block font-semibold">Супровід</span><span class="block text-sm text-content-muted">Мед, горіхи, фрукти, крекери — 45 грн на гостя</span></span>
+              </label>
+              <label class="board-option">
+                <input class="h-5 w-5 shrink-0 cursor-pointer rounded accent-primary" type="checkbox" id="board-sommelier" name="sommelier" data-cb="sommelier">
+                <span><span class="block font-semibold">Сомельє на подачі</span><span class="block text-sm text-content-muted">Розповідь про кожну пару — 1 200 грн за вечір</span></span>
+              </label>
+            </fieldset>
+          </form>
+
+          <!-- Результат: <output> має неявну роль status — програма читання з екрана озвучує нову суму -->
+          <aside class="flex flex-col gap-5 rounded-panel bg-primary p-6 text-on-primary md:p-8 lg:sticky lg:top-28 lg:col-span-2" aria-labelledby="board-result-title">
+            <h3 class="font-heading text-h3 font-semibold" id="board-result-title">Ваша тарілка</h3>
+            <div>
+              <p class="text-caption uppercase tracking-caps opacity-80">Орієнтовна вартість</p>
+              <output class="mt-1 block break-words font-heading text-h1 font-semibold tabular-nums lg:text-h1-lg" id="board-total" for="board-guests board-format board-wine board-extras board-sommelier" data-cb="total">Увімкніть JavaScript для розрахунку</output>
+              <p class="mt-1 text-sm opacity-90" data-cb="per-guest"></p>
+            </div>
+            <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 border-t border-on-primary/25 pt-4 text-sm" data-cb="breakdown">
+              <dt class="opacity-80">Сир</dt><dd class="text-right font-medium tabular-nums" data-cb="cheese">—</dd>
+              <dt class="opacity-80">Вино</dt><dd class="text-right font-medium tabular-nums" data-cb="bottles">—</dd>
+              <dt class="opacity-80">Супровід</dt><dd class="text-right font-medium tabular-nums" data-cb="extras-sum">—</dd>
+              <dt class="opacity-80">Сомельє</dt><dd class="text-right font-medium tabular-nums" data-cb="sommelier-sum">—</dd>
+            </dl>
+            <a class="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-on-primary px-6 text-sm font-semibold text-primary transition duration-150 ease-standard hover:bg-surface hover:shadow-raised aria-disabled:pointer-events-none aria-disabled:opacity-60" href="#contact" data-cb="cta">Обговорити з сомельє</a>
+            <p class="text-caption opacity-80">Ціни орієнтовні (навчальний проєкт). Остаточну вартість підтвердить сомельє.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
     <section class="scroll-mt-20 py-12 md:scroll-mt-24 lg:py-16" id="video" aria-labelledby="video-title">
       <div class="mx-auto max-w-container px-4 md:px-8 lg:px-12">
         <p class="mb-2 text-caption font-medium uppercase tracking-caps text-primary">Відео</p>
@@ -577,5 +678,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.js" defer></script>
   <script src="js/plugins.js" defer></script>
+  <!-- ЛР №11: калькулятор сирної тарілки (власний Vanilla JS, без бібліотек) -->
+  <script src="js/widget.js" defer></script>
 </body>
 </html>

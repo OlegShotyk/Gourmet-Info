@@ -50,6 +50,22 @@
   }
 }
 
+/* ЛР №11 — калькулятор сирної тарілки: кнопки −/+ і картки-опції (radio / checkbox) */
+@layer components {
+  .board-step {
+    @apply inline-flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-lg border-1.5 border-primary text-primary
+      transition-colors duration-150 ease-standard hover:bg-background-alt disabled:cursor-not-allowed disabled:border-border disabled:text-content-muted disabled:hover:bg-transparent;
+  }
+  /* Уся картка — зона натискання; обраний стан — рамка бренду (:has без JS) */
+  .board-option {
+    @apply flex min-h-12 cursor-pointer items-start gap-3 rounded-lg border border-border bg-white p-3 transition-colors duration-150 ease-standard
+      hover:border-content-muted has-[:checked]:border-primary has-[:checked]:bg-background has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-primary/20;
+  }
+  .board-option input {
+    @apply mt-0.5;
+  }
+}
+
 /* Тема Swiper через CSS-змінні бібліотеки: крапки пагінації в кольорах бренду */
 .pairs-swiper {
   --swiper-theme-color: #6b1e2b;
