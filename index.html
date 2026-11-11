@@ -343,7 +343,7 @@
          5 параметрів впливають на результат: кількість гостей (number + кнопки −/+), формат події (select),
          рівень сирів (radio), вино / супровід / сомельє (checkbox). Перерахунок миттєвий — події input і change.
          Захист від Edge Cases: HTML5 (min / max / step / required) → перевірка в JS → вивід лише через textContent.
-         Без JavaScript видно форму й текст-заглушку замість суми.
+         Без JavaScript видно форму, прочерк замість суми та підказку в <noscript>.
          mobile: параметри, під ними результат → lg: параметри 3/5 + результат 2/5 (липкий) -->
     <section class="scroll-mt-20 py-12 md:scroll-mt-24 lg:py-16" id="planner" aria-labelledby="planner-title">
       <div class="mx-auto max-w-container px-4 md:px-8 lg:px-12">
@@ -422,8 +422,9 @@
             <h3 class="font-heading text-h3 font-semibold" id="board-result-title">Ваша тарілка</h3>
             <div>
               <p class="text-caption uppercase tracking-caps opacity-80">Орієнтовна вартість</p>
-              <output class="mt-1 block break-words font-heading text-h1 font-semibold tabular-nums lg:text-h1-lg" id="board-total" for="board-guests board-format board-wine board-extras board-sommelier" data-cb="total">Увімкніть JavaScript для розрахунку</output>
+              <output class="mt-1 block break-words font-heading text-h1 font-semibold tabular-nums lg:text-h1-lg" id="board-total" for="board-guests board-format board-wine board-extras board-sommelier" data-cb="total">—</output>
               <p class="mt-1 text-sm opacity-90" data-cb="per-guest"></p>
+              <noscript><p class="mt-1 text-sm opacity-90">Для розрахунку увімкніть JavaScript у браузері.</p></noscript>
             </div>
             <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 border-t border-on-primary/25 pt-4 text-sm" data-cb="breakdown">
               <dt class="opacity-80">Сир</dt><dd class="text-right font-medium tabular-nums" data-cb="cheese">—</dd>
