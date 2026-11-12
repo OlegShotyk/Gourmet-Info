@@ -356,7 +356,8 @@
         <div class="mt-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-5 lg:gap-8" data-widget="cheese-board">
           <form class="flex flex-col gap-6 rounded-xl border border-border bg-surface p-5 shadow-subtle md:p-8 lg:col-span-3" id="board-form" novalidate aria-label="Параметри сирної тарілки">
 
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <!-- Колонка гостей — за вмістом, формат вечора займає решту рядка (повна назва формату вміщається в поле) -->
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-[auto_1fr]">
               <!-- 1. Кількість гостей: лише цифри (type="text" + inputmode="numeric" — у полі type="number" браузер пропускає «.», «,», «e», «-») -->
               <div class="flex flex-col gap-2">
                 <label class="text-sm font-medium" for="board-guests">Кількість гостей</label>
@@ -370,18 +371,19 @@
                     <svg class="h-4 w-4 fill-current" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
                   </button>
                 </div>
-                <p class="text-caption text-content-muted" id="board-guests-hint">Ціле число від 1 до&nbsp;50. Стрілки ↑ ↓ змінюють значення.</p>
+                <p class="text-caption text-content-muted" id="board-guests-hint">Ціле число від 1 до&nbsp;50.</p>
                 <p class="form-error hidden" id="board-guests-error" data-cb="guests-error"></p>
               </div>
 
               <!-- 2. Формат вечора: скільки сиру на гостя -->
               <div class="flex flex-col gap-2">
                 <label class="text-sm font-medium" for="board-format">Формат вечора</label>
-                <select class="form-control cursor-pointer pr-3" id="board-format" name="format" data-cb="format">
-                  <option value="aperitif">Аперитив — 30 г кожного сиру на гостя</option>
-                  <option value="tasting" selected>Дегустація — 40 г кожного сиру на гостя</option>
-                  <option value="dinner">Сирна вечеря — 50 г кожного сиру на гостя</option>
+                <select class="form-control cursor-pointer pr-3" id="board-format" name="format" aria-describedby="board-format-hint" data-cb="format">
+                  <option value="aperitif">Аперитив — 30 г</option>
+                  <option value="tasting" selected>Дегустація — 40 г</option>
+                  <option value="dinner">Сирна вечеря — 50 г</option>
                 </select>
+                <p class="text-caption text-content-muted" id="board-format-hint">Порція кожного сиру на одного гостя.</p>
               </div>
             </div>
 
@@ -444,7 +446,7 @@
                 </label>
                 <label class="board-option">
                   <input class="h-5 w-5 shrink-0 cursor-pointer rounded accent-primary" type="checkbox" id="board-sommelier" name="sommelier" data-cb="sommelier">
-                  <span><span class="block font-semibold">Сомельє на подачі</span><span class="block text-sm text-content-muted">Розповідь про кожну пару — 1&nbsp;200&nbsp;грн за&nbsp;вечір</span></span>
+                  <span><span class="block font-semibold">Сомельє на подачі</span><span class="block text-sm text-content-muted">Розповідь про кожен сир та вино з Вашого замовлення — 1&nbsp;200&nbsp;грн за&nbsp;вечір</span></span>
                 </label>
               </div>
             </fieldset>
