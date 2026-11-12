@@ -154,8 +154,9 @@
   }
 
   /* ---------- 3. Форматування для виводу ---------- */
-  const uah = (n) => `${money.format(n)} грн`;
-  const weight = (g) => (g < 1000 ? `${money.format(g)} г` : `${kilos.format(g / 1000)} кг`);
+  // Нерозривний пробіл (\u00a0): сума й «грн» не розриваються між рядками (Intl уже ставить його між тисячами)
+  const uah = (n) => `${money.format(n)}\u00a0грн`;
+  const weight = (g) => (g < 1000 ? `${money.format(g)}\u00a0г` : `${kilos.format(g / 1000)}\u00a0кг`);
   const plural = (n, one, few, many) => {
     const m10 = n % 10, m100 = n % 100;
     if (m10 === 1 && m100 !== 11) return one;
@@ -238,7 +239,7 @@
           const text = h('span', 'flex min-w-0 flex-1 flex-col sm:flex-row sm:items-center');
           const info = h('span', 'min-w-0');
           info.append(h('span', 'picker-name', item.name), h('span', 'picker-note', item.note));
-          text.append(info, h('span', 'picker-price', kind === 'cheeses' ? `${item.price} грн / 100 г` : `${money.format(item.price)} грн`));
+          text.append(info, h('span', 'picker-price', kind === 'cheeses' ? `${item.price}\u00a0грн / 100\u00a0г` : uah(item.price)));
           label.append(input, thumb(item.img, 56, '', true), text);
           group.append(label);
         });
@@ -281,7 +282,7 @@
       };
       add('custom', 'Власний вибір', 'Сири й вина — з меню нижче');
       Object.entries(CATALOG.pairs).forEach(([id, p]) => {
-        add(id, p.name, `${p.badge} · сир ${CATALOG.cheeses[p.cheese].price} грн / 100 г, вино ${money.format(CATALOG.wines[p.wine].price)} грн`, p.img);
+        add(id, p.name, `${p.badge} · сир ${CATALOG.cheeses[p.cheese].price}\u00a0грн / 100\u00a0г, вино ${uah(CATALOG.wines[p.wine].price)}`, p.img);
       });
     }
 
