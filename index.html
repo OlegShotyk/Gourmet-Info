@@ -375,15 +375,30 @@
                 <p class="form-error hidden" id="board-guests-error" data-cb="guests-error"></p>
               </div>
 
-              <!-- 2. Формат вечора: скільки сиру на гостя -->
+              <!-- 2. Формат вечора: меню в стилі сирів і вин. У закритому полі — лише назва формату,
+                   повний опис порції (скільки грамів кожного сиру на гостя) — у розкритому меню -->
               <div class="flex flex-col gap-2">
-                <label class="text-sm font-medium" for="board-format">Формат вечора</label>
-                <select class="form-control cursor-pointer pr-3" id="board-format" name="format" aria-describedby="board-format-hint" data-cb="format">
-                  <option value="aperitif">Аперитив — 30 г</option>
-                  <option value="tasting" selected>Дегустація — 40 г</option>
-                  <option value="dinner">Сирна вечеря — 50 г</option>
-                </select>
-                <p class="text-caption text-content-muted" id="board-format-hint">Порція кожного сиру на одного гостя.</p>
+                <span class="text-sm font-medium" id="board-format-label">Формат вечора</span>
+                <details class="picker" name="board-picker" data-cb="format-picker">
+                  <summary class="picker-summary" aria-describedby="board-format-label">
+                    <span class="picker-value" data-cb="format-summary">Дегустація</span>
+                    <svg class="picker-chevron" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+                  </summary>
+                  <div class="picker-panel" role="radiogroup" aria-labelledby="board-format-label">
+                    <label class="picker-option">
+                      <input type="radio" name="format" value="aperitif" data-cb="format">
+                      <span class="min-w-0"><span class="picker-name">Аперитив</span><span class="picker-note">30 г кожного сиру на гостя</span></span>
+                    </label>
+                    <label class="picker-option">
+                      <input type="radio" name="format" value="tasting" checked data-cb="format">
+                      <span class="min-w-0"><span class="picker-name">Дегустація</span><span class="picker-note">40 г кожного сиру на гостя</span></span>
+                    </label>
+                    <label class="picker-option">
+                      <input type="radio" name="format" value="dinner" data-cb="format">
+                      <span class="min-w-0"><span class="picker-name">Сирна вечеря</span><span class="picker-note">50 г кожного сиру на гостя</span></span>
+                    </label>
+                  </div>
+                </details>
               </div>
             </div>
 
@@ -457,7 +472,7 @@
             <h3 class="font-heading text-h3 font-semibold" id="board-result-title">Ваша тарілка</h3>
             <div>
               <p class="text-caption uppercase tracking-caps opacity-80">Орієнтовна вартість</p>
-              <output class="mt-1 block break-words font-heading text-h1 font-semibold tabular-nums lg:text-h1-lg" id="board-total" for="board-guests board-format board-extras board-sommelier" data-cb="total">—</output>
+              <output class="mt-1 block break-words font-heading text-h1 font-semibold tabular-nums lg:text-h1-lg" id="board-total" for="board-guests board-extras board-sommelier" data-cb="total">—</output>
               <p class="mt-1 text-sm opacity-90" data-cb="per-guest"></p>
               <noscript><p class="mt-1 text-sm opacity-90">Для розрахунку увімкніть JavaScript у браузері.</p></noscript>
             </div>

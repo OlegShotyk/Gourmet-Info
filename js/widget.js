@@ -193,7 +193,8 @@
     const uid = ++instances;
     const $ = (name) => root.querySelector(`[data-cb="${name}"]`);
     const el = {
-      guests: $('guests'), guestsError: $('guests-error'), minus: $('minus'), plus: $('plus'), format: $('format'),
+      guests: $('guests'), guestsError: $('guests-error'), minus: $('minus'), plus: $('plus'),
+      formatPicker: $('format-picker'), formatSummary: $('format-summary'),
       pairPicker: $('pair-picker'), pairOptions: $('pair-options'), pairSummary: $('pair-summary'), pairThumbs: $('pair-thumbs'),
       cheesePicker: $('cheese-picker'), cheeseOptions: $('cheese-options'), cheeseSummary: $('cheese-summary'), cheeseThumbs: $('cheese-thumbs'),
       cheeseHint: $('cheese-hint'), cheeseError: $('cheese-error'),
@@ -293,15 +294,19 @@
     const checkedIds = (kind) => boxes(kind).filter((b) => b.checked).map((b) => b.value);
     const setChecked = (kind, ids) => boxes(kind).forEach((b) => { b.checked = ids.includes(b.value); });
     setChecked('cheese', RULES.defaultCheeses);
+    boxes('format').forEach((r) => { r.name = `format-${uid}`; }); // кожен екземпляр — своя група radio
+    const formatRadio = () => boxes('format').find((r) => r.checked);
+    const setFormat = (v) => boxes('format').forEach((r) => { r.checked = r.value === v; });
 
     /* --- 4.2. Читання та перевірка стану --- */
     function readState() {
       const guests = parseGuests(el.guests.value);
-      // select / checkbox могли підмінити через DevTools — беремо лише відомі значення каталогу
-      const format = has(RULES.formats, el.format && el.format.value) ? el.format.value : RULES.defaultFormat;
-      if (el.format && format !== el.format.value) {
-        console.warn('[cheese-board] Невідомий формат:', el.format.value, '→', format);
-        el.format.value = format;
+      // radio / checkbox могли підмінити через DevTools — беремо лише відомі значення каталогу
+      const checkedFormat = formatRadio();
+      const format = has(RULES.formats, checkedFormat && checkedFormat.value) ? checkedFormat.value : RULES.defaultFormat;
+      if (!checkedFormat || format !== checkedFormat.value) {
+        console.warn('[cheese-board] Невідомий формат:', checkedFormat ? checkedFormat.value : '(не обрано)', '→', format);
+        setFormat(format);
       }
       const rawCheeses = checkedIds('cheese');
       const rawWines = checkedIds('wine');
@@ -335,6 +340,9 @@
 
     /* --- 4.3. Відображення: меню, конструктор, результат --- */
     function renderPickers(s) {
+      // формат: у закритому полі — лише назва; опис порції видно в розкритому меню
+      const fr = formatRadio();
+      setText(el.formatSummary, fr ? fr.closest('label').querySelector('.picker-name').textContent : '');
       // сири
       setText(el.cheeseSummary, shortList(s.cheeses.map((id) => CATALOG.cheeses[id].name), 'Оберіть сири'));
       el.cheeseThumbs?.replaceChildren(...s.cheeses.slice(0, 3).map((id) => thumb(CATALOG.cheeses[id].img, 32)));
@@ -517,10 +525,14 @@
     holdToRepeat(el.plus, 1);
 
     /* --- 4.5. Меню вибору, конструктор, опції --- */
-    [el.format, el.extras, el.sommelier].forEach((c) => c?.addEventListener('change', schedule));
+    [el.extras, el.sommelier].forEach((c) => c?.addEventListener('change', schedule));
     root.addEventListener('change', (e) => {
       const cb = e.target && e.target.dataset ? e.target.dataset.cb : '';
       if (cb === 'cheese' || cb === 'wine') schedule();
+      if (cb === 'format') { // один вибір — меню закривається, фокус повертається на поле
+        render();
+        if (el.formatPicker) { el.formatPicker.open = false; summaryOf(el.formatPicker).focus(); }
+      }
       if (cb === 'pair') {
         const p = CATALOG.pairs[e.target.value];
         // перевірена пара замінює склад тарілки на її сир і вино; «Власний вибір» нічого не стирає
@@ -551,7 +563,7 @@
     });
 
     // Меню: одночасно відкрите лише одне; закриття клавішею Esc і кліком поза меню
-    const pickers = [el.pairPicker, el.cheesePicker, el.winePicker].filter(Boolean);
+    const pickers = [el.formatPicker, el.pairPicker, el.cheesePicker, el.winePicker].filter(Boolean);
     pickers.forEach((d) => {
       d.addEventListener('toggle', () => { if (d.open) pickers.forEach((o) => { if (o !== d) o.open = false; }); });
       d.addEventListener('keydown', (e) => {
@@ -576,7 +588,7 @@
       const topic = form && form.querySelector('#topic');
       const message = form && form.querySelector('#message');
       if (!topic || !message) return; // форми немає — звичайний перехід за посиланням
-      const fmt = el.format ? el.format.options[el.format.selectedIndex].text.split(' — ')[0].toLowerCase() : 'дегустація';
+      const fmt = (el.formatSummary ? el.formatSummary.textContent : 'Дегустація').toLowerCase();
       const cheeses = last.result.cheeseLines.map((l) => `${l.name} ${weight(l.grams)}`).join(', ');
       const wines = last.result.wineLines.map((l) => `${l.name} × ${l.bottles}`).join(', ') || 'без вина';
       const opts = [last.extras && 'супровід', last.sommelier && 'сомельє'].filter(Boolean).join(', ');
@@ -593,16 +605,16 @@
       const presets = {
         consult: () => { if (el.sommelier) el.sommelier.checked = true; }, // персональна консультація — з сомельє
         company: () => { // дегустація для компанії
-          if (el.format) el.format.value = 'tasting';
+          setFormat('tasting');
           const p = parseGuests(el.guests.value);
           if (!p.ok || p.value < 10) el.guests.value = '10';
         },
-        menu: () => { if (el.format) el.format.value = 'dinner'; }, // підбір до меню — сирна вечеря
+        menu: () => setFormat('dinner'), // підбір до меню — сирна вечеря
       };
       if (has(presets, name)) { presets[name](); clearNotice(); render(); }
     }
     function openPicker(name) {
-      const d = { pair: el.pairPicker, cheese: el.cheesePicker, wine: el.winePicker }[name];
+      const d = { format: el.formatPicker, pair: el.pairPicker, cheese: el.cheesePicker, wine: el.winePicker }[name];
       if (!d) return;
       d.open = true;
       summaryOf(d).focus({ preventScroll: true });
