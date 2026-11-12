@@ -581,7 +581,7 @@
       const cheeses = last.result.cheeseLines.map((l) => `${l.name} ${weight(l.grams)}`).join(', ');
       const wines = last.result.wineLines.map((l) => `${l.name} × ${l.bottles}`).join(', ') || 'без вина';
       const opts = [last.extras && 'супровід', last.sommelier && 'сомельє'].filter(Boolean).join(', ');
-      topic.value = 'tasting';
+      if (!topic.value) topic.value = 'tasting'; // тему, обрану кнопкою «Обрати формат», не перезаписуємо
       message.value = `Сирна тарілка: ${guestsWord(last.guests)}, ${fmt}. Сири: ${cheeses}. Вино: ${wines}.` +
         (opts ? ` Додатково: ${opts}.` : '') + ` Розрахунок калькулятора: ${uah(last.result.total)}.`;
       // лічильник символів і стан полів оновлюють власні обробники форми
@@ -624,11 +624,18 @@
     if (document.documentElement.dataset.plannerLinks) return; // один делегований обробник на сторінку
     document.documentElement.dataset.plannerLinks = 'on';
 
-    // «Підібрати пару» / «Обрати формат» ведуть до калькулятора (#planner) і налаштовують його
+    // «Підібрати пару» / «Обрати формат» ведуть до калькулятора (#planner) і налаштовують його;
+    // «Обрати формат» ще й обирає відповідну тему у формі зворотного зв'язку (ЛР №9)
     document.addEventListener('click', (e) => {
-      const link = e.target instanceof Element ? e.target.closest('[data-planner-preset], [data-planner-open]') : null;
+      const link = e.target instanceof Element ? e.target.closest('[data-planner-preset], [data-planner-open], [data-topic]') : null;
+      if (!link) return;
+      const topic = document.querySelector('#feedbackForm #topic');
+      if (topic && link.dataset.topic && [...topic.options].some((o) => o.value === link.dataset.topic)) {
+        topic.value = link.dataset.topic;
+        topic.dispatchEvent(new Event('change', { bubbles: true })); // знімає можливу помилку «Оберіть тему»
+      }
       const api = document.querySelector('[data-widget="cheese-board"]')?.cheeseBoard;
-      if (!link || !api) return;
+      if (!api) return;
       if (link.dataset.plannerPreset) api.applyPreset(link.dataset.plannerPreset);
       // меню відкривається після плавного прокручування до секції
       if (link.dataset.plannerOpen) setTimeout(() => api.openPicker(link.dataset.plannerOpen), 500);
