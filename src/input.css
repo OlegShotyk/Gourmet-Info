@@ -66,6 +66,92 @@
   }
 }
 
+/* ЛР №11 — меню вибору сирів, вин і перевірених пар (<details>/<summary>) та картки конструктора */
+@layer components {
+  .picker {
+    @apply relative;
+  }
+  .picker-summary {
+    @apply flex min-h-12 cursor-pointer list-none items-center gap-3 rounded-lg border border-border bg-white px-3 py-2 text-base text-content
+      transition-[border-color,box-shadow] duration-150 ease-standard hover:border-content-muted;
+  }
+  .picker-summary::-webkit-details-marker {
+    display: none;
+  }
+  .picker[open] > .picker-summary {
+    @apply border-primary ring-4 ring-primary/20;
+  }
+  .picker-value {
+    @apply min-w-0 flex-1 truncate;
+  }
+  .picker-chevron {
+    @apply h-4 w-4 shrink-0 fill-primary transition-transform duration-150 ease-standard motion-reduce:transition-none;
+  }
+  .picker[open] .picker-chevron {
+    @apply rotate-180;
+  }
+  .picker-thumbs {
+    @apply flex shrink-0 -space-x-2;
+  }
+  .picker-thumbs:empty {
+    @apply hidden;
+  }
+  .picker-thumbs img {
+    @apply h-8 w-8 rounded-full border-2 border-white object-cover;
+  }
+  .picker-panel {
+    @apply absolute inset-x-0 top-full z-30 mt-2 max-h-[26rem] overflow-y-auto overscroll-contain rounded-xl border border-border bg-surface p-2 shadow-overlay;
+  }
+  .picker-level {
+    @apply sticky top-0 z-10 flex w-full flex-wrap items-baseline justify-between gap-x-2 bg-surface px-2 pb-1 pt-3 text-caption font-semibold uppercase tracking-caps text-primary;
+  }
+  .picker-level span {
+    @apply font-normal normal-case tracking-normal text-content-muted;
+  }
+  .picker-option {
+    @apply flex min-h-14 cursor-pointer items-center gap-3 rounded-lg p-2 transition-colors duration-150 ease-standard
+      hover:bg-background has-[:checked]:bg-background has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/40
+      has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50;
+  }
+  .picker-option input {
+    @apply h-5 w-5 shrink-0 cursor-pointer accent-primary disabled:cursor-not-allowed;
+  }
+  .picker-option img {
+    @apply h-12 w-12 shrink-0 rounded-lg object-cover sm:h-14 sm:w-14;
+  }
+  .picker-option--pair img {
+    @apply w-16 sm:w-20;
+  }
+  .picker-name {
+    @apply block font-semibold leading-snug;
+  }
+  .picker-note {
+    @apply block text-sm text-content-muted;
+  }
+  /* Ціна: на телефоні — третім рядком під описом, з 640 px — окремою колонкою праворуч */
+  .picker-price {
+    @apply mt-0.5 block whitespace-nowrap text-sm font-semibold tabular-nums text-primary sm:ml-auto sm:mt-0 sm:pl-2;
+  }
+  .picker-footer {
+    @apply sticky -bottom-2 -mx-2 -mb-2 mt-2 flex items-center justify-between gap-3 border-t border-border bg-surface px-4 py-3 text-sm text-content-muted;
+  }
+  .picker-done {
+    @apply inline-flex min-h-11 cursor-pointer items-center justify-center rounded-lg bg-primary px-5 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover;
+  }
+  .picker-clear {
+    @apply inline-flex min-h-11 cursor-pointer items-center rounded-lg px-2 text-sm font-medium text-primary underline-offset-4 hover:underline;
+  }
+  .board-item {
+    @apply flex min-w-0 items-center gap-3 rounded-lg border border-border bg-white p-2;
+  }
+  .board-item img {
+    @apply h-12 w-12 shrink-0 rounded-md object-cover;
+  }
+  .board-remove {
+    @apply ml-auto inline-flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-lg text-content-muted transition-colors duration-150 ease-standard hover:bg-background-alt hover:text-primary;
+  }
+}
+
 /* Тема Swiper через CSS-змінні бібліотеки: крапки пагінації в кольорах бренду */
 .pairs-swiper {
   --swiper-theme-color: #6b1e2b;
