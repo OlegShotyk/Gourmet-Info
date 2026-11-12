@@ -1,0 +1,106 @@
+# CI/CD конвеєр «Гурман-Інфо» (ЛР №12).
+# push у main → перевірка коду → деплой на Vercel (production) → Lighthouse-аудит живого сайту.
+# Pull request у main → лише перевірка коду (без деплою).
+# Автоматичний деплой Vercel з Git вимкнено у vercel.json ("git.deploymentEnabled": false),
+# тому єдиний шлях на продакшн — цей конвеєр: код, що не пройшов перевірку, не потрапляє на сайт.
+#
+# Секрети репозиторію (Settings → Secrets and variables → Actions):
+#   VERCEL_TOKEN      — токен Vercel (Account Settings → Tokens)
+#   VERCEL_ORG_ID     — ідентифікатор власника проєкту (Team ID / Your ID у налаштуваннях Vercel)
+#   VERCEL_PROJECT_ID — ідентифікатор проєкту (Project → Settings → General → Project ID)
+
+name: CI/CD Production Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Два push поспіль в одну гілку: попередній незавершений запуск скасовується, на сайт іде лише найновіший код
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  SITE_URL: https://gourmet-info.vercel.app/
+
+jobs:
+  check:
+    name: Перевірка коду
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # css/tailwind.css зберігається в репозиторії; якщо після збірки він відрізняється —
+      # хтось змінив класи чи src/input.css і забув виконати npm run build:css
+      - name: Build Tailwind CSS and verify it is committed
+        run: |
+          npm run build:css
+          git diff --exit-code -- css/tailwind.css || { echo "::error::css/tailwind.css застарів — виконайте npm run build:css"; exit 1; }
+
+      - name: JavaScript syntax check
+        run: for f in js/*.js; do node --check "$f"; done
+
+      - name: Validate HTML
+        run: npx --yes html-validate@9 --config .htmlvalidate.json index.html
+
+  deploy:
+    name: Деплой на Vercel (production)
+    needs: check
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel
+        id: deploy
+        run: |
+          url=$(vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Розгорнуто: $url" >> "$GITHUB_STEP_SUMMARY"
+
+  lighthouse:
+    name: Lighthouse-аудит продакшну
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Пороги — у lighthouserc.json: Accessibility, Best Practices, SEO ≥ 90 — помилка;
+      # Performance < 90 — попередження (результат на спільних серверах GitHub коливається)
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: ${{ env.SITE_URL }}
+          configPath: ./lighthouserc.json
+          runs: 3
+          uploadArtifacts: true
+          temporaryPublicStorage: true
