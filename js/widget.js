@@ -7,7 +7,7 @@
 
    Захисне програмування (Defensive Programming):
    1. Введення: у поле гостей потрапляють лише цифри — крапку, кому, слеш, «e», «-», пробіл
-      і літери відсікає фільтр (beforeinput / paste / drop / input), maxlength="2".
+      і літери відсікає фільтр (beforeinput — при наборі, input — при вставці й автозаповненні), maxlength="2".
    2. Перевірка до розрахунку: кожне значення з DOM — «брудне» (порожнє поле, 0, > 50,
       підмінені в DevTools сири / вина / пари / формат, жодного сиру, понад 5 сортів).
       Невалідний стан не рахується: замість суми — «—» і зрозуміле повідомлення біля поля.
@@ -173,8 +173,8 @@
     if (text !== undefined) node.textContent = text;
     return node;
   }
-  // lazy — для фото в закритих меню (вантажаться лише при відкритті); мініатюри на виду — одразу
-  function thumb(id, size, cls, lazy = false) {
+  // Усі фото віджета ліниві: секція нижче першого екрана, а фото меню вантажаться лише при його відкритті
+  function thumb(id, size, cls, lazy = true) {
     const img = h('img', cls);
     img.src = IMG(id, size * 2);
     img.alt = '';
@@ -456,12 +456,9 @@
     el.guests.addEventListener('beforeinput', (e) => {
       if (e.data && /\D/.test(e.data)) { e.preventDefault(); showNotice(); }
     });
-    // Вставлення й перетягування: приймається лише рядок з цифр, інакше нічого (щоб «2.5» не стало «25»)
-    const guard = (text, e) => { if (!/^\d+$/.test(text.trim())) { e.preventDefault(); showNotice(); } };
-    el.guests.addEventListener('paste', (e) => guard((e.clipboardData && e.clipboardData.getData('text')) || '', e));
-    el.guests.addEventListener('drop', (e) => guard((e.dataTransfer && e.dataTransfer.getData('text')) || '', e));
-    // Запасний фільтр (автозаповнення, клавіатури без beforeinput, зміна value скриптом):
-    // значення з будь-яким нецифровим символом не приймається — повертається попереднє («3.7» не стане «37»)
+    // Вставлення, перетягування, автозаповнення, клавіатури без beforeinput, зміна value скриптом:
+    // значення з будь-яким нецифровим символом не приймається — повертається попереднє («2.5» не стане «25», «3.7» — «37»).
+    // Саму вставку не блокуємо (paste без preventDefault): це вимога доступності й аудит Lighthouse «paste-preventing-inputs»
     let lastGood = /^\d{0,2}$/.test(el.guests.value) ? el.guests.value : String(RULES.guests.initial);
     el.guests.addEventListener('input', () => {
       const v = el.guests.value;
