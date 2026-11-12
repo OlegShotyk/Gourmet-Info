@@ -60,14 +60,14 @@
       <nav class="hidden md:block" aria-label="Основна навігація">
         <!-- Лендинг: лише якірні посилання на секції цієї сторінки -->
         <ul class="flex items-center gap-4 whitespace-nowrap lg:gap-8">
-          <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#benefits">Переваги</a></li>
-          <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#services">Послуги</a></li>
-          <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#how-it-works">Як це працює</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline" href="#benefits">Переваги</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline" href="#services">Послуги</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline" href="#how-it-works">Як це працює</a></li>
           <!-- «Колекція» — з lg, «Калькулятор» — з xl: на вужчих екранах шапка з усіма пунктами виходила за ширину екрана (768 px, 1024 px) -->
-          <li class="hidden lg:block"><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#collection">Колекція</a></li>
-          <li class="hidden xl:block"><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#planner">Калькулятор</a></li>
-          <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#about">Про нас</a></li>
-          <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 hover:underline" href="#contact">Контакти</a></li>
+          <li class="hidden lg:block"><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline" href="#collection">Колекція</a></li>
+          <li class="hidden xl:block"><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline" href="#planner">Калькулятор</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline" href="#about">Про нас</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline" href="#contact">Контакти</a></li>
         </ul>
       </nav>
 
@@ -184,7 +184,7 @@
             <h2 class="font-heading text-h2 font-semibold lg:text-h2-lg" id="services-title">Оберіть свій формат</h2>
           </div>
           <!-- Рух, що запускається сам і триває понад 5 с, користувач має могти зупинити (js/bg-video.js) -->
-          <button class="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-border bg-surface px-4 text-sm font-semibold text-primary transition duration-150 ease-standard hover:bg-background-alt motion-reduce:hidden" type="button" data-video-toggle>
+          <button class="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-lg border border-border bg-surface px-4 text-sm font-semibold text-primary transition duration-150 ease-standard hover:bg-background-alt motion-reduce:hidden" type="button" data-video-toggle>
             <span data-icon="pause"><svg class="h-4 w-4 shrink-0 fill-current" viewBox="0 0 320 512" aria-hidden="true" focusable="false"><path d="M48 64C21.5 64 0 85.5 0 112L0 400c0 26.5 21.5 48 48 48l32 0c26.5 0 48-21.5 48-48l0-288c0-26.5-21.5-48-48-48L48 64zm192 0c-26.5 0-48 21.5-48 48l0 288c0 26.5 21.5 48 48 48l32 0c26.5 0 48-21.5 48-48l0-288c0-26.5-21.5-48-48-48l-32 0z"/></svg></span>
             <span data-icon="play" hidden><svg class="h-4 w-4 shrink-0 fill-current" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80L0 432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span>
             <span data-label>Пауза відео</span>
@@ -268,15 +268,15 @@
           </div>
           <!-- Керування слайдером: стрілки та пауза автопрогортання (WCAG 2.2.2 — рух, що триває понад 5 с, можна зупинити) -->
           <div class="flex shrink-0 items-center gap-2">
-            <button class="pairs-autoplay inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-border bg-surface px-4 text-sm font-semibold text-primary transition duration-150 ease-standard hover:bg-background" type="button" aria-pressed="false" data-autoplay-toggle>
+            <button class="pairs-autoplay inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-lg border border-border bg-surface px-4 text-sm font-semibold text-primary transition duration-150 ease-standard hover:bg-background" type="button" aria-pressed="false" data-autoplay-toggle>
               <svg class="h-3.5 w-3.5 fill-current" data-icon="pause" viewBox="0 0 320 512" aria-hidden="true" focusable="false"><path d="M48 64C21.5 64 0 85.5 0 112L0 400c0 26.5 21.5 48 48 48l32 0c26.5 0 48-21.5 48-48l0-288c0-26.5-21.5-48-48-48L48 64zm192 0c-26.5 0-48 21.5-48 48l0 288c0 26.5 21.5 48 48 48l32 0c26.5 0 48-21.5 48-48l0-288c0-26.5-21.5-48-48-48l-32 0z"/></svg>
               <svg class="hidden h-3.5 w-3.5 fill-current" data-icon="play" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80L0 432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg>
               <span data-label>Пауза</span>
             </button>
-            <button class="pairs-prev inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-1.5 border-primary text-primary transition-colors duration-150 ease-standard hover:bg-surface" type="button" aria-label="Попередня пара">
+            <button class="pairs-prev inline-flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border-1.5 border-primary text-primary transition-colors duration-150 ease-standard hover:bg-surface" type="button" aria-label="Попередня пара">
               <svg class="h-4 w-4 fill-current" viewBox="0 0 320 512" aria-hidden="true" focusable="false"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>
             </button>
-            <button class="pairs-next inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-primary text-on-primary transition-colors duration-150 ease-standard hover:bg-primary-hover" type="button" aria-label="Наступна пара">
+            <button class="pairs-next inline-flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-primary text-on-primary transition-colors duration-150 ease-standard hover:bg-primary-hover" type="button" aria-label="Наступна пара">
               <svg class="h-4 w-4 fill-current" viewBox="0 0 320 512" aria-hidden="true" focusable="false"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>
             </button>
           </div>
@@ -605,7 +605,7 @@
                 </div>
                 <p class="text-caption text-content-muted" id="phoneHint">Формат: +380XXXXXXXXX. Можна ввести 0501234567 — код країни додасться автоматично.</p>
                 <p class="form-error hidden" id="phoneError"></p>
-                <button class="hidden min-h-11 self-start rounded-lg border border-primary px-3 text-sm font-medium text-primary transition-colors duration-150 ease-standard hover:bg-background-alt" type="button" id="phoneFix">Підставити номер</button>
+                <button class="hidden min-h-12 self-start rounded-lg border border-primary px-3 text-sm font-medium text-primary transition-colors duration-150 ease-standard hover:bg-background-alt" type="button" id="phoneFix">Підставити номер</button>
               </div>
 
               <!-- Тема звернення -->
@@ -637,7 +637,7 @@
 
               <!-- Згода: увесь рядок — зона натискання (label обгортає чекбокс) -->
               <div class="flex flex-col gap-2 md:col-span-2" data-field>
-                <label class="flex min-h-11 cursor-pointer items-start gap-3 text-sm">
+                <label class="flex min-h-12 cursor-pointer items-start gap-3 text-sm">
                   <input class="mt-0.5 h-5 w-5 shrink-0 cursor-pointer rounded accent-primary" type="checkbox" id="agreement" name="agreement" value="yes" required aria-describedby="agreementError">
                   <span>Погоджуюся з обробкою персональних даних відповідно до політики конфіденційності «Гурман-Інфо».</span>
                 </label>
@@ -698,19 +698,19 @@
       <nav aria-labelledby="footer-nav-title">
         <h2 class="text-caption font-semibold uppercase tracking-caps text-content" id="footer-nav-title">Навігація</h2>
         <ul class="mt-3">
-          <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#benefits">Переваги</a></li>
-          <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#services">Послуги</a></li>
-          <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#about">Про нас</a></li>
-          <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#contact">Контакти</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#benefits">Переваги</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#services">Послуги</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#about">Про нас</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#contact">Контакти</a></li>
         </ul>
       </nav>
 
       <section aria-labelledby="footer-services-title">
         <h2 class="text-caption font-semibold uppercase tracking-caps text-content" id="footer-services-title">Послуги</h2>
         <ul class="mt-3">
-          <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#contact" data-topic="consultation">Персональна консультація</a></li>
-          <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#contact" data-topic="tasting">Дегустація для компанії</a></li>
-          <li><a class="inline-flex min-h-11 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#contact" data-topic="pairing">Підбір до вашого меню</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#contact" data-topic="consultation">Персональна консультація</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#contact" data-topic="tasting">Дегустація для компанії</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#contact" data-topic="pairing">Підбір до вашого меню</a></li>
         </ul>
       </section>
 

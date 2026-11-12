@@ -169,10 +169,10 @@
     @apply sticky -bottom-2 -mx-2 -mb-2 mt-2 flex items-center justify-between gap-3 border-t border-border bg-surface px-4 py-3 text-sm text-content-muted;
   }
   .picker-done {
-    @apply inline-flex min-h-11 cursor-pointer items-center justify-center rounded-lg bg-primary px-5 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover;
+    @apply inline-flex min-h-12 cursor-pointer items-center justify-center rounded-lg bg-primary px-5 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover;
   }
   .picker-clear {
-    @apply inline-flex min-h-11 cursor-pointer items-center rounded-lg px-2 text-sm font-medium text-primary underline-offset-4 hover:underline;
+    @apply inline-flex min-h-12 cursor-pointer items-center rounded-lg px-2 text-sm font-medium text-primary underline-offset-4 hover:underline;
   }
   .board-item {
     @apply flex min-w-0 items-center gap-3 rounded-lg border border-border bg-white p-2;
@@ -181,7 +181,7 @@
     @apply h-12 w-12 shrink-0 rounded-md object-cover;
   }
   .board-remove {
-    @apply ml-auto inline-flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-lg text-content-muted transition-colors duration-150 ease-standard hover:bg-background-alt hover:text-primary;
+    @apply ml-auto inline-flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-lg text-content-muted transition-colors duration-150 ease-standard hover:bg-background-alt hover:text-primary;
   }
 }
 
@@ -194,11 +194,11 @@
   --swiper-pagination-bullet-horizontal-gap: 6px;
 }
 /* ЛР №12 — axe-core target-size (WCAG 2.2, 2.5.8): крапка пагінації була 10×10 px.
-   Видима крапка лишається 10 px (малюється ::before), а зона натискання — 44×44 px, як у кнопок-стрілок */
+   Видима крапка лишається 10 px (малюється ::before), а зона натискання — 48×48 px (мінімум Google для пальця), як у кнопок-стрілок */
 .pairs-pagination .swiper-pagination-bullet {
   position: relative;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   margin: 0 !important;
   background: transparent;
   opacity: 1;
@@ -206,7 +206,7 @@
 .pairs-pagination .swiper-pagination-bullet::before {
   content: "";
   position: absolute;
-  inset: 17px;
+  inset: 19px;
   border-radius: 9999px;
   background: #6b5d52;
   opacity: 0.45;
