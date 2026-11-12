@@ -2,7 +2,8 @@
    Гурман-Інфо — конструктор і калькулятор сирної тарілки (ЛР №11)
    Vanilla JS, без бібліотек. Користувач обирає кількість гостей, формат вечора,
    конкретні сири й вина (меню з фото, поділені на рівні Класика / Крафт / Преміум)
-   або готову «перевірену пару» з секції «Колекція»; віджет рахує вагу сиру на кожен сорт,
+   або готову «перевірену пару» з секції «Колекція»; кожен сир — фіксована порція на гостя (за форматом),
+   кожне вино — 1 пляшка на 3 гостей; віджет рахує вагу кожного сорту,
    кількість пляшок і орієнтовну вартість. Перерахунок миттєвий: події input і change.
 
    Захисне програмування (Defensive Programming):
@@ -26,10 +27,12 @@
 
   const RULES = deepFreeze({
     guests: { min: 1, max: 50, initial: 1, maxDigits: 2 },
-    formats: { aperitif: 60, tasting: 100, dinner: 150 }, // грамів сиру на гостя
+    // грамів КОЖНОГО сорту на гостя: кожна позиція має власну порцію, тому додавання сиру чи вина
+    // ніколи не зменшує суму (раніше загальна вага ділилась між сортами — дешевий сорт «витісняв» дорогий)
+    formats: { aperitif: 30, tasting: 40, dinner: 50 },
     defaultFormat: 'tasting',
     cheeses: { max: 5 }, // скільки сортів можна покласти на тарілку (мінімум — 1)
-    wines: { max: 4, guestsPerBottle: 3 },
+    wines: { max: 4, guestsPerBottle: 3 }, // 1 пляшка КОЖНОГО обраного вина на 3 гостей
     extrasPerGuest: 45,
     sommelierFee: 1200,
     defaultCheeses: ['brie', 'gouda'],
@@ -122,24 +125,20 @@
    * @param {{ guests: number, format: string, cheeses: string[], wines: string[], extras: boolean, sommelier: boolean }} s
    */
   function calculate(s) {
-    const grams = s.guests * RULES.formats[s.format];
-    // вага ділиться між сортами порівну; залишок грамів — першим сортам (сума ваг = grams)
-    const base = Math.floor(grams / s.cheeses.length);
-    let rest = grams - base * s.cheeses.length;
+    // Кожен сорт — власна порція: гості × грамів сорту за форматом (не залежить від кількості інших сортів)
+    const portion = s.guests * RULES.formats[s.format];
     const cheeseLines = s.cheeses.map((id) => {
       const c = CATALOG.cheeses[id];
-      const g = base + (rest-- > 0 ? 1 : 0);
-      return { id, name: c.name, img: c.img, grams: g, sum: Math.round((g * c.price) / 100) };
+      return { id, name: c.name, img: c.img, grams: portion, sum: Math.round((portion * c.price) / 100) };
     });
-    // пляшки: 1 на 3 гостей, але щонайменше по одній кожного обраного вина
-    const bottles = s.wines.length ? Math.max(Math.ceil(s.guests / RULES.wines.guestsPerBottle), s.wines.length) : 0;
-    const per = s.wines.length ? Math.floor(bottles / s.wines.length) : 0;
-    let extra = bottles - per * s.wines.length;
+    const grams = portion * cheeseLines.length;
+    // Кожне вино — власна кількість пляшок: 1 на 3 гостей (не ділиться з іншими винами)
+    const perWine = Math.ceil(s.guests / RULES.wines.guestsPerBottle);
     const wineLines = s.wines.map((id) => {
       const w = CATALOG.wines[id];
-      const count = per + (extra-- > 0 ? 1 : 0);
-      return { id, name: w.name, img: w.img, bottles: count, sum: count * w.price };
+      return { id, name: w.name, img: w.img, bottles: perWine, sum: perWine * w.price };
     });
+    const bottles = perWine * wineLines.length;
     const cheese = cheeseLines.reduce((a, l) => a + l.sum, 0);
     const wine = wineLines.reduce((a, l) => a + l.sum, 0);
     const extras = s.extras ? s.guests * RULES.extrasPerGuest : 0;

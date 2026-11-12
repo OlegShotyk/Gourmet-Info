@@ -378,9 +378,9 @@
               <div class="flex flex-col gap-2">
                 <label class="text-sm font-medium" for="board-format">Формат вечора</label>
                 <select class="form-control cursor-pointer pr-3" id="board-format" name="format" data-cb="format">
-                  <option value="aperitif">Аперитив — 60 г сиру на гостя</option>
-                  <option value="tasting" selected>Дегустація — 100 г на гостя</option>
-                  <option value="dinner">Сирна вечеря — 150 г на гостя</option>
+                  <option value="aperitif">Аперитив — 30 г кожного сиру на гостя</option>
+                  <option value="tasting" selected>Дегустація — 40 г кожного сиру на гостя</option>
+                  <option value="dinner">Сирна вечеря — 50 г кожного сиру на гостя</option>
                 </select>
               </div>
             </div>
@@ -410,7 +410,7 @@
                   </summary>
                   <div class="picker-panel" data-cb="cheese-options" role="group" aria-labelledby="board-cheese-label"></div>
                 </details>
-                <p class="text-caption text-content-muted" data-cb="cheese-hint">До 5 сортів. Вага ділиться між ними порівну.</p>
+                <p class="text-caption text-content-muted" data-cb="cheese-hint">До 5 сортів. Кожен сорт — окрема порція на кожного гостя.</p>
                 <p class="form-error hidden" id="board-cheese-error" data-cb="cheese-error"></p>
               </div>
               <div class="flex flex-col gap-2">
@@ -423,7 +423,7 @@
                   </summary>
                   <div class="picker-panel" data-cb="wine-options" role="group" aria-labelledby="board-wine-label"></div>
                 </details>
-                <p class="text-caption text-content-muted">1&nbsp;пляшка 0,75&nbsp;л на 3&nbsp;гостей, розподіляється між обраними винами.</p>
+                <p class="text-caption text-content-muted">1&nbsp;пляшка 0,75&nbsp;л кожного обраного вина на 3&nbsp;гостей.</p>
               </div>
             </div>
 
