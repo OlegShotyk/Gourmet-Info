@@ -3,18 +3,49 @@
    Swiper.js 11 — слайдер «Колекція пар», Fancybox v5 — галерея дегустацій,
    Typed.js 2 — ефект друку в Hero. Усі три — Vanilla JS, без jQuery.
 
-   Скрипт підключено з defer після CDN-бібліотек, тому на момент DOMContentLoaded
-   глобальні Swiper, Fancybox і Typed уже визначені. Якщо CDN недоступний,
+   ЛР №12: бібліотеки більше не підключаються тегами <script> — цей файл сам завантажує
+   кожну з них, коли вона потрібна (див. loadScript нижче). Якщо CDN недоступний,
    сторінка не ламається: слайди лишаються стрічкою з прокручуванням, фото — звичайними посиланнями.
    ========================================================================== */
 
 (() => {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ЛР №12 — бібліотеки з CDN підвантажуються на вимогу (Lighthouse: «Reduce unused JavaScript», 66 KiB).
+     Версії зафіксовано, як і раніше. Поки бібліотека не завантажилась (або CDN недоступний),
+     сторінка працює без неї: слайди — стрічка з прокручуванням, фото галереї — звичайні посилання, текст Hero — статичний. */
+  const CDN = {
+    swiper: 'https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.js',
+    fancybox: 'https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js',
+    typed: 'https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.js',
+  };
+  const loading = {};
+  function loadScript(src) {
+    if (!loading[src]) {
+      loading[src] = new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = src;
+        s.async = true;
+        s.onload = resolve;
+        s.onerror = () => { delete loading[src]; reject(new Error(`Не вдалося завантажити ${src}`)); };
+        document.head.append(s);
+      });
+    }
+    return loading[src];
+  }
+  // Помилка мережі не ламає сторінку: лишається запасний варіант без бібліотеки
+  const use = (src, init) => () => loadScript(src).then(init, () => {});
+
   document.addEventListener('DOMContentLoaded', () => {
-    whenNearViewport(document.querySelector('.pairs-swiper'), initPairsSwiper);
-    initGallery();
-    initTyped();
+    whenNearViewport(document.querySelector('.pairs-swiper'), use(CDN.swiper, initPairsSwiper));
+    whenNearViewport(document.querySelector('[data-fancybox]'), use(CDN.fancybox, initGallery));
+    // Ефект друку — прикраса, не потрібна для першого відмальовування: після load, у вільний час браузера
+    if (!reduceMotion && document.querySelector('[data-typed]')) {
+      const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 200));
+      const start = () => idle(use(CDN.typed, initTyped));
+      if (document.readyState === 'complete') start();
+      else window.addEventListener('load', start, { once: true });
+    }
   });
 
   /* ---------- Відкладений запуск: секція далеко нижче першого екрана ----------
