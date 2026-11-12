@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gourmet-info.vercel.app/sitemap.xml

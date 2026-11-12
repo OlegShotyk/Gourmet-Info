@@ -12,13 +12,21 @@
   <meta property="og:site_name" content="Гурман-Інфо">
   <meta property="og:title" content="Підбір сиру та вина: каталог і рекомендації | Гурман-Інфо">
   <meta property="og:description" content="Каталог крафтових сирів та вин з онлайн-підбором гастрономічних пар під ваш смак.">
-  <meta property="og:url" content="https://gourmet-info.netlify.app/">
-  <meta property="og:image" content="https://gourmet-info.netlify.app/assets/images/hero.webp">
-  <link rel="canonical" href="https://gourmet-info.netlify.app/">  <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
-  <link rel="preload" href="assets/images/hero.webp" as="image" type="image/webp" fetchpriority="high">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap">
+  <!-- ЛР №12 (SEO): сайт переїхав на Vercel — canonical і Open Graph вказували на стару адресу Netlify -->
+  <meta property="og:url" content="https://gourmet-info.vercel.app/">
+  <meta property="og:image" content="https://gourmet-info.vercel.app/assets/images/hero.webp">
+  <meta property="og:image:width" content="1920">
+  <meta property="og:image:height" content="1080">
+  <meta property="og:image:alt" content="Сири та келихи вина на дегустаційному столі">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://gourmet-info.vercel.app/">
+  <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
+  <!-- ЛР №12: LCP-зображення — AVIF у двох розмірах (телефон отримує 960 px / 14 КБ замість 1920 px / 60 КБ WebP).
+       Preload з тими самими srcset/sizes, що й <picture>: браузер починає завантаження ще до розбору <body> -->
+  <link rel="preload" as="image" type="image/avif" href="assets/images/hero-960.avif" imagesrcset="assets/images/hero-960.avif 960w, assets/images/hero-1920.avif 1920w" imagesizes="(min-width: 1280px) 600px, (min-width: 768px) 50vw, 100vw" fetchpriority="high">
+  <!-- ЛР №12: шрифти з власного домену (src/input.css, @font-face) — без блокуючого CSS Google Fonts.
+       Кириличний Inter потрібен для першого екрана, тому завантажується разом з CSS -->
+  <link rel="preload" href="assets/fonts/inter-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
   <!-- ЛР №10: CSS плагінів з CDN jsDelivr (версії зафіксовано) — у <head>, перед власними стилями (тема сайту їх перевизначає).
        Неблокуюче завантаження (media="print" → "all"): слайдер і галерея — далеко нижче першого екрана, тому браузер
        не чекає на сторонній CDN перед першим відмальовуванням (Lighthouse: render-blocking resources).
@@ -84,10 +92,10 @@
           <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#contact">Контакти</a></li>
         </ul>
         <a class="mt-4 flex min-h-12 w-full items-center justify-center rounded-lg bg-primary px-6 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none" href="#planner" data-planner-open="pair">Підібрати пару</a>
-        <aside class="mt-4 rounded-lg bg-background-alt p-4">
+        <div class="mt-4 rounded-lg bg-background-alt p-4">
           <p class="font-semibold">Потрібна порада?</p>
           <p class="mt-1 text-sm text-content-muted">Розкажіть про нагоду й ваші смаки у запиті на консультацію.</p>
-        </aside>
+        </div>
       </nav>
     </div>
   </header>
@@ -116,7 +124,11 @@
 
         <!-- Візуал: статичний банер (декоративний, тому alt="") -->
         <div class="aspect-video overflow-hidden rounded-panel border border-border shadow-raised md:aspect-4/3">
-          <img class="h-full w-full object-cover" src="assets/images/hero.webp" alt="" width="1920" height="1080" fetchpriority="high">
+          <picture class="block h-full w-full">
+            <source type="image/avif" srcset="assets/images/hero-960.avif 960w, assets/images/hero-1920.avif 1920w" sizes="(min-width: 1280px) 600px, (min-width: 768px) 50vw, 100vw">
+            <source type="image/webp" srcset="assets/images/hero-960.webp 960w, assets/images/hero.webp 1920w" sizes="(min-width: 1280px) 600px, (min-width: 768px) 50vw, 100vw">
+            <img class="h-full w-full object-cover" src="assets/images/hero.webp" alt="" width="1920" height="1080" fetchpriority="high">
+          </picture>
         </div>
       </div>
     </section>
@@ -157,8 +169,10 @@
       <!-- Декоративний фон: відео-текстура сиру; кремовий шар тримає контраст заголовка.
            За prefers-reduced-motion відео і кнопка ховаються, лишається статичне зображення (.hero-media) -->
       <div class="hero-media absolute inset-0 -z-10" aria-hidden="true">
-        <video class="h-full w-full object-cover motion-reduce:hidden" autoplay muted loop playsinline preload="metadata" poster="assets/images/hero.webp" data-bg-video>
-          <source src="assets/video/hero-video-loop.mp4" type="video/mp4">
+        <!-- ЛР №12: 822 КБ відео — 70 % ваги сторінки; src у data-src, js/bg-video.js підставляє його, коли секція близько до екрана.
+             Постера немає: до запуску відео видно той самий кадр — фон .hero-media (окреме завантаження не потрібне) -->
+        <video class="h-full w-full object-cover motion-reduce:hidden" muted loop playsinline preload="none" data-bg-video>
+          <source data-src="assets/video/hero-video-loop.mp4" type="video/mp4">
         </video>
         <div class="absolute inset-0 bg-background/85"></div>
       </div>
@@ -269,59 +283,60 @@
         </div>
 
         <!-- Swiper: .swiper > .swiper-wrapper > .swiper-slide — обов'язкова структура бібліотеки -->
-        <div class="swiper pairs-swiper mt-8" aria-label="Колекція пар сиру та вина">
+        <!-- ЛР №12 (a11y): шаблон каруселі WAI-ARIA — контейнер <section> з назвою (регіон), слайди-групи (role="group" додає Swiper; на <article> ця роль недопустима, тому слайди — <div>, а заголовок h3 усередині) -->
+        <section class="swiper pairs-swiper mt-8" aria-roledescription="карусель" aria-label="Колекція пар сиру та вина">
           <div class="swiper-wrapper">
-            <article class="swiper-slide pair-card">
+            <div class="swiper-slide pair-card">
               <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1589881133595-a3c085cb731d?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Скибочки витриманого сиру на тарілці поруч із келихом вина" width="600" height="450" loading="lazy">
               <div class="flex flex-1 flex-col gap-3 p-5">
                 <span class="pair-badge"><img src="assets/icons/icon-2-expert-matched-flavor.svg" alt="" width="20" height="20" loading="lazy" decoding="async">Вибір сомельє</span>
                 <h3 class="font-heading text-h3 font-semibold">Витримана гауда + тоні-портвейн</h3>
                 <p class="text-sm text-content-muted">Карамельні кристали сиру й горіхові тони портвейну підсилюють одне одного.</p>
               </div>
-            </article>
-            <article class="swiper-slide pair-card">
+            </div>
+            <div class="swiper-slide pair-card">
               <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1700760933443-84ef4f5feac4?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Дерев’яна дошка з сирами та виноградом" width="600" height="450" loading="lazy">
               <div class="flex flex-1 flex-col gap-3 p-5">
                 <span class="pair-badge"><img src="assets/icons/icon-3-verified-craft-origin.svg" alt="" width="20" height="20" loading="lazy" decoding="async">Крафтове походження</span>
                 <h3 class="font-heading text-h3 font-semibold">Брі + шампанське брют</h3>
                 <p class="text-sm text-content-muted">Бульбашки й кислотність «очищують» смак після вершкової текстури.</p>
               </div>
-            </article>
-            <article class="swiper-slide pair-card">
+            </div>
+            <div class="swiper-slide pair-card">
               <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1707037489765-1a12e1f90164?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Стіл з різними видами сиру" width="600" height="450" loading="lazy">
               <div class="flex flex-1 flex-col gap-3 p-5">
                 <span class="pair-badge"><img src="assets/icons/icon-1-regional-pairing.svg" alt="" width="20" height="20" loading="lazy" decoding="async">Регіональна пара</span>
                 <h3 class="font-heading text-h3 font-semibold">Пармезан 24 міс. + ламбруско</h3>
                 <p class="text-sm text-content-muted">Обидва з Емілії-Романьї: легке ігристе червоне врівноважує солоність і умами.</p>
               </div>
-            </article>
-            <article class="swiper-slide pair-card">
+            </div>
+            <div class="swiper-slide pair-card">
               <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1719996155228-bbac3f5a8843?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Дошка з сирами, серед них — блакитний сир, і келих червоного вина" width="600" height="450" loading="lazy">
               <div class="flex flex-1 flex-col gap-3 p-5">
                 <span class="pair-badge"><img src="assets/icons/icon-2-expert-matched-flavor.svg" alt="" width="20" height="20" loading="lazy" decoding="async">Вибір сомельє</span>
                 <h3 class="font-heading text-h3 font-semibold">Рокфор + сотерн</h3>
                 <p class="text-sm text-content-muted">Класика контрасту: солодке вино проти пікантної блакитної плісняви.</p>
               </div>
-            </article>
-            <article class="swiper-slide pair-card">
+            </div>
+            <div class="swiper-slide pair-card">
               <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1696081249685-dfaee74913a5?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Келих білого вина поруч із м’яким білим сиром і виноградом" width="600" height="450" loading="lazy">
               <div class="flex flex-1 flex-col gap-3 p-5">
                 <span class="pair-badge"><img src="assets/icons/icon-1-regional-pairing.svg" alt="" width="20" height="20" loading="lazy" decoding="async">Регіональна пара</span>
                 <h3 class="font-heading text-h3 font-semibold">Козячий сир + совіньйон блан</h3>
                 <p class="text-sm text-content-muted">Обидва з долини Луари: трав’яна свіжість вина повторює кислинку молодого сиру.</p>
               </div>
-            </article>
-            <article class="swiper-slide pair-card">
+            </div>
+            <div class="swiper-slide pair-card">
               <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1598306442928-4d90f32c6866?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Келихи вина, сир і крекери на дошці у виноградниках" width="600" height="450" loading="lazy">
               <div class="flex flex-1 flex-col gap-3 p-5">
                 <span class="pair-badge"><img src="assets/icons/icon-3-verified-craft-origin.svg" alt="" width="20" height="20" loading="lazy" decoding="async">Крафтове походження</span>
                 <h3 class="font-heading text-h3 font-semibold">Конте + шардоне з Юри</h3>
                 <p class="text-sm text-content-muted">Горіхова глибина сиру й вершкова текстура вина з того самого регіону.</p>
               </div>
-            </article>
+            </div>
           </div>
           <div class="swiper-pagination pairs-pagination"></div>
-        </div>
+        </section>
 
         <!-- Галерея дегустацій: Fancybox v5. Однаковий data-fancybox об'єднує фото в один альбом;
              data-srcset — телефон завантажує версію 800 px, а не 1800 px (швидше відкриття на мобільному) -->
@@ -354,6 +369,7 @@
         <p class="mt-2 max-w-2xl text-content-muted">Оберіть сири й вино з нашої колекції або готову перевірену пару — порахуємо вагу, кількість пляшок і орієнтовну вартість для вашої компанії.</p>
 
         <div class="mt-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-5 lg:gap-8" data-widget="cheese-board">
+          <!-- [html-validate-disable-next wcag/h32: калькулятор нікуди не надсилається — сума перераховується одразу; Enter у полі гостей перехоплює js/widget.js] -->
           <form class="flex flex-col gap-6 rounded-xl border border-border bg-surface p-5 shadow-subtle md:p-8 lg:col-span-3" id="board-form" novalidate aria-label="Параметри сирної тарілки">
 
             <!-- Колонка гостей — за вмістом, формат вечора займає решту рядка (повна назва формату вміщається в поле) -->
@@ -445,7 +461,7 @@
             </div>
 
             <!-- Візуальний конструктор: що зараз на тарілці (картки з вагою, ціною й кнопкою «прибрати») -->
-            <div class="rounded-lg bg-background p-4" aria-labelledby="board-list-title">
+            <div class="rounded-lg bg-background p-4" role="group" aria-labelledby="board-list-title">
               <p class="text-sm font-medium" id="board-list-title">На вашій тарілці</p>
               <ul class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2" data-cb="board-list" aria-live="polite"></ul>
               <noscript><p class="mt-2 text-sm text-content-muted">Конструктор працює з увімкненим JavaScript.</p></noscript>
@@ -499,7 +515,11 @@
             <!-- Фасад: превʼю з теки сайту. Плеєр YouTube (сотні КБ JS і сторонні cookie)
                  вантажиться лише після натискання — js/lazy-embeds.js підставляє iframe -->
             <button class="group relative block h-full w-full cursor-pointer" type="button" data-youtube="yJN7VsXCfqc" data-title="Відео: Wine &amp; Cheese Pairing Secrets From a Sommelier (VinePair)" aria-label="Відтворити відео «Wine &amp; Cheese Pairing Secrets From a Sommelier»">
-              <img class="h-full w-full object-cover" src="assets/images/video-poster.webp" alt="" width="1280" height="720" loading="lazy">
+              <picture class="block h-full w-full">
+                <source type="image/avif" srcset="assets/images/video-poster-640.avif 640w, assets/images/video-poster-1280.avif 1280w" sizes="(min-width: 1280px) 800px, 100vw">
+                <source type="image/webp" srcset="assets/images/video-poster-640.webp 640w, assets/images/video-poster.webp 1280w" sizes="(min-width: 1280px) 800px, 100vw">
+                <img class="h-full w-full object-cover" src="assets/images/video-poster.webp" alt="" width="1280" height="720" loading="lazy" decoding="async">
+              </picture>
               <span class="absolute inset-0 flex items-center justify-center bg-content/20 transition-colors duration-150 ease-standard group-hover:bg-content/10">
                 <span class="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-on-primary shadow-overlay transition-transform duration-150 ease-standard group-hover:scale-110 motion-reduce:group-hover:scale-100"><svg class="ml-1 h-6 w-6 shrink-0 fill-current" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80L0 432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span>
               </span>
@@ -585,7 +605,7 @@
                 </div>
                 <p class="text-caption text-content-muted" id="phoneHint">Формат: +380XXXXXXXXX. Можна ввести 0501234567 — код країни додасться автоматично.</p>
                 <p class="form-error hidden" id="phoneError"></p>
-                <button class="hidden min-h-11 self-start rounded-lg border border-primary px-3 text-sm font-medium text-primary transition-colors duration-150 ease-standard hover:bg-background-alt" type="button" id="phoneFix"></button>
+                <button class="hidden min-h-11 self-start rounded-lg border border-primary px-3 text-sm font-medium text-primary transition-colors duration-150 ease-standard hover:bg-background-alt" type="button" id="phoneFix">Підставити номер</button>
               </div>
 
               <!-- Тема звернення -->
@@ -617,7 +637,7 @@
 
               <!-- Згода: увесь рядок — зона натискання (label обгортає чекбокс) -->
               <div class="flex flex-col gap-2 md:col-span-2" data-field>
-                <label class="flex min-h-11 cursor-pointer items-start gap-3 text-sm" for="agreement">
+                <label class="flex min-h-11 cursor-pointer items-start gap-3 text-sm">
                   <input class="mt-0.5 h-5 w-5 shrink-0 cursor-pointer rounded accent-primary" type="checkbox" id="agreement" name="agreement" value="yes" required aria-describedby="agreementError">
                   <span>Погоджуюся з обробкою персональних даних відповідно до політики конфіденційності «Гурман-Інфо».</span>
                 </label>
@@ -724,11 +744,10 @@
       <button class="mt-6 inline-flex min-h-12 w-full cursor-pointer items-center justify-center rounded-lg bg-primary px-8 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover active:bg-primary-pressed sm:w-auto" type="button" data-modal-close>Закрити</button>
     </div>
   </div>
-  <!-- ЛР №10: JS-бібліотеки з CDN — у кінці <body> з defer: не блокують розбір сторінки,
-       виконуються по черзі (спершу бібліотеки, потім js/plugins.js з ініціалізацією) -->
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.js" defer></script>
+  <!-- ЛР №10 → №12: JS-бібліотеки з CDN (Swiper, Fancybox, Typed) більше не завантажуються разом зі сторінкою.
+       Lighthouse: «Reduce unused JavaScript» — 66 KiB коду, що на першому екрані не виконується.
+       js/plugins.js підвантажує кожну бібліотеку тоді, коли вона потрібна: слайдер і галерею — коли до секції
+       лишається ~400 px прокручування, Typed — після завантаження сторінки, у вільний час браузера -->
   <script src="js/plugins.js" defer></script>
   <!-- ЛР №11: калькулятор сирної тарілки (власний Vanilla JS, без бібліотек) -->
   <script src="js/widget.js" defer></script>

@@ -28,7 +28,9 @@
    ========================================================================== */
 
 .hero-media {
-  background: #f5ede1 url("../assets/images/hero.webp") center / cover no-repeat;
+  background: #f5ede1 url("../assets/images/hero-960.webp") center / cover no-repeat;
+  /* ЛР №12: фон декоративний і під кремовим шаром 85 % — достатньо 960 px; AVIF там, де підтримується */
+  background-image: image-set(url("../assets/images/hero-960.avif") type("image/avif"), url("../assets/images/hero-960.webp") type("image/webp"));
 }
 
 
