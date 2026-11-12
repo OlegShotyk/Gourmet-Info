@@ -481,13 +481,40 @@
       el.guests.value = String(next); // арифметика над числом: '6' + 1 не перетвориться на '61'
       clearNotice();
       render();
+      return next !== base; // false — уперлися в межу 1 або 50
     }
     // Роль spinbutton: стрілки ↑ ↓ змінюють значення, як у звичайному числовому полі
     el.guests.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { e.preventDefault(); step(e.key === 'ArrowUp' ? 1 : -1); }
     });
-    el.minus?.addEventListener('click', () => step(-1));
-    el.plus?.addEventListener('click', () => step(1));
+
+    // Кнопки −/+: клік — крок 1; утримання — повтор із прискоренням (затримка 400 мс, далі 150 → 50 мс)
+    function holdToRepeat(button, delta) {
+      if (!button) return;
+      let timer = 0;
+      let count = 0;
+      const stop = () => { clearTimeout(timer); timer = 0; };
+      const tick = () => {
+        if (!step(delta) || button.disabled) { stop(); return; } // межа — зупинка
+        count += 1;
+        timer = setTimeout(tick, count < 5 ? 150 : count < 15 ? 90 : 50);
+      };
+      button.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0 || button.disabled) return;
+        e.preventDefault(); // без виділення тексту й «довгого натискання» на телефоні; фокус ставимо вручну
+        button.focus({ preventScroll: true });
+        button.setPointerCapture?.(e.pointerId);
+        stop();
+        count = 0;
+        if (step(delta)) timer = setTimeout(tick, 400);
+      });
+      ['pointerup', 'pointercancel', 'lostpointercapture', 'blur'].forEach((type) => button.addEventListener(type, stop));
+      button.addEventListener('contextmenu', (e) => e.preventDefault());
+      // Клавіатура (Enter / Space): click з detail = 0; утримання Enter повторюється автоповтором клавіатури
+      button.addEventListener('click', (e) => { if (e.detail === 0) step(delta); });
+    }
+    holdToRepeat(el.minus, -1);
+    holdToRepeat(el.plus, 1);
 
     /* --- 4.5. Меню вибору, конструктор, опції --- */
     [el.format, el.extras, el.sommelier].forEach((c) => c?.addEventListener('change', schedule));

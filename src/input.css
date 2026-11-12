@@ -52,8 +52,9 @@
 
 /* ЛР №11 — калькулятор сирної тарілки: кнопки −/+ і картки-опції (radio / checkbox) */
 @layer components {
+  /* select-none і touch-manipulation: утримання кнопки на телефоні не виділяє текст і не масштабує сторінку */
   .board-step {
-    @apply inline-flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-lg border-1.5 border-primary text-primary
+    @apply inline-flex h-12 w-12 shrink-0 cursor-pointer touch-manipulation select-none items-center justify-center rounded-lg border-1.5 border-primary text-primary
       transition-colors duration-150 ease-standard hover:bg-background-alt disabled:cursor-not-allowed disabled:border-border disabled:text-content-muted disabled:hover:bg-transparent;
   }
   /* Уся картка — зона натискання; обраний стан — рамка бренду (:has без JS) */
