@@ -37,7 +37,9 @@
   const use = (src, init) => () => loadScript(src).then(init, () => {});
 
   document.addEventListener('DOMContentLoaded', () => {
-    whenNearViewport(document.querySelector('.pairs-swiper'), use(CDN.swiper, initPairsSwiper));
+    // Самостійна робота: слайди будуються з data.json, Swiper запускається лише після того, як вони на місці
+    const pairsReady = renderPairs();
+    whenNearViewport(document.querySelector('.pairs-swiper'), () => pairsReady.then((ok) => ok && use(CDN.swiper, initPairsSwiper)()));
     whenNearViewport(document.querySelector('[data-fancybox]'), use(CDN.fancybox, initGallery));
     // Ефект друку — прикраса, не потрібна для першого відмальовування: після load, у вільний час браузера
     if (!reduceMotion && document.querySelector('[data-typed]')) {
@@ -47,6 +49,43 @@
       else window.addEventListener('load', start, { once: true });
     }
   });
+
+  /* ---------- Самостійна робота: слайди «Перевірені пари» з data.json ----------
+     Поки дані йдуть мережею, у розмітці стоять три «скелети» тієї ж висоти (без зсуву макета).
+     Помилка завантаження — повідомлення з кнопкою повтору замість порожнього слайдера. */
+  async function renderPairs() {
+    const wrapper = document.querySelector('[data-pairs-list]');
+    if (!wrapper || !window.GourmetData) return false;
+    const el = (tag, cls, text) => {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text !== undefined) n.textContent = text;
+      return n;
+    };
+    try {
+      const { pairs } = await window.GourmetData.load();
+      wrapper.replaceChildren(...Object.values(pairs).map((p) => {
+        const slide = el('div', 'swiper-slide pair-card');
+        const img = el('img', 'aspect-4/3 w-full object-cover');
+        Object.assign(img, { src: window.GourmetData.img(p.img, 600, 450), alt: p.alt, width: 600, height: 450, loading: 'lazy', decoding: 'async' });
+        const body = el('div', 'flex flex-1 flex-col gap-3 p-5');
+        const badge = el('span', 'pair-badge');
+        const icon = el('img', 'dark:hue-rotate-180 dark:invert');
+        Object.assign(icon, { src: `assets/icons/${p.icon}.svg`, alt: '', width: 20, height: 20, loading: 'lazy', decoding: 'async' });
+        badge.append(icon, p.badge);
+        body.append(badge, el('h3', 'font-heading text-h3 font-semibold', p.name), el('p', 'text-sm text-content-muted', p.text));
+        slide.append(img, body);
+        return slide;
+      }));
+      return true;
+    } catch {
+      const section = wrapper.closest('.swiper');
+      const box = window.GourmetData.errorBox('Не вдалося завантажити перевірені пари. Перевірте з’єднання з інтернетом.', () => location.reload());
+      section.replaceWith(box);
+      document.querySelectorAll('.pairs-prev, .pairs-next, [data-autoplay-toggle]').forEach((b) => b.classList.add('hidden'));
+      return false;
+    }
+  }
 
   /* ---------- Відкладений запуск: секція далеко нижче першого екрана ----------
      Ініціалізація Swiper (клонування слайдів для loop, розрахунок розмірів, автопрогортання)

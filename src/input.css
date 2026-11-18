@@ -33,6 +33,42 @@
     U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+/* Самостійна робота — кольорові токени тем. Формат «R G B» без rgb(): Tailwind додає прозорість
+   (rgb(var(--c-surface) / 0.85)). Світла тема — палітра дизайн-системи (ЛР №4), темна — темно-бордова.
+   Контраст тексту перевірено для обох тем (WCAG AA ≥ 4,5:1; див. звіт). */
+:root {
+  --c-primary: 107 30 43;        /* #6b1e2b */
+  --c-primary-hover: 84 23 34;   /* #541722 */
+  --c-primary-pressed: 68 18 27; /* #44121b */
+  --c-on-primary: 245 237 225;   /* #f5ede1 */
+  --c-wine: 107 30 43;           /* #6b1e2b — бордові панелі */
+  --c-on-wine: 245 237 225;
+  --c-background: 245 237 225;   /* #f5ede1 */
+  --c-background-alt: 237 226 208; /* #ede2d0 */
+  --c-surface: 251 247 240;      /* #fbf7f0 */
+  --c-border: 228 217 200;       /* #e4d9c8 */
+  --c-content: 43 33 28;         /* #2b211c */
+  --c-content-muted: 107 93 82;  /* #6b5d52 */
+  --c-shadow: 43 33 28;
+  color-scheme: light;
+}
+.dark {
+  --c-primary: 220 122 138;      /* #dc7a8a — світлий «винний» для тексту й кнопок на темному тлі */
+  --c-primary-hover: 231 149 162; /* #e795a2 */
+  --c-primary-pressed: 201 102 118; /* #c96676 */
+  --c-on-primary: 24 14 17;      /* #180e11 */
+  --c-wine: 84 22 36;            /* #541624 — глибокий бордовий */
+  --c-on-wine: 243 232 220;
+  --c-background: 24 14 17;      /* #180e11 */
+  --c-background-alt: 33 19 23;  /* #211317 */
+  --c-surface: 41 24 29;         /* #29181d */
+  --c-border: 74 46 52;          /* #4a2e34 */
+  --c-content: 243 232 220;      /* #f3e8dc */
+  --c-content-muted: 196 177 166; /* #c4b1a6 */
+  --c-shadow: 0 0 0;
+  color-scheme: dark;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -42,13 +78,13 @@
    шар utilities іде після components, тому вони перекривають border-border. */
 @layer components {
   .form-control {
-    @apply block min-h-12 w-full rounded-lg border border-border bg-white px-4 pr-11 text-base text-content
+    @apply block min-h-12 w-full rounded-lg border border-border bg-white px-4 pr-11 dark:bg-background-alt text-base text-content
       transition-[border-color,box-shadow] duration-150 ease-standard
       hover:border-content-muted
       focus-visible:border-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20;
   }
   .form-error {
-    @apply flex items-start gap-1.5 text-sm font-medium text-red-700;
+    @apply flex items-start gap-1.5 text-sm font-medium text-red-700 dark:text-red-300;
   }
   /* Іконка помилки — декоративна: порожній альтернативний текст після «/», щоб читач екрана її не вимовляв */
   .form-error::before {
@@ -91,7 +127,7 @@
   }
   /* Уся картка — зона натискання; обраний стан — рамка бренду (:has без JS) */
   .board-option {
-    @apply flex min-h-12 cursor-pointer items-start gap-3 rounded-lg border border-border bg-white p-3 transition-colors duration-150 ease-standard
+    @apply flex min-h-12 cursor-pointer items-start gap-3 rounded-lg border border-border bg-white p-3 dark:bg-background-alt transition-colors duration-150 ease-standard
       hover:border-content-muted has-[:checked]:border-primary has-[:checked]:bg-background has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-primary/20;
   }
   .board-option input {
@@ -105,7 +141,7 @@
     @apply relative;
   }
   .picker-summary {
-    @apply flex min-h-12 cursor-pointer list-none items-center gap-3 rounded-lg border border-border bg-white px-3 py-2 text-base text-content
+    @apply flex min-h-12 cursor-pointer list-none items-center gap-3 rounded-lg border border-border bg-white px-3 py-2 text-base dark:bg-background-alt text-content
       transition-[border-color,box-shadow] duration-150 ease-standard hover:border-content-muted;
   }
   .picker-summary::-webkit-details-marker {
@@ -130,7 +166,7 @@
     @apply hidden;
   }
   .picker-thumbs img {
-    @apply h-8 w-8 rounded-full border-2 border-white object-cover;
+    @apply h-8 w-8 rounded-full border-2 border-white object-cover dark:border-surface;
   }
   .picker-panel {
     @apply absolute inset-x-0 top-full z-30 mt-2 max-h-[26rem] overflow-y-auto overscroll-contain rounded-xl border border-border bg-surface p-2 shadow-overlay;
@@ -175,7 +211,7 @@
     @apply inline-flex min-h-12 cursor-pointer items-center rounded-lg px-2 text-sm font-medium text-primary underline-offset-4 hover:underline;
   }
   .board-item {
-    @apply flex min-w-0 items-center gap-3 rounded-lg border border-border bg-white p-2;
+    @apply flex min-w-0 items-center gap-3 rounded-lg border border-border bg-white p-2 dark:bg-background-alt;
   }
   .board-item img {
     @apply h-12 w-12 shrink-0 rounded-md object-cover;
@@ -187,8 +223,8 @@
 
 /* Тема Swiper через CSS-змінні бібліотеки: крапки пагінації в кольорах бренду */
 .pairs-swiper {
-  --swiper-theme-color: #6b1e2b;
-  --swiper-pagination-bullet-inactive-color: #6b5d52;
+  --swiper-theme-color: rgb(var(--c-primary));
+  --swiper-pagination-bullet-inactive-color: rgb(var(--c-content-muted));
   --swiper-pagination-bullet-inactive-opacity: 0.45;
   --swiper-pagination-bullet-size: 10px;
   --swiper-pagination-bullet-horizontal-gap: 6px;
@@ -208,15 +244,15 @@
   position: absolute;
   inset: 19px;
   border-radius: 9999px;
-  background: #6b5d52;
+  background: rgb(var(--c-content-muted));
   opacity: 0.45;
 }
 .pairs-pagination .swiper-pagination-bullet-active::before {
-  background: #6b1e2b;
+  background: rgb(var(--c-primary));
   opacity: 1;
 }
 .pairs-pagination .swiper-pagination-bullet:focus-visible {
-  outline: 2px solid #6b1e2b;
+  outline: 2px solid rgb(var(--c-primary));
   outline-offset: -6px;
   border-radius: 9999px;
 }
@@ -253,6 +289,6 @@
 
 /* Курсор Typed.js у кольорі бренду */
 .typed-cursor {
-  color: #6b1e2b;
+  color: rgb(var(--c-primary));
   font-weight: 400;
 }

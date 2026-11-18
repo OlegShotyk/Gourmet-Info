@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="uk" class="scroll-smooth motion-reduce:scroll-auto" data-hero-bg="planner">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Калькулятор сирної тарілки: вага, пляшки, вартість | Гурман-Інфо</title>
+  <meta name="description" content="Оберіть сири й вино або перевірену пару — калькулятор порахує вагу кожного сорту, кількість пляшок і орієнтовну вартість для вашої компанії.">
+  <meta name="theme-color" content="#6b1e2b">
+  <meta name="color-scheme" content="light dark">
+  <!-- Самостійна робота: тема обирається ДО відмальовування (без «блимання» світлої теми).
+       Збережений вибір (localStorage) → інакше налаштування системи. Тут же — preload фонового фото першого екрана
+       саме для активної теми й ширини екрана (CSS-фон браузер інакше знайшов би лише після розбору стилів) -->
+  <script>
+    (function () {
+      var d = document.documentElement, t = null;
+      try { t = localStorage.getItem('theme'); } catch (e) {}
+      var dark = t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      d.classList.toggle('dark', dark);
+      d.style.colorScheme = dark ? 'dark' : 'light';
+      var bg = d.getAttribute('data-hero-bg');
+      if (bg) {
+        var l = document.createElement('link');
+        l.rel = 'preload'; l.as = 'image'; l.type = 'image/avif'; l.setAttribute('fetchpriority', 'high');
+        l.href = 'assets/images/bg/' + bg + '-' + (dark ? 'dark' : 'light') + '-' + (window.matchMedia('(min-width: 64rem)').matches ? 1920 : 960) + '.avif';
+        document.head.appendChild(l);
+      }
+    })();
+  </script>
+  <!-- Open Graph: картка сторінки при поширенні посилання в месенджерах і соцмережах -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="uk_UA">
+  <meta property="og:site_name" content="Гурман-Інфо">
+  <meta property="og:title" content="Калькулятор сирної тарілки: вага, пляшки, вартість | Гурман-Інфо">
+  <meta property="og:description" content="Оберіть сири й вино або перевірену пару — калькулятор порахує вагу кожного сорту, кількість пляшок і орієнтовну вартість для вашої компанії.">
+  <meta property="og:url" content="https://gourmet-info.vercel.app/planner.html">
+  <meta property="og:image" content="https://gourmet-info.vercel.app/assets/images/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Сири, келихи вина та логотип Гурман-Інфо">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://gourmet-info.vercel.app/planner.html">
+  <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/inter-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="stylesheet" href="css/tailwind.css">
+  <script src="js/theme.js" defer></script>
+  <script src="js/menu.js" defer></script>
+  <script src="js/data.js" defer></script>
+  <script src="js/widget.js" defer></script>
+  <script src="js/analytics.js" defer></script>
+</head>
+<body class="flex min-h-screen flex-col bg-background font-sans text-base text-content antialiased">
+
+  <a class="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-[60] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-on-primary" href="#main">Перейти до основного вмісту</a>
+
+  <!-- ===== Header: спільний для 5 сторінок; поточна сторінка — aria-current="page" ===== -->
+  <header class="sticky top-0 z-50 border-b border-border bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/85">
+    <div class="mx-auto flex min-h-20 max-w-container items-center justify-between gap-3 px-4 py-2 md:min-h-24 md:px-8 lg:gap-6 lg:px-12">
+      <a class="shrink-0" href="./">
+        <img class="h-15 w-auto dark:hue-rotate-180 dark:invert lg:h-19" src="assets/images/logo.svg" alt="Гурман-Інфо — на головну" width="830" height="608">
+      </a>
+
+      <nav class="hidden md:block" aria-label="Основна навігація">
+        <ul class="flex items-center gap-4 whitespace-nowrap lg:gap-7">
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline aria-[current=page]:font-semibold aria-[current=page]:underline" href="./">Головна</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline aria-[current=page]:font-semibold aria-[current=page]:underline" href="collection.html">Колекція</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline aria-[current=page]:font-semibold aria-[current=page]:underline" href="planner.html" aria-current="page">Калькулятор</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline aria-[current=page]:font-semibold aria-[current=page]:underline" href="about.html">Про нас</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline aria-[current=page]:font-semibold aria-[current=page]:underline" href="contact.html">Контакти</a></li>
+        </ul>
+      </nav>
+
+      <div class="flex items-center gap-1 md:gap-3">
+        <a class="inline-flex min-h-12 items-center justify-center rounded-lg bg-primary px-6 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none hidden shrink-0 lg:inline-flex" href="planner.html?open=pair">Підібрати пару</a>
+        <button class="inline-flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-lg text-primary transition-colors duration-150 ease-standard hover:bg-background-alt" type="button" aria-pressed="false" data-theme-toggle><span class="sr-only">Темна тема</span><svg class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="hidden h-5 w-5 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
+        <button class="inline-flex h-12 w-12 items-center justify-center rounded-lg text-primary transition-colors duration-150 ease-standard hover:bg-background-alt md:hidden" type="button" aria-label="Відкрити меню" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle>
+          <span data-icon="open"><svg class="h-6 w-6 shrink-0 fill-current" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z"/></svg></span>
+          <span data-icon="close" hidden><svg class="h-6 w-6 shrink-0 fill-current" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Мобільне меню (до md): 5 сторінок, CTA і блок «Потрібна порада?» -->
+    <div class="mobile-menu max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-border bg-surface md:hidden" id="mobile-menu" hidden>
+      <nav class="mx-auto max-w-container px-4 pb-6 pt-2" aria-label="Мобільна навігація">
+        <ul class="divide-y divide-border">
+          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4 aria-[current=page]:font-semibold" href="./">Головна</a></li>
+          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4 aria-[current=page]:font-semibold" href="collection.html">Колекція</a></li>
+          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4 aria-[current=page]:font-semibold" href="planner.html" aria-current="page">Калькулятор</a></li>
+          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4 aria-[current=page]:font-semibold" href="about.html">Про нас</a></li>
+          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4 aria-[current=page]:font-semibold" href="contact.html">Контакти</a></li>
+        </ul>
+        <a class="inline-flex min-h-12 items-center justify-center rounded-lg bg-primary px-6 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none mt-4 flex w-full" href="planner.html?open=pair">Підібрати пару</a>
+        <div class="mt-4 rounded-lg bg-background-alt p-4">
+          <p class="font-semibold">Потрібна порада?</p>
+          <p class="mt-1 text-sm text-content-muted">Розкажіть про нагоду й ваші смаки у <a class="text-primary underline underline-offset-2" href="contact.html">запиті на консультацію</a>.</p>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1" id="main">
+
+    <!-- ===== Перший екран сторінки: фонове фото теми (світле / темно-бордове) + шар кольору тла для контрасту тексту.
+         Класи bg-planner-* згенеровано з tailwind.config.js (backgroundImage); dark: і lg: обирають файл ===== -->
+    <section class="relative isolate overflow-hidden bg-cover bg-center bg-planner-light lg:bg-planner-light-lg dark:bg-planner-dark lg:dark:bg-planner-dark-lg" aria-labelledby="page-title">
+      <div class="absolute inset-0 -z-10 bg-background/90 md:bg-transparent md:bg-gradient-to-r md:from-background md:via-background/85 md:to-background/10 dark:bg-background/85 md:dark:bg-transparent md:dark:via-background/85 md:dark:to-wine/30" aria-hidden="true"></div>
+      <div class="mx-auto max-w-container px-4 py-10 md:px-8 md:py-16 lg:px-12 lg:py-20">
+        <nav class="mb-4 text-sm" aria-label="Хлібні крихти">
+          <ol class="flex flex-wrap items-center gap-2 text-content">
+            <li><a class="inline-flex min-h-12 items-center text-primary underline-offset-4 hover:underline" href="./">Головна</a></li>
+            <li aria-hidden="true">/</li>
+            <li><span aria-current="page">Калькулятор</span></li>
+          </ol>
+        </nav>
+        <div class="max-w-xl">
+          <p class="mb-3 text-caption font-medium uppercase tracking-caps text-primary">Калькулятор</p>
+          <h1 class="font-heading text-h1 font-semibold lg:text-h1-lg" id="page-title">Зберіть свою сирну тарілку</h1>
+          <p class="mt-4 text-content lg:text-lg">Оберіть сири й вино з нашої колекції або готову перевірену пару — порахуємо вагу, кількість пляшок і орієнтовну вартість для вашої компанії.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== КАЛЬКУЛЯТОР / КОНСТРУКТОР СИРНОЇ ТАРІЛКИ (ЛР №11): інтерактивний віджет, js/widget.js =====
+         Параметри: кількість гостей (лише ціле число 1–50, кнопки −/+), формат вечора (select),
+         конкретні сири та вина (меню з фото, поділені на рівні Класика / Крафт / Преміум),
+         «Перевірені пари» (ті самі 6 пар, що в «Колекції»), супровід і сомельє (checkbox).
+         Каталог сирів, вин і пар — єдине джерело цін у data.json (самостійна робота): js/widget.js завантажує його fetch і будує пункти меню (textContent),
+         тому ціни не дублюються в HTML. Меню — <details>/<summary>: відкриваються клавіатурою без ARIA-хитрощів.
+         Захист від Edge Cases: фільтр введення → перевірка в JS → вивід лише через textContent.
+         mobile: параметри, під ними результат → lg: параметри 3/5 + результат 2/5 (липкий) -->
+    <section class="py-10 lg:py-14" id="planner" aria-labelledby="planner-title">
+      <div class="mx-auto max-w-container px-4 md:px-8 lg:px-12">
+        <h2 class="sr-only" id="planner-title">Параметри й результат розрахунку</h2>
+        <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-5 lg:gap-8" data-widget="cheese-board">
+          <!-- [html-validate-disable-next wcag/h32: калькулятор нікуди не надсилається — сума перераховується одразу; Enter у полі гостей перехоплює js/widget.js] -->
+          <form class="flex flex-col gap-6 rounded-xl border border-border bg-surface p-5 shadow-subtle md:p-8 lg:col-span-3" id="board-form" novalidate aria-label="Параметри сирної тарілки">
+
+            <!-- Колонка гостей — за вмістом, формат вечора займає решту рядка (повна назва формату вміщається в поле) -->
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-[auto_1fr]">
+              <!-- 1. Кількість гостей: лише цифри (type="text" + inputmode="numeric" — у полі type="number" браузер пропускає «.», «,», «e», «-») -->
+              <div class="flex flex-col gap-2">
+                <label class="text-sm font-medium" for="board-guests">Кількість гостей</label>
+                <div class="flex gap-2">
+                  <button class="board-step" type="button" aria-label="Менше гостей" aria-controls="board-guests" data-cb="minus">
+                    <svg class="h-4 w-4 fill-current" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
+                  </button>
+                  <input class="form-control w-20 px-3 text-center tabular-nums" type="text" id="board-guests" name="guests" value="1" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" required
+                         role="spinbutton" aria-valuemin="1" aria-valuemax="50" aria-valuenow="1" aria-describedby="board-guests-hint board-guests-error" data-cb="guests">
+                  <button class="board-step" type="button" aria-label="Більше гостей" aria-controls="board-guests" data-cb="plus">
+                    <svg class="h-4 w-4 fill-current" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
+                  </button>
+                </div>
+                <p class="text-caption text-content-muted" id="board-guests-hint">Ціле число від 1 до&nbsp;50.</p>
+                <p class="form-error hidden" id="board-guests-error" data-cb="guests-error"></p>
+              </div>
+
+              <!-- 2. Формат вечора: меню в стилі сирів і вин. У закритому полі — лише назва формату,
+                   повний опис порції (скільки грамів кожного сиру на гостя) — у розкритому меню -->
+              <div class="flex flex-col gap-2">
+                <span class="text-sm font-medium" id="board-format-label">Формат вечора</span>
+                <details class="picker" name="board-picker" data-cb="format-picker">
+                  <summary class="picker-summary" aria-describedby="board-format-label">
+                    <span class="picker-value" data-cb="format-summary">Дегустація</span>
+                    <svg class="picker-chevron" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+                  </summary>
+                  <div class="picker-panel" role="radiogroup" aria-labelledby="board-format-label">
+                    <label class="picker-option">
+                      <input type="radio" name="format" value="aperitif" data-cb="format">
+                      <span class="min-w-0"><span class="picker-name">Аперитив</span><span class="picker-note">30 г кожного сиру на гостя</span></span>
+                    </label>
+                    <label class="picker-option">
+                      <input type="radio" name="format" value="tasting" checked data-cb="format">
+                      <span class="min-w-0"><span class="picker-name">Дегустація</span><span class="picker-note">40 г кожного сиру на гостя</span></span>
+                    </label>
+                    <label class="picker-option">
+                      <input type="radio" name="format" value="dinner" data-cb="format">
+                      <span class="min-w-0"><span class="picker-name">Сирна вечеря</span><span class="picker-note">50 г кожного сиру на гостя</span></span>
+                    </label>
+                  </div>
+                </details>
+              </div>
+            </div>
+
+            <!-- 3. Перевірені пари: готовий набір сир + вино з секції «Колекція» -->
+            <div class="flex flex-col gap-2">
+              <span class="text-sm font-medium" id="board-pair-label">Перевірені пари</span>
+              <details class="picker" name="board-picker" data-cb="pair-picker">
+                <summary class="picker-summary" aria-describedby="board-pair-label">
+                  <span class="picker-thumbs" data-cb="pair-thumbs" aria-hidden="true"></span>
+                  <span class="picker-value" data-cb="pair-summary">Власний вибір</span>
+                  <svg class="picker-chevron" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+                </summary>
+                <div class="picker-panel" data-cb="pair-options" role="group" aria-labelledby="board-pair-label"></div>
+              </details>
+            </div>
+
+            <!-- 4. Конструктор: конкретні сири (до 5 сортів) і вина, згруповані за рівнями -->
+            <div class="grid grid-cols-1 gap-6">
+              <div class="flex flex-col gap-2">
+                <span class="text-sm font-medium" id="board-cheese-label">Сири на тарілці</span>
+                <details class="picker" name="board-picker" data-cb="cheese-picker">
+                  <summary class="picker-summary" aria-describedby="board-cheese-label board-cheese-error">
+                    <span class="picker-thumbs" data-cb="cheese-thumbs" aria-hidden="true"></span>
+                    <span class="picker-value" data-cb="cheese-summary">Оберіть сири</span>
+                    <svg class="picker-chevron" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+                  </summary>
+                  <div class="picker-panel" data-cb="cheese-options" role="group" aria-labelledby="board-cheese-label"></div>
+                </details>
+                <p class="text-caption text-content-muted" data-cb="cheese-hint">До 5 сортів. Кожен сорт — окрема порція на кожного гостя.</p>
+                <p class="form-error hidden" id="board-cheese-error" data-cb="cheese-error"></p>
+              </div>
+              <div class="flex flex-col gap-2">
+                <span class="text-sm font-medium" id="board-wine-label">Вино в пару</span>
+                <details class="picker" name="board-picker" data-cb="wine-picker">
+                  <summary class="picker-summary" aria-describedby="board-wine-label">
+                    <span class="picker-thumbs" data-cb="wine-thumbs" aria-hidden="true"></span>
+                    <span class="picker-value" data-cb="wine-summary">Без вина</span>
+                    <svg class="picker-chevron" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+                  </summary>
+                  <div class="picker-panel" data-cb="wine-options" role="group" aria-labelledby="board-wine-label"></div>
+                </details>
+                <p class="text-caption text-content-muted">1&nbsp;пляшка 0,75&nbsp;л кожного обраного вина на 3&nbsp;гостей.</p>
+              </div>
+            </div>
+
+            <!-- Візуальний конструктор: що зараз на тарілці (картки з вагою, ціною й кнопкою «прибрати») -->
+            <div class="rounded-lg bg-background p-4" role="group" aria-labelledby="board-list-title">
+              <p class="text-sm font-medium" id="board-list-title">На вашій тарілці</p>
+              <ul class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2" data-cb="board-list" aria-live="polite"><li class="text-sm text-content-muted sm:col-span-2" data-cb="loading">Завантажуємо каталог сирів і вин…</li></ul>
+              <noscript><p class="mt-2 text-sm text-content-muted">Конструктор працює з увімкненим JavaScript.</p></noscript>
+            </div>
+
+            <!-- 5–6. Додаткові опції -->
+            <fieldset class="flex flex-col gap-2">
+              <legend class="mb-2 text-sm font-medium">Додатково</legend>
+              <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+                <label class="board-option">
+                  <input class="h-5 w-5 shrink-0 cursor-pointer rounded accent-primary" type="checkbox" id="board-extras" name="extras" data-cb="extras">
+                  <span><span class="block font-semibold">Супровід</span><span class="block text-sm text-content-muted">Мед, горіхи, фрукти, крекери — 45&nbsp;грн на&nbsp;гостя</span></span>
+                </label>
+                <label class="board-option">
+                  <input class="h-5 w-5 shrink-0 cursor-pointer rounded accent-primary" type="checkbox" id="board-sommelier" name="sommelier" data-cb="sommelier">
+                  <span><span class="block font-semibold">Сомельє на подачі</span><span class="block text-sm text-content-muted">Розповідь про кожен сир та вино з Вашого замовлення — 1&nbsp;200&nbsp;грн за&nbsp;вечір</span></span>
+                </label>
+              </div>
+            </fieldset>
+          </form>
+
+          <!-- Результат: <output> має неявну роль status — програма читання з екрана озвучує нову суму -->
+          <aside class="flex flex-col gap-5 rounded-panel bg-wine p-6 text-on-wine md:p-8 lg:sticky lg:top-28 lg:col-span-2" aria-labelledby="board-result-title">
+            <h3 class="font-heading text-h3 font-semibold" id="board-result-title">Ваша тарілка</h3>
+            <div>
+              <p class="text-caption uppercase tracking-caps opacity-80">Орієнтовна вартість</p>
+              <output class="mt-1 block break-words font-heading text-h1 font-semibold tabular-nums lg:text-h1-lg" id="board-total" for="board-guests board-extras board-sommelier" data-cb="total">—</output>
+              <p class="mt-1 text-sm opacity-90" data-cb="per-guest"></p>
+              <noscript><p class="mt-1 text-sm opacity-90">Для розрахунку увімкніть JavaScript у браузері.</p></noscript>
+            </div>
+            <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 border-t border-on-wine/25 pt-4 text-sm" data-cb="breakdown">
+              <dt class="opacity-80">Сир</dt><dd class="text-right font-medium tabular-nums" data-cb="cheese">—</dd>
+              <dt class="opacity-80">Вино</dt><dd class="text-right font-medium tabular-nums" data-cb="bottles">—</dd>
+              <dt class="opacity-80">Супровід</dt><dd class="text-right font-medium tabular-nums" data-cb="extras-sum">—</dd>
+              <dt class="opacity-80">Сомельє</dt><dd class="text-right font-medium tabular-nums" data-cb="sommelier-sum">—</dd>
+            </dl>
+            <a class="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-on-wine px-6 text-sm font-semibold text-wine transition duration-150 ease-standard hover:bg-surface hover:shadow-raised aria-disabled:pointer-events-none aria-disabled:opacity-60" href="contact.html?topic=tasting#feedbackForm" data-cb="cta">Обговорити з сомельє</a>
+            <p class="text-caption opacity-80">Ціни орієнтовні (навчальний проєкт). Остаточну вартість підтвердить сомельє. Фото: Unsplash.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="border-t border-border bg-background-alt">
+    <div class="mx-auto grid max-w-container grid-cols-1 gap-10 px-4 py-12 md:grid-cols-2 md:px-8 lg:grid-cols-4 lg:px-12">
+      <div>
+        <a class="inline-block" href="./">
+          <img class="h-15 w-auto dark:hue-rotate-180 dark:invert" src="assets/images/logo.svg" alt="Гурман-Інфо — на головну" width="830" height="608" loading="lazy">
+        </a>
+        <p class="mt-4 max-w-xs text-sm text-content-muted">Каталог крафтових сирів та вин з онлайн-підбором гастрономічних пар під ваш смак.</p>
+      </div>
+
+      <nav aria-labelledby="footer-nav-title">
+        <h2 class="text-caption font-semibold uppercase tracking-caps text-content" id="footer-nav-title">Сторінки</h2>
+        <ul class="mt-3">
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="./">Головна</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="collection.html">Колекція</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="planner.html">Калькулятор</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="about.html">Про нас</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="contact.html">Контакти</a></li>
+        </ul>
+      </nav>
+
+      <section aria-labelledby="footer-services-title">
+        <h2 class="text-caption font-semibold uppercase tracking-caps text-content" id="footer-services-title">Послуги</h2>
+        <ul class="mt-3">
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="contact.html?topic=consultation#feedbackForm">Персональна консультація</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="contact.html?topic=tasting#feedbackForm">Дегустація для компанії</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="contact.html?topic=pairing#feedbackForm">Підбір до вашого меню</a></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="footer-contact-title">
+        <h2 class="text-caption font-semibold uppercase tracking-caps text-content" id="footer-contact-title">Зв’язатися</h2>
+        <p class="mt-3 text-sm text-content-muted">Розкажіть про нагоду й ваші смаки — ми зв’яжемося, щоб обговорити формат.</p>
+        <a class="inline-flex min-h-12 items-center justify-center rounded-lg bg-primary px-6 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none mt-4 w-full md:w-auto" href="contact.html#feedbackForm">Залишити запит</a>
+      </section>
+    </div>
+
+    <div class="border-t border-border">
+      <div class="mx-auto flex max-w-container flex-col gap-2 px-4 py-6 text-caption text-content-muted sm:flex-row sm:items-center sm:justify-between md:px-8 lg:px-12">
+        <p>© 2026 Гурман-Інфо. Навчальний проєкт.</p>
+        <p>Фото: <a class="inline-flex min-h-12 items-center underline underline-offset-2 hover:text-primary sm:min-h-0" href="https://unsplash.com/license" rel="noopener">Unsplash (Unsplash License)</a></p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

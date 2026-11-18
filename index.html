@@ -1,100 +1,103 @@
 <!DOCTYPE html>
-<html lang="uk" class="scroll-smooth motion-reduce:scroll-auto">
+<html lang="uk" class="scroll-smooth motion-reduce:scroll-auto" data-hero-bg="home">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Підбір сиру та вина: каталог і рекомендації | Гурман-Інфо</title>
   <meta name="description" content="Шукаєте ідеальну гастрономічну пару? Каталог крафтових сирів та вин з онлайн-підбором під ваш смак. Знайдіть свій ідеальний дует на Гурман-Інфо!">
   <meta name="theme-color" content="#6b1e2b">
-  <!-- Open Graph: картка сайту при поширенні посилання в месенджерах і соцмережах -->
+  <meta name="color-scheme" content="light dark">
+  <!-- Самостійна робота: тема обирається ДО відмальовування (без «блимання» світлої теми).
+       Збережений вибір (localStorage) → інакше налаштування системи. Тут же — preload фонового фото першого екрана
+       саме для активної теми й ширини екрана (CSS-фон браузер інакше знайшов би лише після розбору стилів) -->
+  <script>
+    (function () {
+      var d = document.documentElement, t = null;
+      try { t = localStorage.getItem('theme'); } catch (e) {}
+      var dark = t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      d.classList.toggle('dark', dark);
+      d.style.colorScheme = dark ? 'dark' : 'light';
+      var bg = d.getAttribute('data-hero-bg');
+      if (bg) {
+        var l = document.createElement('link');
+        l.rel = 'preload'; l.as = 'image'; l.type = 'image/avif'; l.setAttribute('fetchpriority', 'high');
+        l.href = 'assets/images/bg/' + bg + '-' + (dark ? 'dark' : 'light') + '-' + (window.matchMedia('(min-width: 64rem)').matches ? 1920 : 960) + '.avif';
+        document.head.appendChild(l);
+      }
+    })();
+  </script>
+  <!-- Open Graph: картка сторінки при поширенні посилання в месенджерах і соцмережах -->
   <meta property="og:type" content="website">
   <meta property="og:locale" content="uk_UA">
   <meta property="og:site_name" content="Гурман-Інфо">
   <meta property="og:title" content="Підбір сиру та вина: каталог і рекомендації | Гурман-Інфо">
-  <meta property="og:description" content="Каталог крафтових сирів та вин з онлайн-підбором гастрономічних пар під ваш смак.">
-  <!-- ЛР №12 (SEO): сайт переїхав на Vercel — canonical і Open Graph вказували на стару адресу Netlify -->
+  <meta property="og:description" content="Шукаєте ідеальну гастрономічну пару? Каталог крафтових сирів та вин з онлайн-підбором під ваш смак. Знайдіть свій ідеальний дует на Гурман-Інфо!">
   <meta property="og:url" content="https://gourmet-info.vercel.app/">
-  <meta property="og:image" content="https://gourmet-info.vercel.app/assets/images/hero.webp">
-  <meta property="og:image:width" content="1920">
-  <meta property="og:image:height" content="1080">
-  <meta property="og:image:alt" content="Сири та келихи вина на дегустаційному столі">
+  <meta property="og:image" content="https://gourmet-info.vercel.app/assets/images/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Сири, келихи вина та логотип Гурман-Інфо">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://gourmet-info.vercel.app/">
   <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
-  <!-- ЛР №12: LCP-зображення — AVIF у двох розмірах (телефон отримує 960 px / 14 КБ замість 1920 px / 60 КБ WebP).
-       Preload з тими самими srcset/sizes, що й <picture>: браузер починає завантаження ще до розбору <body> -->
-  <link rel="preload" as="image" type="image/avif" href="assets/images/hero-960.avif" imagesrcset="assets/images/hero-960.avif 960w, assets/images/hero-1920.avif 1920w" imagesizes="(min-width: 1280px) 600px, (min-width: 768px) 50vw, 100vw" fetchpriority="high">
-  <!-- ЛР №12: шрифти з власного домену (src/input.css, @font-face) — без блокуючого CSS Google Fonts.
-       Кириличний Inter потрібен для першого екрана, тому завантажується разом з CSS -->
   <link rel="preload" href="assets/fonts/inter-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-  <!-- ЛР №10: CSS плагінів з CDN jsDelivr (версії зафіксовано) — у <head>, перед власними стилями (тема сайту їх перевизначає).
-       Неблокуюче завантаження (media="print" → "all"): слайдер і галерея — далеко нижче першого екрана, тому браузер
-       не чекає на сторонній CDN перед першим відмальовуванням (Lighthouse: render-blocking resources).
-       Вигляд слайдера до завантаження стилів і запуску Swiper задає власний CSS (src/input.css) — без FOUC і зсуву макета. -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://images.unsplash.com">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.css" media="print" onload="this.media='all'">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" media="print" onload="this.media='all'">
-  <noscript>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.css">
-  </noscript>
-  <!-- Tailwind CSS: скомпільовано Tailwind CLI з теми tailwind.config.js (npm run build:css) -->
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.css"></noscript>
   <link rel="stylesheet" href="css/tailwind.css">
+  <script src="js/theme.js" defer></script>
   <script src="js/menu.js" defer></script>
   <script src="js/bg-video.js" defer></script>
-  <script src="js/lazy-embeds.js" defer></script>
-  <script src="js/validation.js" defer></script>
-  <!-- Іконки: Font Awesome Free 6.6.0 (CC BY 4.0), вбудовані як SVG -->
+  <script src="js/data.js" defer></script>
+  <script src="js/plugins.js" defer></script>
+  <script src="js/analytics.js" defer></script>
 </head>
-<body id="top" class="flex min-h-screen flex-col bg-background font-sans text-base text-content antialiased">
+<body class="flex min-h-screen flex-col bg-background font-sans text-base text-content antialiased">
 
   <a class="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-[60] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-on-primary" href="#main">Перейти до основного вмісту</a>
 
-  <!-- ===== Header ===== -->
-  <header class="sticky top-0 z-50 border-b border-border bg-surface">
-    <div class="mx-auto flex min-h-20 max-w-container items-center justify-between gap-4 px-4 py-2 md:min-h-24 md:px-8 lg:gap-6 lg:px-12">
-      <a class="shrink-0" href="#top">
-        <img class="h-15 w-auto lg:h-19" src="assets/images/logo.svg" alt="Гурман-Інфо — на початок сторінки" width="830" height="608">
+  <!-- ===== Header: спільний для 5 сторінок; поточна сторінка — aria-current="page" ===== -->
+  <header class="sticky top-0 z-50 border-b border-border bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/85">
+    <div class="mx-auto flex min-h-20 max-w-container items-center justify-between gap-3 px-4 py-2 md:min-h-24 md:px-8 lg:gap-6 lg:px-12">
+      <a class="shrink-0" href="./">
+        <img class="h-15 w-auto dark:hue-rotate-180 dark:invert lg:h-19" src="assets/images/logo.svg" alt="Гурман-Інфо — на головну" width="830" height="608">
       </a>
 
       <nav class="hidden md:block" aria-label="Основна навігація">
-        <!-- Лендинг: лише якірні посилання на секції цієї сторінки -->
-        <ul class="flex items-center gap-4 whitespace-nowrap lg:gap-8">
-          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline" href="#benefits">Переваги</a></li>
-          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline" href="#services">Послуги</a></li>
-          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline" href="#how-it-works">Як це працює</a></li>
-          <!-- «Колекція» — з lg, «Калькулятор» — з xl: на вужчих екранах шапка з усіма пунктами виходила за ширину екрана (768 px, 1024 px) -->
-          <li class="hidden lg:block"><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline" href="#collection">Колекція</a></li>
-          <li class="hidden xl:block"><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline" href="#planner">Калькулятор</a></li>
-          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline" href="#about">Про нас</a></li>
-          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline" href="#contact">Контакти</a></li>
+        <ul class="flex items-center gap-4 whitespace-nowrap lg:gap-7">
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline aria-[current=page]:font-semibold aria-[current=page]:underline" href="./" aria-current="page">Головна</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline aria-[current=page]:font-semibold aria-[current=page]:underline" href="collection.html">Колекція</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline aria-[current=page]:font-semibold aria-[current=page]:underline" href="planner.html">Калькулятор</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline aria-[current=page]:font-semibold aria-[current=page]:underline" href="about.html">Про нас</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline aria-[current=page]:font-semibold aria-[current=page]:underline" href="contact.html">Контакти</a></li>
         </ul>
       </nav>
 
-      <a class="hidden min-h-12 shrink-0 items-center justify-center rounded-lg bg-primary px-6 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none md:inline-flex" href="#planner" data-planner-open="pair">Підібрати пару</a>
-
-      <button class="inline-flex h-12 w-12 items-center justify-center rounded-lg text-primary transition-colors duration-150 ease-standard hover:bg-background-alt md:hidden" type="button" aria-label="Відкрити меню" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle>
-        <span data-icon="open"><svg class="h-6 w-6 shrink-0 fill-current" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z"/></svg></span>
-        <span data-icon="close" hidden><svg class="h-6 w-6 shrink-0 fill-current" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></span>
-      </button>
+      <div class="flex items-center gap-1 md:gap-3">
+        <a class="inline-flex min-h-12 items-center justify-center rounded-lg bg-primary px-6 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none hidden shrink-0 lg:inline-flex" href="planner.html?open=pair">Підібрати пару</a>
+        <button class="inline-flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-lg text-primary transition-colors duration-150 ease-standard hover:bg-background-alt" type="button" aria-pressed="false" data-theme-toggle><span class="sr-only">Темна тема</span><svg class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="hidden h-5 w-5 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
+        <button class="inline-flex h-12 w-12 items-center justify-center rounded-lg text-primary transition-colors duration-150 ease-standard hover:bg-background-alt md:hidden" type="button" aria-label="Відкрити меню" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle>
+          <span data-icon="open"><svg class="h-6 w-6 shrink-0 fill-current" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z"/></svg></span>
+          <span data-icon="close" hidden><svg class="h-6 w-6 shrink-0 fill-current" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></span>
+        </button>
+      </div>
     </div>
 
-    <!-- Мобільне меню (до md): 7 пунктів, CTA і блок «Потрібна порада?» -->
+    <!-- Мобільне меню (до md): 5 сторінок, CTA і блок «Потрібна порада?» -->
     <div class="mobile-menu max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-border bg-surface md:hidden" id="mobile-menu" hidden>
       <nav class="mx-auto max-w-container px-4 pb-6 pt-2" aria-label="Мобільна навігація">
         <ul class="divide-y divide-border">
-          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#benefits">Переваги</a></li>
-          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#services">Послуги</a></li>
-          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#how-it-works">Як це працює</a></li>
-          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#collection">Колекція</a></li>
-          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#planner">Калькулятор</a></li>
-          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#about">Про нас</a></li>
-          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4" href="#contact">Контакти</a></li>
+          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4 aria-[current=page]:font-semibold" href="./" aria-current="page">Головна</a></li>
+          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4 aria-[current=page]:font-semibold" href="collection.html">Колекція</a></li>
+          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4 aria-[current=page]:font-semibold" href="planner.html">Калькулятор</a></li>
+          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4 aria-[current=page]:font-semibold" href="about.html">Про нас</a></li>
+          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4 aria-[current=page]:font-semibold" href="contact.html">Контакти</a></li>
         </ul>
-        <a class="mt-4 flex min-h-12 w-full items-center justify-center rounded-lg bg-primary px-6 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none" href="#planner" data-planner-open="pair">Підібрати пару</a>
+        <a class="inline-flex min-h-12 items-center justify-center rounded-lg bg-primary px-6 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none mt-4 flex w-full" href="planner.html?open=pair">Підібрати пару</a>
         <div class="mt-4 rounded-lg bg-background-alt p-4">
           <p class="font-semibold">Потрібна порада?</p>
-          <p class="mt-1 text-sm text-content-muted">Розкажіть про нагоду й ваші смаки у запиті на консультацію.</p>
+          <p class="mt-1 text-sm text-content-muted">Розкажіть про нагоду й ваші смаки у <a class="text-primary underline underline-offset-2" href="contact.html">запиті на консультацію</a>.</p>
         </div>
       </nav>
     </div>
@@ -102,11 +105,11 @@
 
   <main class="flex-1" id="main">
 
-    <!-- ===== Hero ===== -->
-    <!-- mobile: текст, кнопки, потім візуал; md+: дві колонки — текст ліворуч, банер праворуч -->
-    <section class="py-8 md:py-12 lg:py-20" aria-labelledby="hero-title">
-      <div class="mx-auto grid max-w-container grid-cols-1 items-center gap-8 px-4 md:grid-cols-2 md:gap-8 md:px-8 lg:gap-12 lg:px-12">
-        <div>
+    <!-- ===== Hero головної: фонове фото (світла тема — сири на мармурі, темна — вино й сир на бордовому тлі) ===== -->
+    <section class="relative isolate overflow-hidden bg-cover bg-center bg-home-light lg:bg-home-light-lg dark:bg-home-dark lg:dark:bg-home-dark-lg" aria-labelledby="hero-title">
+      <div class="absolute inset-0 -z-10 bg-background/90 md:bg-transparent md:bg-gradient-to-r md:from-background md:via-background/85 md:to-background/0 dark:bg-background/85 md:dark:bg-transparent md:dark:via-background/85 md:dark:to-wine/20" aria-hidden="true"></div>
+      <div class="mx-auto flex max-w-container items-center px-4 py-12 md:min-h-[32rem] md:px-8 md:py-16 lg:min-h-[38rem] lg:px-12 lg:py-20">
+        <div class="max-w-xl">
           <p class="mb-3 text-caption font-medium uppercase tracking-caps text-primary">Сир і вино · Гурман-Інфо</p>
           <h1 class="font-heading text-h1 font-semibold lg:text-h1-lg" id="hero-title">Ідеальна гастрономічна пара для вашого вечора</h1>
           <!-- Typed.js: друкований рядок декоративний (aria-hidden), повний текст — для читачів екрана;
@@ -115,46 +118,37 @@
             <span class="sr-only">Підберемо вино до витриманої гауди, пармезану, брі та рокфору.</span>
             <span aria-hidden="true">Підберемо вино до <span class="font-semibold" data-typed>витриманої гауди.</span></span>
           </p>
-          <p class="mt-4 max-w-xl text-content-muted lg:text-lg">Відкрийте понад 500 видів крафтових сирів та добірних вин із професійними рекомендаціями щодо поєднання, подачі та гастрономічних поєднань.</p>
+          <p class="mt-4 max-w-xl text-content lg:text-lg">Відкрийте понад 500 видів крафтових сирів та добірних вин із професійними рекомендаціями щодо поєднання, подачі та гастрономічних поєднань.</p>
           <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap md:mt-8">
-            <a class="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-primary px-6 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none sm:w-auto" href="#planner" data-planner-open="pair">Підібрати смакову пару</a>
-            <a class="inline-flex min-h-12 w-full items-center justify-center rounded-lg border-1.5 border-primary px-6 text-sm font-semibold text-primary transition-colors duration-150 ease-standard hover:bg-background-alt sm:w-auto" href="#services">Переглянути послуги</a>
+            <a class="inline-flex min-h-12 items-center justify-center rounded-lg bg-primary px-6 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none w-full sm:w-auto" href="planner.html?open=pair">Підібрати смакову пару</a>
+            <a class="inline-flex min-h-12 items-center justify-center rounded-lg border-1.5 border-primary px-6 text-sm font-semibold text-primary transition-colors duration-150 ease-standard hover:bg-background-alt w-full bg-surface/70 sm:w-auto" href="collection.html">Переглянути колекцію</a>
           </div>
-        </div>
-
-        <!-- Візуал: статичний банер (декоративний, тому alt="") -->
-        <div class="aspect-video overflow-hidden rounded-panel border border-border shadow-raised md:aspect-4/3">
-          <picture class="block h-full w-full">
-            <source type="image/avif" srcset="assets/images/hero-960.avif 960w, assets/images/hero-1920.avif 1920w" sizes="(min-width: 1280px) 600px, (min-width: 768px) 50vw, 100vw">
-            <source type="image/webp" srcset="assets/images/hero-960.webp 960w, assets/images/hero.webp 1920w" sizes="(min-width: 1280px) 600px, (min-width: 768px) 50vw, 100vw">
-            <img class="h-full w-full object-cover" src="assets/images/hero.webp" alt="" width="1920" height="1080" fetchpriority="high">
-          </picture>
         </div>
       </div>
     </section>
 
     <!-- ===== Benefits ===== -->
-    <section class="scroll-mt-20 bg-background-alt py-12 md:scroll-mt-24 lg:py-16" id="benefits" aria-labelledby="benefits-title">
+    <section class="scroll-mt-20 bg-background-alt py-12 lg:py-16" id="benefits" aria-labelledby="benefits-title">
       <div class="mx-auto max-w-container px-4 md:px-8 lg:px-12">
         <p class="mb-2 text-caption font-medium uppercase tracking-caps text-primary">Переваги</p>
         <h2 class="font-heading text-h2 font-semibold lg:text-h2-lg" id="benefits-title">Поєднання сиру і вина без вгадування</h2>
         <ul class="mt-6 grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-3">
           <li class="flex flex-col gap-4 rounded-xl border border-border bg-surface p-6 transition-shadow duration-150 ease-standard hover:shadow-raised md:flex-row md:items-start md:gap-6 lg:flex-col lg:gap-4">
-            <img class="h-24 w-auto shrink-0 self-start md:h-28" src="assets/icons/icon-1-regional-pairing.svg" alt="" loading="lazy" width="470" height="616">
+            <img class="h-24 w-auto shrink-0 self-start dark:hue-rotate-180 dark:invert md:h-28" src="assets/icons/icon-1-regional-pairing.svg" alt="" loading="lazy" width="470" height="616">
             <div class="flex flex-col gap-2">
               <h3 class="font-heading text-h3 font-semibold">Регіональна традиція</h3>
               <p class="text-content-muted">Враховуємо регіон походження: сир і вино з одного теруару — перевірена гастрономічна традиція, з якої ми починаємо підбір.</p>
             </div>
           </li>
           <li class="flex flex-col gap-4 rounded-xl border border-border bg-surface p-6 transition-shadow duration-150 ease-standard hover:shadow-raised md:flex-row md:items-start md:gap-6 lg:flex-col lg:gap-4">
-            <img class="h-24 w-auto shrink-0 self-start md:h-28" src="assets/icons/icon-2-expert-matched-flavor.svg" alt="" loading="lazy" width="646" height="569">
+            <img class="h-24 w-auto shrink-0 self-start dark:hue-rotate-180 dark:invert md:h-28" src="assets/icons/icon-2-expert-matched-flavor.svg" alt="" loading="lazy" width="646" height="569">
             <div class="flex flex-col gap-2">
               <h3 class="font-heading text-h3 font-semibold">Експертний підбір смаку</h3>
               <p class="text-content-muted">Замість спрощеного «червоне до м’яса» — смаковий профіль: текстура, витримка, кислотність. Пояснюємо, чому пара працює.</p>
             </div>
           </li>
           <li class="flex flex-col gap-4 rounded-xl border border-border bg-surface p-6 transition-shadow duration-150 ease-standard hover:shadow-raised md:flex-row md:items-start md:gap-6 lg:flex-col lg:gap-4">
-            <img class="h-24 w-auto shrink-0 self-start md:h-28" src="assets/icons/icon-3-verified-craft-origin.svg" alt="" loading="lazy" width="584" height="644">
+            <img class="h-24 w-auto shrink-0 self-start dark:hue-rotate-180 dark:invert md:h-28" src="assets/icons/icon-3-verified-craft-origin.svg" alt="" loading="lazy" width="584" height="644">
             <div class="flex flex-col gap-2">
               <h3 class="font-heading text-h3 font-semibold">Перевірене крафтове походження</h3>
               <p class="text-content-muted">Регіон, виробник і сертифікація для кожного продукту — без підробок і масмаркету.</p>
@@ -165,7 +159,7 @@
     </section>
 
     <!-- ===== Services: Card × 3 у Grid ===== -->
-    <section class="relative isolate scroll-mt-20 overflow-hidden py-12 md:scroll-mt-24 lg:py-16" id="services" aria-labelledby="services-title">
+    <section class="relative isolate overflow-hidden py-12 lg:py-16" id="services" aria-labelledby="services-title">
       <!-- Декоративний фон: відео-текстура сиру; кремовий шар тримає контраст заголовка.
            За prefers-reduced-motion відео і кнопка ховаються, лишається статичне зображення (.hero-media) -->
       <div class="hero-media absolute inset-0 -z-10" aria-hidden="true">
@@ -200,7 +194,7 @@
               <p class="text-content-muted">Знайдемо сир і вино до вашого смаку та нагоди.</p>
               <p class="text-caption font-medium text-content-muted"><time datetime="PT45M">45 хв</time> · онлайн</p>
               <!-- Посилання розтягнуте на всю картку псевдоелементом after: -->
-              <a class="mt-auto inline-flex min-h-12 w-full items-center justify-center rounded-lg border-1.5 border-primary px-6 text-sm font-semibold text-primary transition duration-150 ease-standard after:absolute after:inset-0 after:rounded-xl hover:bg-primary hover:text-on-primary active:bg-primary-pressed" href="#planner" data-planner-preset="consult" data-topic="consultation" id="service-1-cta" aria-labelledby="service-1-cta service-1">Обрати формат</a>
+              <a class="mt-auto inline-flex min-h-12 w-full items-center justify-center rounded-lg border-1.5 border-primary px-6 text-sm font-semibold text-primary transition duration-150 ease-standard after:absolute after:inset-0 after:rounded-xl hover:bg-primary hover:text-on-primary active:bg-primary-pressed" href="planner.html?preset=consult&amp;topic=consultation" id="service-1-cta" aria-labelledby="service-1-cta service-1">Обрати формат</a>
             </article>
           </li>
           <li>
@@ -209,7 +203,7 @@
               <h3 class="font-heading text-h3 font-semibold lg:text-2xl" id="service-2">Дегустація для компанії</h3>
               <p class="text-content-muted">Проведемо камерну дегустацію для друзів або команди. Познайомимо з локальними сирами та пояснимо, як поєднувати їх із вином.</p>
               <p class="text-caption font-medium text-content-muted"><time datetime="PT2H">2 години</time> · від 6 учасників</p>
-              <a class="mt-auto inline-flex min-h-12 w-full items-center justify-center rounded-lg border-1.5 border-primary px-6 text-sm font-semibold text-primary transition duration-150 ease-standard after:absolute after:inset-0 after:rounded-xl hover:bg-primary hover:text-on-primary active:bg-primary-pressed" href="#planner" data-planner-preset="company" data-topic="tasting" id="service-2-cta" aria-labelledby="service-2-cta service-2">Обрати формат</a>
+              <a class="mt-auto inline-flex min-h-12 w-full items-center justify-center rounded-lg border-1.5 border-primary px-6 text-sm font-semibold text-primary transition duration-150 ease-standard after:absolute after:inset-0 after:rounded-xl hover:bg-primary hover:text-on-primary active:bg-primary-pressed" href="planner.html?preset=company&amp;topic=tasting" id="service-2-cta" aria-labelledby="service-2-cta service-2">Обрати формат</a>
             </article>
           </li>
           <!-- Третя картка на sm/md займає весь рядок, щоб не лишалась «сирітська» колонка -->
@@ -219,52 +213,20 @@
               <h3 class="font-heading text-h3 font-semibold lg:text-2xl" id="service-3">Підбір до вашого меню</h3>
               <p class="text-content-muted">Створимо добірку поєднань для вечері, свята або ресторанного меню. Врахуємо ваші страви, бюджет і побажання гостей.</p>
               <p class="text-caption font-medium text-content-muted">Для вечері, свята або меню</p>
-              <a class="mt-auto inline-flex min-h-12 w-full items-center justify-center rounded-lg border-1.5 border-primary px-6 text-sm font-semibold text-primary transition duration-150 ease-standard after:absolute after:inset-0 after:rounded-xl hover:bg-primary hover:text-on-primary active:bg-primary-pressed" href="#planner" data-planner-preset="menu" data-topic="pairing" id="service-3-cta" aria-labelledby="service-3-cta service-3">Обрати формат</a>
+              <a class="mt-auto inline-flex min-h-12 w-full items-center justify-center rounded-lg border-1.5 border-primary px-6 text-sm font-semibold text-primary transition duration-150 ease-standard after:absolute after:inset-0 after:rounded-xl hover:bg-primary hover:text-on-primary active:bg-primary-pressed" href="planner.html?preset=menu&amp;topic=pairing" id="service-3-cta" aria-labelledby="service-3-cta service-3">Обрати формат</a>
             </article>
           </li>
         </ul>
       </div>
     </section>
 
-    <!-- ===== Як це працює ===== -->
-    <section class="scroll-mt-20 pb-16 pt-12 md:scroll-mt-24" id="how-it-works" aria-labelledby="how-title">
-      <div class="mx-auto max-w-container px-4 md:px-8 lg:px-12">
-        <p class="mb-2 text-caption font-medium uppercase tracking-caps text-primary">Як це працює</p>
-        <h2 class="font-heading text-h2 font-semibold lg:text-h2-lg" id="how-title">Від побажання до поєднання</h2>
-
-        <ol class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
-          <li class="flex gap-3 rounded-xl border border-border p-4 md:flex-col md:gap-2 md:p-6">
-            <span class="text-sm font-semibold text-primary" aria-hidden="true">01</span>
-            <p class="text-content-muted">Оберіть формат: консультація, дегустація чи підбір до меню.</p>
-          </li>
-          <li class="flex gap-3 rounded-xl border border-border p-4 md:flex-col md:gap-2 md:p-6">
-            <span class="text-sm font-semibold text-primary" aria-hidden="true">02</span>
-            <p class="text-content-muted">Вкажіть страву, бюджет чи настрій — без складних термінів.</p>
-          </li>
-          <li class="flex gap-3 rounded-xl border border-border p-4 md:flex-col md:gap-2 md:p-6">
-            <span class="text-sm font-semibold text-primary" aria-hidden="true">03</span>
-            <p class="text-content-muted">Отримайте безпрограшну пару з поясненням, чому вона працює.</p>
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    <!-- ===== МЕДІА: відео YouTube =====
-         Вбудоване відео з YouTube (режим youtube-nocookie без рекламних cookie до натискання «Відтворити»).
-         Адаптивність — клас .media-frame у css/style.css: aspect-ratio 16/9, ширина 100 %,
-         max-width / радіус / тінь — змінні в :root. loading="lazy": плеєр вантажиться, лише коли секція близько. -->
-    <!-- ===== КОЛЕКЦІЯ ПАР (ЛР №10): Swiper.js + Fancybox v5 через CDN =====
-         Слайдер: 6 класичних пар, бейджі — іконки з ЛР №3 (assets/icons). Брейкпоінти Swiper:
-         телефон — 1 слайд, від 768 px — 2, від 1024 px — 3 (js/plugins.js).
-         Без JavaScript слайди лишаються горизонтальною стрічкою з прокручуванням — контент доступний.
-         Фото: Unsplash (Unsplash License), підвантажуються ліниво. -->
-    <section class="scroll-mt-20 bg-background-alt py-12 md:scroll-mt-24 lg:py-16" id="collection" aria-labelledby="collection-title">
+    <section class="scroll-mt-20 bg-background-alt py-12 lg:py-16" id="collection" aria-labelledby="collection-title">
       <div class="mx-auto max-w-container px-4 md:px-8 lg:px-12">
         <p class="text-caption font-medium uppercase tracking-caps text-primary">Колекція</p>
         <div class="mt-2 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <h2 class="font-heading text-h2 font-semibold lg:text-h2-lg" id="collection-title">Перевірені пари для початку</h2>
-            <p class="mt-2 max-w-2xl text-content-muted">Класичні поєднання, з яких сомельє радять починати знайомство з крафтовим сиром.</p>
+            <p class="mt-2 max-w-2xl text-content-muted">Класичні поєднання, з яких сомельє радять починати знайомство з крафтовим сиром. Уся колекція з цінами — на сторінці <a class="text-primary underline underline-offset-2" href="collection.html">«Колекція»</a>.</p>
           </div>
           <!-- Керування слайдером: стрілки та пауза автопрогортання (WCAG 2.2.2 — рух, що триває понад 5 с, можна зупинити) -->
           <div class="flex shrink-0 items-center gap-2">
@@ -285,399 +247,28 @@
         <!-- Swiper: .swiper > .swiper-wrapper > .swiper-slide — обов'язкова структура бібліотеки -->
         <!-- ЛР №12 (a11y): шаблон каруселі WAI-ARIA — контейнер <section> з назвою (регіон), слайди-групи (role="group" додає Swiper; на <article> ця роль недопустима, тому слайди — <div>, а заголовок h3 усередині) -->
         <section class="swiper pairs-swiper mt-8" aria-roledescription="карусель" aria-label="Колекція пар сиру та вина">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide pair-card">
-              <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1589881133595-a3c085cb731d?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Скибочки витриманого сиру на тарілці поруч із келихом вина" width="600" height="450" loading="lazy">
-              <div class="flex flex-1 flex-col gap-3 p-5">
-                <span class="pair-badge"><img src="assets/icons/icon-2-expert-matched-flavor.svg" alt="" width="20" height="20" loading="lazy" decoding="async">Вибір сомельє</span>
-                <h3 class="font-heading text-h3 font-semibold">Витримана гауда + тоні-портвейн</h3>
-                <p class="text-sm text-content-muted">Карамельні кристали сиру й горіхові тони портвейну підсилюють одне одного.</p>
-              </div>
-            </div>
-            <div class="swiper-slide pair-card">
-              <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1700760933443-84ef4f5feac4?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Дерев’яна дошка з сирами та виноградом" width="600" height="450" loading="lazy">
-              <div class="flex flex-1 flex-col gap-3 p-5">
-                <span class="pair-badge"><img src="assets/icons/icon-3-verified-craft-origin.svg" alt="" width="20" height="20" loading="lazy" decoding="async">Крафтове походження</span>
-                <h3 class="font-heading text-h3 font-semibold">Брі + шампанське брют</h3>
-                <p class="text-sm text-content-muted">Бульбашки й кислотність «очищують» смак після вершкової текстури.</p>
-              </div>
-            </div>
-            <div class="swiper-slide pair-card">
-              <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1707037489765-1a12e1f90164?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Стіл з різними видами сиру" width="600" height="450" loading="lazy">
-              <div class="flex flex-1 flex-col gap-3 p-5">
-                <span class="pair-badge"><img src="assets/icons/icon-1-regional-pairing.svg" alt="" width="20" height="20" loading="lazy" decoding="async">Регіональна пара</span>
-                <h3 class="font-heading text-h3 font-semibold">Пармезан 24 міс. + ламбруско</h3>
-                <p class="text-sm text-content-muted">Обидва з Емілії-Романьї: легке ігристе червоне врівноважує солоність і умами.</p>
-              </div>
-            </div>
-            <div class="swiper-slide pair-card">
-              <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1719996155228-bbac3f5a8843?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Дошка з сирами, серед них — блакитний сир, і келих червоного вина" width="600" height="450" loading="lazy">
-              <div class="flex flex-1 flex-col gap-3 p-5">
-                <span class="pair-badge"><img src="assets/icons/icon-2-expert-matched-flavor.svg" alt="" width="20" height="20" loading="lazy" decoding="async">Вибір сомельє</span>
-                <h3 class="font-heading text-h3 font-semibold">Рокфор + сотерн</h3>
-                <p class="text-sm text-content-muted">Класика контрасту: солодке вино проти пікантної блакитної плісняви.</p>
-              </div>
-            </div>
-            <div class="swiper-slide pair-card">
-              <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1696081249685-dfaee74913a5?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Келих білого вина поруч із м’яким білим сиром і виноградом" width="600" height="450" loading="lazy">
-              <div class="flex flex-1 flex-col gap-3 p-5">
-                <span class="pair-badge"><img src="assets/icons/icon-1-regional-pairing.svg" alt="" width="20" height="20" loading="lazy" decoding="async">Регіональна пара</span>
-                <h3 class="font-heading text-h3 font-semibold">Козячий сир + совіньйон блан</h3>
-                <p class="text-sm text-content-muted">Обидва з долини Луари: трав’яна свіжість вина повторює кислинку молодого сиру.</p>
-              </div>
-            </div>
-            <div class="swiper-slide pair-card">
-              <img class="aspect-4/3 w-full object-cover" src="https://images.unsplash.com/photo-1598306442928-4d90f32c6866?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Келихи вина, сир і крекери на дошці у виноградниках" width="600" height="450" loading="lazy">
-              <div class="flex flex-1 flex-col gap-3 p-5">
-                <span class="pair-badge"><img src="assets/icons/icon-3-verified-craft-origin.svg" alt="" width="20" height="20" loading="lazy" decoding="async">Крафтове походження</span>
-                <h3 class="font-heading text-h3 font-semibold">Конте + шардоне з Юри</h3>
-                <p class="text-sm text-content-muted">Горіхова глибина сиру й вершкова текстура вина з того самого регіону.</p>
-              </div>
-            </div>
+          <!-- Самостійна робота: слайди рендерить js/plugins.js з data.json (fetch) — ті самі 6 пар, що в калькуляторі -->
+          <div class="swiper-wrapper" data-pairs-list>
+            <div class="swiper-slide pair-card" aria-hidden="true" data-skeleton><div class="aspect-4/3 w-full animate-pulse bg-background-alt motion-reduce:animate-none"></div><div class="flex flex-1 flex-col gap-3 p-5"><span class="h-7 w-40 rounded-full bg-background-alt"></span><span class="h-7 w-3/4 rounded bg-background-alt"></span><span class="h-10 w-full rounded bg-background-alt"></span></div></div>
+            <div class="swiper-slide pair-card" aria-hidden="true" data-skeleton><div class="aspect-4/3 w-full animate-pulse bg-background-alt motion-reduce:animate-none"></div><div class="flex flex-1 flex-col gap-3 p-5"><span class="h-7 w-40 rounded-full bg-background-alt"></span><span class="h-7 w-3/4 rounded bg-background-alt"></span><span class="h-10 w-full rounded bg-background-alt"></span></div></div>
+            <div class="swiper-slide pair-card" aria-hidden="true" data-skeleton><div class="aspect-4/3 w-full animate-pulse bg-background-alt motion-reduce:animate-none"></div><div class="flex flex-1 flex-col gap-3 p-5"><span class="h-7 w-40 rounded-full bg-background-alt"></span><span class="h-7 w-3/4 rounded bg-background-alt"></span><span class="h-10 w-full rounded bg-background-alt"></span></div></div>
           </div>
           <div class="swiper-pagination pairs-pagination"></div>
         </section>
-
-        <!-- Галерея дегустацій: Fancybox v5. Однаковий data-fancybox об'єднує фото в один альбом;
-             data-srcset — телефон завантажує версію 800 px, а не 1800 px (швидше відкриття на мобільному) -->
-        <h3 class="mt-12 font-heading text-h3 font-semibold lg:text-2xl" id="gallery-title">Галерея дегустацій</h3>
-        <p class="mt-1 text-sm text-content-muted">Натисніть на фото, щоб переглянути у повному розмірі, наблизити й погортати.</p>
-        <ul class="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4" aria-labelledby="gallery-title">
-          <li><a class="gallery-item" href="https://images.unsplash.com/photo-1553653760-d787a53b4bbe?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75" data-srcset="https://images.unsplash.com/photo-1553653760-d787a53b4bbe?w=800&amp;h=600&amp;fit=crop&amp;auto=format&amp;q=75 800w, https://images.unsplash.com/photo-1553653760-d787a53b4bbe?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75 1200w, https://images.unsplash.com/photo-1553653760-d787a53b4bbe?w=1800&amp;h=1350&amp;fit=crop&amp;auto=format&amp;q=75 1800w" data-sizes="100vw" data-fancybox="tasting-gallery" data-caption="Сирна тарілка до червоного вина"><img src="https://images.unsplash.com/photo-1553653760-d787a53b4bbe?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Сирна тарілка до червоного вина — відкрити фото" width="600" height="450" loading="lazy"></a></li>
-          <li><a class="gallery-item" href="https://images.unsplash.com/photo-1644302406517-4f87a6e34b27?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75" data-srcset="https://images.unsplash.com/photo-1644302406517-4f87a6e34b27?w=800&amp;h=600&amp;fit=crop&amp;auto=format&amp;q=75 800w, https://images.unsplash.com/photo-1644302406517-4f87a6e34b27?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75 1200w, https://images.unsplash.com/photo-1644302406517-4f87a6e34b27?w=1800&amp;h=1350&amp;fit=crop&amp;auto=format&amp;q=75 1800w" data-sizes="100vw" data-fancybox="tasting-gallery" data-caption="Вечірня дегустація"><img src="https://images.unsplash.com/photo-1644302406517-4f87a6e34b27?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Вечірня дегустація — відкрити фото" width="600" height="450" loading="lazy"></a></li>
-          <li><a class="gallery-item" href="https://images.unsplash.com/photo-1646296586390-723f37ba380a?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75" data-srcset="https://images.unsplash.com/photo-1646296586390-723f37ba380a?w=800&amp;h=600&amp;fit=crop&amp;auto=format&amp;q=75 800w, https://images.unsplash.com/photo-1646296586390-723f37ba380a?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75 1200w, https://images.unsplash.com/photo-1646296586390-723f37ba380a?w=1800&amp;h=1350&amp;fit=crop&amp;auto=format&amp;q=75 1800w" data-sizes="100vw" data-fancybox="tasting-gallery" data-caption="Подача на двох"><img src="https://images.unsplash.com/photo-1646296586390-723f37ba380a?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Подача на двох — відкрити фото" width="600" height="450" loading="lazy"></a></li>
-          <li><a class="gallery-item" href="https://images.unsplash.com/photo-1688100781833-aa9760ab4b48?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75" data-srcset="https://images.unsplash.com/photo-1688100781833-aa9760ab4b48?w=800&amp;h=600&amp;fit=crop&amp;auto=format&amp;q=75 800w, https://images.unsplash.com/photo-1688100781833-aa9760ab4b48?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75 1200w, https://images.unsplash.com/photo-1688100781833-aa9760ab4b48?w=1800&amp;h=1350&amp;fit=crop&amp;auto=format&amp;q=75 1800w" data-sizes="100vw" data-fancybox="tasting-gallery" data-caption="Сирна дошка з пляшкою вина"><img src="https://images.unsplash.com/photo-1688100781833-aa9760ab4b48?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Сирна дошка з пляшкою вина — відкрити фото" width="600" height="450" loading="lazy"></a></li>
-          <li><a class="gallery-item" href="https://images.unsplash.com/photo-1706586345580-b9a7ca95630e?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75" data-srcset="https://images.unsplash.com/photo-1706586345580-b9a7ca95630e?w=800&amp;h=600&amp;fit=crop&amp;auto=format&amp;q=75 800w, https://images.unsplash.com/photo-1706586345580-b9a7ca95630e?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75 1200w, https://images.unsplash.com/photo-1706586345580-b9a7ca95630e?w=1800&amp;h=1350&amp;fit=crop&amp;auto=format&amp;q=75 1800w" data-sizes="100vw" data-fancybox="tasting-gallery" data-caption="Асорті для компанії"><img src="https://images.unsplash.com/photo-1706586345580-b9a7ca95630e?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Асорті для компанії — відкрити фото" width="600" height="450" loading="lazy"></a></li>
-          <li><a class="gallery-item" href="https://images.unsplash.com/photo-1612120177832-442df0f45d6e?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75" data-srcset="https://images.unsplash.com/photo-1612120177832-442df0f45d6e?w=800&amp;h=600&amp;fit=crop&amp;auto=format&amp;q=75 800w, https://images.unsplash.com/photo-1612120177832-442df0f45d6e?w=1200&amp;h=900&amp;fit=crop&amp;auto=format&amp;q=75 1200w, https://images.unsplash.com/photo-1612120177832-442df0f45d6e?w=1800&amp;h=1350&amp;fit=crop&amp;auto=format&amp;q=75 1800w" data-sizes="100vw" data-fancybox="tasting-gallery" data-caption="Свіжий сир з томатами й базиліком"><img src="https://images.unsplash.com/photo-1612120177832-442df0f45d6e?w=600&amp;h=450&amp;fit=crop&amp;auto=format&amp;q=75" alt="Свіжий сир з томатами й базиліком — відкрити фото" width="600" height="450" loading="lazy"></a></li>
-        </ul>
-        <p class="mt-3 text-caption text-content-muted">Фото: <a class="underline underline-offset-2 hover:text-primary" href="https://unsplash.com/license" rel="noopener">Unsplash (Unsplash License)</a>.</p>
       </div>
     </section>
 
-    <!-- ===== КАЛЬКУЛЯТОР / КОНСТРУКТОР СИРНОЇ ТАРІЛКИ (ЛР №11): інтерактивний віджет, js/widget.js =====
-         Параметри: кількість гостей (лише ціле число 1–50, кнопки −/+), формат вечора (select),
-         конкретні сири та вина (меню з фото, поділені на рівні Класика / Крафт / Преміум),
-         «Перевірені пари» (ті самі 6 пар, що в «Колекції»), супровід і сомельє (checkbox).
-         Каталог сирів, вин і пар — єдине джерело цін у js/widget.js: пункти меню будуються з нього (textContent),
-         тому ціни не дублюються в HTML. Меню — <details>/<summary>: відкриваються клавіатурою без ARIA-хитрощів.
-         Захист від Edge Cases: фільтр введення → перевірка в JS → вивід лише через textContent.
-         mobile: параметри, під ними результат → lg: параметри 3/5 + результат 2/5 (липкий) -->
-    <section class="scroll-mt-20 py-12 md:scroll-mt-24 lg:py-16" id="planner" aria-labelledby="planner-title">
-      <div class="mx-auto max-w-container px-4 md:px-8 lg:px-12">
-        <p class="text-caption font-medium uppercase tracking-caps text-primary">Калькулятор</p>
-        <h2 class="mt-2 font-heading text-h2 font-semibold lg:text-h2-lg" id="planner-title">Зберіть свою сирну тарілку</h2>
-        <p class="mt-2 max-w-2xl text-content-muted">Оберіть сири й вино з нашої колекції або готову перевірену пару — порахуємо вагу, кількість пляшок і орієнтовну вартість для вашої компанії.</p>
-
-        <div class="mt-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-5 lg:gap-8" data-widget="cheese-board">
-          <!-- [html-validate-disable-next wcag/h32: калькулятор нікуди не надсилається — сума перераховується одразу; Enter у полі гостей перехоплює js/widget.js] -->
-          <form class="flex flex-col gap-6 rounded-xl border border-border bg-surface p-5 shadow-subtle md:p-8 lg:col-span-3" id="board-form" novalidate aria-label="Параметри сирної тарілки">
-
-            <!-- Колонка гостей — за вмістом, формат вечора займає решту рядка (повна назва формату вміщається в поле) -->
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-[auto_1fr]">
-              <!-- 1. Кількість гостей: лише цифри (type="text" + inputmode="numeric" — у полі type="number" браузер пропускає «.», «,», «e», «-») -->
-              <div class="flex flex-col gap-2">
-                <label class="text-sm font-medium" for="board-guests">Кількість гостей</label>
-                <div class="flex gap-2">
-                  <button class="board-step" type="button" aria-label="Менше гостей" aria-controls="board-guests" data-cb="minus">
-                    <svg class="h-4 w-4 fill-current" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>
-                  </button>
-                  <input class="form-control w-20 px-3 text-center tabular-nums" type="text" id="board-guests" name="guests" value="1" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" required
-                         role="spinbutton" aria-valuemin="1" aria-valuemax="50" aria-valuenow="1" aria-describedby="board-guests-hint board-guests-error" data-cb="guests">
-                  <button class="board-step" type="button" aria-label="Більше гостей" aria-controls="board-guests" data-cb="plus">
-                    <svg class="h-4 w-4 fill-current" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
-                  </button>
-                </div>
-                <p class="text-caption text-content-muted" id="board-guests-hint">Ціле число від 1 до&nbsp;50.</p>
-                <p class="form-error hidden" id="board-guests-error" data-cb="guests-error"></p>
-              </div>
-
-              <!-- 2. Формат вечора: меню в стилі сирів і вин. У закритому полі — лише назва формату,
-                   повний опис порції (скільки грамів кожного сиру на гостя) — у розкритому меню -->
-              <div class="flex flex-col gap-2">
-                <span class="text-sm font-medium" id="board-format-label">Формат вечора</span>
-                <details class="picker" name="board-picker" data-cb="format-picker">
-                  <summary class="picker-summary" aria-describedby="board-format-label">
-                    <span class="picker-value" data-cb="format-summary">Дегустація</span>
-                    <svg class="picker-chevron" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
-                  </summary>
-                  <div class="picker-panel" role="radiogroup" aria-labelledby="board-format-label">
-                    <label class="picker-option">
-                      <input type="radio" name="format" value="aperitif" data-cb="format">
-                      <span class="min-w-0"><span class="picker-name">Аперитив</span><span class="picker-note">30 г кожного сиру на гостя</span></span>
-                    </label>
-                    <label class="picker-option">
-                      <input type="radio" name="format" value="tasting" checked data-cb="format">
-                      <span class="min-w-0"><span class="picker-name">Дегустація</span><span class="picker-note">40 г кожного сиру на гостя</span></span>
-                    </label>
-                    <label class="picker-option">
-                      <input type="radio" name="format" value="dinner" data-cb="format">
-                      <span class="min-w-0"><span class="picker-name">Сирна вечеря</span><span class="picker-note">50 г кожного сиру на гостя</span></span>
-                    </label>
-                  </div>
-                </details>
-              </div>
-            </div>
-
-            <!-- 3. Перевірені пари: готовий набір сир + вино з секції «Колекція» -->
-            <div class="flex flex-col gap-2">
-              <span class="text-sm font-medium" id="board-pair-label">Перевірені пари</span>
-              <details class="picker" name="board-picker" data-cb="pair-picker">
-                <summary class="picker-summary" aria-describedby="board-pair-label">
-                  <span class="picker-thumbs" data-cb="pair-thumbs" aria-hidden="true"></span>
-                  <span class="picker-value" data-cb="pair-summary">Власний вибір</span>
-                  <svg class="picker-chevron" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
-                </summary>
-                <div class="picker-panel" data-cb="pair-options" role="group" aria-labelledby="board-pair-label"></div>
-              </details>
-            </div>
-
-            <!-- 4. Конструктор: конкретні сири (до 5 сортів) і вина, згруповані за рівнями -->
-            <div class="grid grid-cols-1 gap-6">
-              <div class="flex flex-col gap-2">
-                <span class="text-sm font-medium" id="board-cheese-label">Сири на тарілці</span>
-                <details class="picker" name="board-picker" data-cb="cheese-picker">
-                  <summary class="picker-summary" aria-describedby="board-cheese-label board-cheese-error">
-                    <span class="picker-thumbs" data-cb="cheese-thumbs" aria-hidden="true"></span>
-                    <span class="picker-value" data-cb="cheese-summary">Оберіть сири</span>
-                    <svg class="picker-chevron" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
-                  </summary>
-                  <div class="picker-panel" data-cb="cheese-options" role="group" aria-labelledby="board-cheese-label"></div>
-                </details>
-                <p class="text-caption text-content-muted" data-cb="cheese-hint">До 5 сортів. Кожен сорт — окрема порція на кожного гостя.</p>
-                <p class="form-error hidden" id="board-cheese-error" data-cb="cheese-error"></p>
-              </div>
-              <div class="flex flex-col gap-2">
-                <span class="text-sm font-medium" id="board-wine-label">Вино в пару</span>
-                <details class="picker" name="board-picker" data-cb="wine-picker">
-                  <summary class="picker-summary" aria-describedby="board-wine-label">
-                    <span class="picker-thumbs" data-cb="wine-thumbs" aria-hidden="true"></span>
-                    <span class="picker-value" data-cb="wine-summary">Без вина</span>
-                    <svg class="picker-chevron" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
-                  </summary>
-                  <div class="picker-panel" data-cb="wine-options" role="group" aria-labelledby="board-wine-label"></div>
-                </details>
-                <p class="text-caption text-content-muted">1&nbsp;пляшка 0,75&nbsp;л кожного обраного вина на 3&nbsp;гостей.</p>
-              </div>
-            </div>
-
-            <!-- Візуальний конструктор: що зараз на тарілці (картки з вагою, ціною й кнопкою «прибрати») -->
-            <div class="rounded-lg bg-background p-4" role="group" aria-labelledby="board-list-title">
-              <p class="text-sm font-medium" id="board-list-title">На вашій тарілці</p>
-              <ul class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2" data-cb="board-list" aria-live="polite"></ul>
-              <noscript><p class="mt-2 text-sm text-content-muted">Конструктор працює з увімкненим JavaScript.</p></noscript>
-            </div>
-
-            <!-- 5–6. Додаткові опції -->
-            <fieldset class="flex flex-col gap-2">
-              <legend class="mb-2 text-sm font-medium">Додатково</legend>
-              <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-                <label class="board-option">
-                  <input class="h-5 w-5 shrink-0 cursor-pointer rounded accent-primary" type="checkbox" id="board-extras" name="extras" data-cb="extras">
-                  <span><span class="block font-semibold">Супровід</span><span class="block text-sm text-content-muted">Мед, горіхи, фрукти, крекери — 45&nbsp;грн на&nbsp;гостя</span></span>
-                </label>
-                <label class="board-option">
-                  <input class="h-5 w-5 shrink-0 cursor-pointer rounded accent-primary" type="checkbox" id="board-sommelier" name="sommelier" data-cb="sommelier">
-                  <span><span class="block font-semibold">Сомельє на подачі</span><span class="block text-sm text-content-muted">Розповідь про кожен сир та вино з Вашого замовлення — 1&nbsp;200&nbsp;грн за&nbsp;вечір</span></span>
-                </label>
-              </div>
-            </fieldset>
-          </form>
-
-          <!-- Результат: <output> має неявну роль status — програма читання з екрана озвучує нову суму -->
-          <aside class="flex flex-col gap-5 rounded-panel bg-primary p-6 text-on-primary md:p-8 lg:sticky lg:top-28 lg:col-span-2" aria-labelledby="board-result-title">
-            <h3 class="font-heading text-h3 font-semibold" id="board-result-title">Ваша тарілка</h3>
-            <div>
-              <p class="text-caption uppercase tracking-caps opacity-80">Орієнтовна вартість</p>
-              <output class="mt-1 block break-words font-heading text-h1 font-semibold tabular-nums lg:text-h1-lg" id="board-total" for="board-guests board-extras board-sommelier" data-cb="total">—</output>
-              <p class="mt-1 text-sm opacity-90" data-cb="per-guest"></p>
-              <noscript><p class="mt-1 text-sm opacity-90">Для розрахунку увімкніть JavaScript у браузері.</p></noscript>
-            </div>
-            <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 border-t border-on-primary/25 pt-4 text-sm" data-cb="breakdown">
-              <dt class="opacity-80">Сир</dt><dd class="text-right font-medium tabular-nums" data-cb="cheese">—</dd>
-              <dt class="opacity-80">Вино</dt><dd class="text-right font-medium tabular-nums" data-cb="bottles">—</dd>
-              <dt class="opacity-80">Супровід</dt><dd class="text-right font-medium tabular-nums" data-cb="extras-sum">—</dd>
-              <dt class="opacity-80">Сомельє</dt><dd class="text-right font-medium tabular-nums" data-cb="sommelier-sum">—</dd>
-            </dl>
-            <a class="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-on-primary px-6 text-sm font-semibold text-primary transition duration-150 ease-standard hover:bg-surface hover:shadow-raised aria-disabled:pointer-events-none aria-disabled:opacity-60" href="#contact" data-cb="cta">Обговорити з сомельє</a>
-            <p class="text-caption opacity-80">Ціни орієнтовні (навчальний проєкт). Остаточну вартість підтвердить сомельє. Фото: Unsplash.</p>
-          </aside>
+    <!-- ===== CTA: фонове фото (світла — головка сиру, темна — бризки червоного вина) під бордовим шаром ===== -->
+    <section class="relative isolate overflow-hidden bg-cover bg-center bg-cta-light lg:bg-cta-light-lg dark:bg-cta-dark lg:dark:bg-cta-dark-lg" aria-labelledby="cta-band-title">
+      <div class="absolute inset-0 -z-10 bg-wine/85 dark:bg-wine/75" aria-hidden="true"></div>
+      <div class="mx-auto flex max-w-container flex-col items-start gap-6 px-4 py-14 text-on-wine md:flex-row md:items-center md:justify-between md:px-8 lg:px-12 lg:py-20">
+        <div class="max-w-2xl">
+          <h2 class="font-heading text-h2 font-semibold lg:text-h2-lg" id="cta-band-title">Готові скласти свою сирну тарілку?</h2>
+          <p class="mt-2">Калькулятор порахує вагу кожного сорту, кількість пляшок і вартість — а сомельє допоможе з подачею.</p>
         </div>
-      </div>
-    </section>
-
-    <section class="scroll-mt-20 py-12 md:scroll-mt-24 lg:py-16" id="video" aria-labelledby="video-title">
-      <div class="mx-auto max-w-container px-4 md:px-8 lg:px-12">
-        <p class="mb-2 text-caption font-medium uppercase tracking-caps text-primary">Відео</p>
-        <h2 class="font-heading text-h2 font-semibold lg:text-h2-lg" id="video-title">Як сомельє поєднують сир і вино</h2>
-        <p class="mt-4 max-w-2xl text-content-muted">Сомельє видання VinePair розповідає, які вина пасують до різних типів сиру. Відео англійською мовою.</p>
-        <figure class="mt-6">
-          <div class="media-frame">
-            <!-- Фасад: превʼю з теки сайту. Плеєр YouTube (сотні КБ JS і сторонні cookie)
-                 вантажиться лише після натискання — js/lazy-embeds.js підставляє iframe -->
-            <button class="group relative block h-full w-full cursor-pointer" type="button" data-youtube="yJN7VsXCfqc" data-title="Відео: Wine &amp; Cheese Pairing Secrets From a Sommelier (VinePair)" aria-label="Відтворити відео «Wine &amp; Cheese Pairing Secrets From a Sommelier»">
-              <picture class="block h-full w-full">
-                <source type="image/avif" srcset="assets/images/video-poster-640.avif 640w, assets/images/video-poster-1280.avif 1280w" sizes="(min-width: 1280px) 800px, 100vw">
-                <source type="image/webp" srcset="assets/images/video-poster-640.webp 640w, assets/images/video-poster.webp 1280w" sizes="(min-width: 1280px) 800px, 100vw">
-                <img class="h-full w-full object-cover" src="assets/images/video-poster.webp" alt="" width="1280" height="720" loading="lazy" decoding="async">
-              </picture>
-              <span class="absolute inset-0 flex items-center justify-center bg-content/20 transition-colors duration-150 ease-standard group-hover:bg-content/10">
-                <span class="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-on-primary shadow-overlay transition-transform duration-150 ease-standard group-hover:scale-110 motion-reduce:group-hover:scale-100"><svg class="ml-1 h-6 w-6 shrink-0 fill-current" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80L0 432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span>
-              </span>
-            </button>
-            <noscript><a href="https://www.youtube.com/watch?v=yJN7VsXCfqc">Дивитися відео на YouTube</a></noscript>
-          </div>
-          <figcaption class="mt-3 text-caption text-content-muted">Джерело: канал VinePair на YouTube.</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <!-- ===== Про нас ===== -->
-    <section class="scroll-mt-20 bg-background-alt py-12 md:scroll-mt-24 lg:py-16" id="about" aria-labelledby="about-title">
-      <div class="mx-auto max-w-container px-4 md:px-8 lg:px-12">
-        <p class="mb-2 text-caption font-medium uppercase tracking-caps text-primary">Про нас</p>
-        <h2 class="font-heading text-h2 font-semibold lg:text-h2-lg" id="about-title">Сир і вино без снобізму та ризику</h2>
-        <div class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-12">
-          <div class="flex max-w-3xl flex-col gap-4 text-content-muted">
-            <p>Ви колись стояли біля полиці в магазині, марно намагаючись згадати, яке саме вино пасує до витриманого сиру? Ми створили «Гурман-Інфо», бо самі втомилися від складних термінів сомельє та зіпсованих вечорів через невдалі гастрономічні експерименти.</p>
-            <p>Вибір сиру та вина не повинен нагадувати іспит. Ми переклали складну теорію на мову простих смакових профілів, об’єднавши сотні сортів, регіонів та витримок у чіткий інструмент.</p>
-          </div>
-          <div class="flex flex-col gap-3 rounded-xl border border-border bg-surface p-6">
-            <h3 class="font-heading text-h3 font-semibold">Чому нам довіряють?</h3>
-            <p class="text-content-muted">Бо за кожною рекомендацією стоять перевірені алгоритми поєднання та дегустаційні оцінки експертів, а не маркетинговий шум.</p>
-            <p class="text-content-muted">Ви вказуєте страву, бюджет чи настрій — ми підбираємо безпрограшну пару. Без снобізму, ризику та марно витрачених коштів.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== CTA + Контакти ===== -->
-    <section class="scroll-mt-20 py-12 md:scroll-mt-24 lg:py-16" id="contact" aria-labelledby="cta-title">
-      <div class="mx-auto flex max-w-container flex-col gap-6 px-4 md:gap-8 md:px-8 lg:px-12">
-
-        <!-- ===== ФОРМА ЗВОРОТНОГО ЗВ'ЯЗКУ (ЛР №9) =====
-             Цільова дія лендингу. novalidate вимикає стандартні підказки браузера:
-             перевірку виконує js/validation.js при натисканні «Надіслати».
-             Реального надсилання на сервер немає — після успішної клієнтської валідації
-             показується модальне вікно «Демонстрація успішного надсилання».
-             mobile: заголовок над формою, поля в одну колонку → md: поля попарно → lg: текст 2/5 + форма 3/5 -->
-        <div class="grid grid-cols-1 gap-8 rounded-panel bg-primary p-6 text-on-primary md:p-10 lg:grid-cols-5 lg:gap-12 lg:p-12">
-          <div class="lg:col-span-2">
-            <h2 class="font-heading text-h2 font-semibold lg:text-h2-lg" id="cta-title">Знайдіть свій ідеальний дует</h2>
-            <p class="mt-2 max-w-2xl">Ви вказуєте страву, бюджет чи настрій — ми підбираємо безпрограшну пару сиру та вина.</p>
-            <ul class="mt-6 flex flex-col gap-3 text-sm">
-              <li class="flex gap-3"><span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-on-primary text-caption font-semibold text-primary" aria-hidden="true">1</span>Заповніть форму — це займе хвилину.</li>
-              <li class="flex gap-3"><span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-on-primary text-caption font-semibold text-primary" aria-hidden="true">2</span>Сомельє уточнить деталі телефоном або листом.</li>
-              <li class="flex gap-3"><span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-on-primary text-caption font-semibold text-primary" aria-hidden="true">3</span>Ви отримуєте підбір пари та рекомендації до подачі.</li>
-            </ul>
-          </div>
-
-          <form class="rounded-xl bg-surface p-5 text-content shadow-overlay md:p-8 lg:col-span-3" id="feedbackForm" name="feedback" method="post" novalidate aria-labelledby="form-title">
-            <h3 class="font-heading text-h3 font-semibold" id="form-title">Форма зворотного зв’язку</h3>
-            <p class="mt-1 text-sm text-content-muted">Обов’язкові для заповнення всі поля, крім повідомлення.</p>
-
-            <div class="mt-6 grid grid-cols-1 gap-x-4 gap-y-5 md:grid-cols-2">
-              <!-- Ім'я -->
-              <div class="flex flex-col gap-2" data-field>
-                <label class="text-sm font-medium" for="username">Ім’я</label>
-                <div class="relative">
-                  <input class="form-control" type="text" id="username" name="name" autocomplete="name" required aria-describedby="usernameError">
-                  <svg class="form-success-icon hidden" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.7 5.3a1 1 0 0 1 0 1.4l-8 8a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.4L8 12.6l7.3-7.3a1 1 0 0 1 1.4 0z"/></svg>
-                </div>
-                <p class="form-error hidden" id="usernameError"></p>
-              </div>
-
-              <!-- Емейл -->
-              <div class="flex flex-col gap-2" data-field>
-                <label class="text-sm font-medium" for="email">Електронна пошта</label>
-                <div class="relative">
-                  <input class="form-control" type="email" id="email" name="email" autocomplete="email" inputmode="email" spellcheck="false" required aria-describedby="emailError">
-                  <svg class="form-success-icon hidden" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.7 5.3a1 1 0 0 1 0 1.4l-8 8a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.4L8 12.6l7.3-7.3a1 1 0 0 1 1.4 0z"/></svg>
-                </div>
-                <p class="form-error hidden" id="emailError"></p>
-              </div>
-
-              <!-- Телефон: type="tel" відкриває цифрову клавіатуру на смартфоні -->
-              <div class="flex flex-col gap-2" data-field>
-                <label class="text-sm font-medium" for="phone">Телефон</label>
-                <div class="relative">
-                  <input class="form-control" type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" required aria-describedby="phoneHint phoneError">
-                  <svg class="form-success-icon hidden" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.7 5.3a1 1 0 0 1 0 1.4l-8 8a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.4L8 12.6l7.3-7.3a1 1 0 0 1 1.4 0z"/></svg>
-                </div>
-                <p class="text-caption text-content-muted" id="phoneHint">Формат: +380XXXXXXXXX. Можна ввести 0501234567 — код країни додасться автоматично.</p>
-                <p class="form-error hidden" id="phoneError"></p>
-                <button class="hidden min-h-12 self-start rounded-lg border border-primary px-3 text-sm font-medium text-primary transition-colors duration-150 ease-standard hover:bg-background-alt" type="button" id="phoneFix">Підставити номер</button>
-              </div>
-
-              <!-- Тема звернення -->
-              <div class="flex flex-col gap-2" data-field>
-                <label class="text-sm font-medium" for="topic">Тема звернення</label>
-                <div class="relative">
-                  <select class="form-control cursor-pointer pr-3" id="topic" name="topic" required aria-describedby="topicError">
-                    <option value="">Оберіть тему</option>
-                    <option value="consultation">Персональна консультація</option>
-                    <option value="pairing">Підбір пари до страви</option>
-                    <option value="tasting">Дегустація для компанії</option>
-                    <option value="gift">Подарунковий набір</option>
-                    <option value="other">Інше питання</option>
-                  </select>
-                </div>
-                <p class="form-error hidden" id="topicError"></p>
-              </div>
-
-              <!-- Повідомлення -->
-              <div class="flex flex-col gap-2 md:col-span-2" data-field>
-                <div class="flex items-baseline justify-between gap-4">
-                  <label class="text-sm font-medium" for="message">Повідомлення <span class="font-normal text-content-muted">(необов’язково)</span></label>
-                  <span class="text-caption text-content-muted" id="messageCounter" aria-hidden="true">0 / 1000</span>
-                </div>
-                <textarea class="form-control min-h-32 resize-y py-3" id="message" name="message" rows="4" maxlength="1000" aria-describedby="messageHint messageError"></textarea>
-                <p class="text-caption text-content-muted" id="messageHint">Страва, бюджет чи настрій. Якщо пишете — щонайменше 10 символів.</p>
-                <p class="form-error hidden" id="messageError"></p>
-              </div>
-
-              <!-- Згода: увесь рядок — зона натискання (label обгортає чекбокс) -->
-              <div class="flex flex-col gap-2 md:col-span-2" data-field>
-                <label class="flex min-h-12 cursor-pointer items-start gap-3 text-sm">
-                  <input class="mt-0.5 h-5 w-5 shrink-0 cursor-pointer rounded accent-primary" type="checkbox" id="agreement" name="agreement" value="yes" required aria-describedby="agreementError">
-                  <span>Погоджуюся з обробкою персональних даних відповідно до політики конфіденційності «Гурман-Інфо».</span>
-                </label>
-                <p class="form-error hidden" id="agreementError"></p>
-              </div>
-            </div>
-
-            <div class="mt-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <p class="text-caption text-content-muted">Навчальна демонстрація: дані не передаються на сервер.</p>
-              <button class="inline-flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary px-8 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none disabled:cursor-wait disabled:opacity-70 md:w-auto" type="submit" id="submitBtn">Надіслати</button>
-            </div>
-            <!-- Підсумок перевірки для програм читання з екрана -->
-            <p class="sr-only" id="formStatus" role="status" aria-live="polite"></p>
-          </form>
-        </div>
-
-        <!-- mobile: карта, потім інформер; lg: карта 2/3 + інформер 1/3 -->
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
-
-          <!-- ===== МЕДІА: карта Google Maps =====
-               Embed за адресою (output=embed). Умовна адреса навчального проєкту.
-               src підставляє js/lazy-embeds.js, коли карта наближається до області перегляду (без сторонніх cookie до прокрутки).
-               Адаптивність — модифікатор media-frame (map) у css/style.css (4/3 на телефоні, 16/9 з 768 px). -->
-          <figure class="lg:col-span-2">
-            <div class="media-frame media-frame--map">
-              <iframe data-lazy-src="https://maps.google.com/maps?q=%D0%BF%D0%BB%D0%BE%D1%89%D0%B0+%D0%A0%D0%B8%D0%BD%D0%BE%D0%BA,+%D0%9B%D1%8C%D0%B2%D1%96%D0%B2&amp;z=16&amp;output=embed" title="Карта: дегустаційна зала Гурман-Інфо, площа Ринок, Львів" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-            </div>
-            <figcaption class="mt-3 text-sm text-content-muted">
-              <address class="not-italic">Дегустаційна зала «Гурман-Інфо»: м. Львів, площа Ринок</address>
-            </figcaption>
-          </figure>
-
-          <!-- ===== ІНФОРМЕР: погода (weatherwidget.io) =====
-               Сторонній динамічний віджет у <aside>: доповнює контакти, але не є основним вмістом.
-               Скрипт (async) підключає js/lazy-embeds.js біля області перегляду; посилання — запасний вміст. -->
-          <aside class="flex flex-col gap-3 rounded-xl border border-border bg-surface p-6" aria-labelledby="weather-title" data-lazy-script="https://weatherwidget.io/js/widget.min.js" data-script-id="weatherwidget-io-js">
-            <h3 class="font-heading text-h3 font-semibold" id="weather-title">Погода для дегустації</h3>
-            <p class="text-sm text-content-muted">Плануєте вечір на терасі? Прогноз у Львові на найближчі дні.</p>
-            <a class="weatherwidget-io" href="https://forecast7.com/uk/49d8424d03/lviv/" data-label_1="ЛЬВІВ" data-label_2="Погода" data-days="3" data-theme="pure" data-basecolor="#FBF7F0" data-textcolor="#2B211C" data-highcolor="#6B1E2B" data-lowcolor="#6B5D52" data-suncolor="#C98A2C" data-raincolor="#7A8450">Прогноз погоди у Львові</a>
-          </aside>
+        <div class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+          <a class="inline-flex min-h-12 items-center justify-center rounded-lg bg-on-wine px-6 text-sm font-semibold text-wine transition duration-150 ease-standard hover:shadow-raised" href="planner.html">Відкрити калькулятор</a>
+          <a class="inline-flex min-h-12 items-center justify-center rounded-lg border-1.5 border-on-wine bg-wine px-6 text-sm font-semibold text-on-wine transition-colors duration-150 ease-standard hover:bg-primary-pressed dark:hover:bg-background" href="contact.html#feedbackForm">Написати сомельє</a>
         </div>
       </div>
     </section>
@@ -686,70 +277,47 @@
 
   <!-- ===== Footer ===== -->
   <footer class="border-t border-border bg-background-alt">
-    <!-- mobile: 1 колонка → md: 2 → lg: 4 -->
     <div class="mx-auto grid max-w-container grid-cols-1 gap-10 px-4 py-12 md:grid-cols-2 md:px-8 lg:grid-cols-4 lg:px-12">
       <div>
-        <a class="inline-block" href="#top">
-          <img class="h-15 w-auto" src="assets/images/logo.svg" alt="Гурман-Інфо — на початок сторінки" width="830" height="608" loading="lazy">
+        <a class="inline-block" href="./">
+          <img class="h-15 w-auto dark:hue-rotate-180 dark:invert" src="assets/images/logo.svg" alt="Гурман-Інфо — на головну" width="830" height="608" loading="lazy">
         </a>
         <p class="mt-4 max-w-xs text-sm text-content-muted">Каталог крафтових сирів та вин з онлайн-підбором гастрономічних пар під ваш смак.</p>
       </div>
 
       <nav aria-labelledby="footer-nav-title">
-        <h2 class="text-caption font-semibold uppercase tracking-caps text-content" id="footer-nav-title">Навігація</h2>
+        <h2 class="text-caption font-semibold uppercase tracking-caps text-content" id="footer-nav-title">Сторінки</h2>
         <ul class="mt-3">
-          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#benefits">Переваги</a></li>
-          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#services">Послуги</a></li>
-          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#about">Про нас</a></li>
-          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#contact">Контакти</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="./">Головна</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="collection.html">Колекція</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="planner.html">Калькулятор</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="about.html">Про нас</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="contact.html">Контакти</a></li>
         </ul>
       </nav>
 
       <section aria-labelledby="footer-services-title">
         <h2 class="text-caption font-semibold uppercase tracking-caps text-content" id="footer-services-title">Послуги</h2>
         <ul class="mt-3">
-          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#contact" data-topic="consultation">Персональна консультація</a></li>
-          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#contact" data-topic="tasting">Дегустація для компанії</a></li>
-          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="#contact" data-topic="pairing">Підбір до вашого меню</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="contact.html?topic=consultation#feedbackForm">Персональна консультація</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="contact.html?topic=tasting#feedbackForm">Дегустація для компанії</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="contact.html?topic=pairing#feedbackForm">Підбір до вашого меню</a></li>
         </ul>
       </section>
 
       <section aria-labelledby="footer-contact-title">
         <h2 class="text-caption font-semibold uppercase tracking-caps text-content" id="footer-contact-title">Зв’язатися</h2>
         <p class="mt-3 text-sm text-content-muted">Розкажіть про нагоду й ваші смаки — ми зв’яжемося, щоб обговорити формат.</p>
-        <a class="mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-primary px-6 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none md:w-auto" href="#contact">Залишити запит</a>
+        <a class="inline-flex min-h-12 items-center justify-center rounded-lg bg-primary px-6 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none mt-4 w-full md:w-auto" href="contact.html#feedbackForm">Залишити запит</a>
       </section>
     </div>
 
     <div class="border-t border-border">
       <div class="mx-auto flex max-w-container flex-col gap-2 px-4 py-6 text-caption text-content-muted sm:flex-row sm:items-center sm:justify-between md:px-8 lg:px-12">
-        <p>© 2026 Гурман-Інфо. Усі права захищено.</p>
-        <p>Сир і вино · консультації й дегустації</p>
+        <p>© 2026 Гурман-Інфо. Навчальний проєкт.</p>
+        <p>Фото: <a class="inline-flex min-h-12 items-center underline underline-offset-2 hover:text-primary sm:min-h-0" href="https://unsplash.com/license" rel="noopener">Unsplash (Unsplash License)</a></p>
       </div>
     </div>
   </footer>
-
-  <!-- ===== МОДАЛЬНЕ ВІКНО: імітація успішного надсилання (ЛР №9) =====
-       fixed inset-0 + затемнений оверлей перекривають сторінку; header/main/footer отримують inert,
-       тож під вікном нічого не можна натиснути чи сфокусувати. Закриття: кнопка, Escape, клік по оверлею.
-       Оверлей і картка — сусідні елементи, тому клік усередині картки не доходить до оверлею. -->
-  <div class="fixed inset-0 z-[60] hidden items-center justify-center p-4" id="successModal">
-    <div class="absolute inset-0 bg-content/60 backdrop-blur-sm" data-modal-overlay></div>
-    <div class="relative w-full max-w-md rounded-xl bg-surface p-6 text-center text-content shadow-overlay md:p-8" role="dialog" aria-modal="true" aria-labelledby="successTitle" aria-describedby="successText">
-      <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-green-700" aria-hidden="true">
-        <svg class="h-7 w-7 fill-current" viewBox="0 0 20 20" focusable="false"><path d="M16.7 5.3a1 1 0 0 1 0 1.4l-8 8a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.4L8 12.6l7.3-7.3a1 1 0 0 1 1.4 0z"/></svg>
-      </span>
-      <h2 class="mt-4 font-heading text-h3 font-semibold" id="successTitle">Дякуємо!</h2>
-      <p class="mt-2 text-content-muted" id="successText">Форма успішно пройшла клієнтську валідацію. Це демонстрація успішного надсилання: дані не передаються на сервер.</p>
-      <button class="mt-6 inline-flex min-h-12 w-full cursor-pointer items-center justify-center rounded-lg bg-primary px-8 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover active:bg-primary-pressed sm:w-auto" type="button" data-modal-close>Закрити</button>
-    </div>
-  </div>
-  <!-- ЛР №10 → №12: JS-бібліотеки з CDN (Swiper, Fancybox, Typed) більше не завантажуються разом зі сторінкою.
-       Lighthouse: «Reduce unused JavaScript» — 66 KiB коду, що на першому екрані не виконується.
-       js/plugins.js підвантажує кожну бібліотеку тоді, коли вона потрібна: слайдер і галерею — коли до секції
-       лишається ~400 px прокручування, Typed — після завантаження сторінки, у вільний час браузера -->
-  <script src="js/plugins.js" defer></script>
-  <!-- ЛР №11: калькулятор сирної тарілки (власний Vanilla JS, без бібліотек) -->
-  <script src="js/widget.js" defer></script>
 </body>
 </html>

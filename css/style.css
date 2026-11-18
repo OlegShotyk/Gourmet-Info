@@ -17,7 +17,7 @@
    ========================================================================== */
 
 :focus-visible {
-  outline: 2px solid #6b1e2b;
+  outline: 2px solid rgb(var(--c-primary)); /* самостійна робота: колір теми (у темній — світлий винний) */
   outline-offset: 2px;
 }
 
@@ -28,7 +28,7 @@
    ========================================================================== */
 
 .hero-media {
-  background: #f5ede1 url("../assets/images/hero-960.webp") center / cover no-repeat;
+  background: rgb(var(--c-background)) url("../assets/images/hero-960.webp") center / cover no-repeat;
   /* ЛР №12: фон декоративний і під кремовим шаром 85 % — достатньо 960 px; AVIF там, де підтримується */
   background-image: image-set(url("../assets/images/hero-960.avif") type("image/avif"), url("../assets/images/hero-960.webp") type("image/webp"));
 }
@@ -43,8 +43,8 @@
 :root {
   --media-max-width: 56rem;                       /* 896 px — відео не ширше за текстову колонку */
   --media-radius: 1.25rem;                        /* radius/panel з дизайн-системи */
-  --media-shadow: 0 4px 12px rgb(43 33 28 / 0.08); /* shadow/raised */
-  --media-bg: #ede2d0;                            /* тло, поки iframe завантажується */
+  --media-shadow: 0 4px 12px rgb(var(--c-shadow) / 0.08); /* shadow/raised */
+  --media-bg: rgb(var(--c-background-alt));                          /* тло, поки iframe завантажується */
 }
 
 .media-frame {

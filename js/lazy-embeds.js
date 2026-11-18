@@ -16,6 +16,21 @@
     });
   });
 
+  // Самостійна робота: кольори інформера погоди — за темою сайту (віджет читає data-атрибути під час запуску)
+  const WEATHER = {
+    light: { basecolor: '#FBF7F0', textcolor: '#2B211C', highcolor: '#6B1E2B', lowcolor: '#6B5D52' },
+    dark: { basecolor: '#29181D', textcolor: '#F3E8DC', highcolor: '#DC7A8A', lowcolor: '#C4B1A6' },
+  };
+  const paintWeather = () => {
+    const theme = WEATHER[document.documentElement.classList.contains('dark') ? 'dark' : 'light'];
+    document.querySelectorAll('.weatherwidget-io').forEach((a) => {
+      Object.entries(theme).forEach(([k, v]) => { a.dataset[k] = v; });
+    });
+    if (typeof window.__weatherwidget_init === 'function') window.__weatherwidget_init(); // перемальовування вже запущеного віджета
+  };
+  paintWeather();
+  document.addEventListener('themechange', paintWeather);
+
   const load = (el) => {
     if (el.dataset.lazySrc) el.src = el.dataset.lazySrc;
     if (el.dataset.lazyScript) {

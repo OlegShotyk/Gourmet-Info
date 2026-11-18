@@ -14,30 +14,53 @@
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./index.html', './js/**/*.js'],
+  // Самостійна робота: 5 сторінок; тема перемикається класом .dark на <html> (js/theme.js)
+  darkMode: 'class',
+  content: ['./*.html', './js/**/*.js'],
   theme: {
     extend: {
-      /* Семантичні кольори: компоненти посилаються на роль, а не на HEX */
+      /* Семантичні кольори: компоненти посилаються на роль, а не на HEX.
+         Самостійна робота: значення — CSS-змінні (src/input.css) у форматі «R G B». У світлій темі вони дорівнюють
+         кольорам дизайн-системи з ЛР №4, у темній (.dark) — темно-бордова палітра. Тому класи bg-surface, text-content
+         тощо перемикаються самі, а утиліти dark:… потрібні лише там, де темна тема відрізняється не кольором
+         (фонові фото, логотип, карта, іконки теми). <alpha-value> зберігає модифікатори прозорості (bg-background/85). */
       colors: {
         primary: {
-          DEFAULT: '#6b1e2b', // основні дії, посилання, активні стани
-          hover: '#541722',
-          pressed: '#44121b',
+          DEFAULT: 'rgb(var(--c-primary) / <alpha-value>)', // основні дії, посилання, активні стани
+          hover: 'rgb(var(--c-primary-hover) / <alpha-value>)',
+          pressed: 'rgb(var(--c-primary-pressed) / <alpha-value>)',
         },
-        'on-primary': '#f5ede1', // текст на основному кольорі
+        'on-primary': 'rgb(var(--c-on-primary) / <alpha-value>)', // текст на основному кольорі
+        wine: 'rgb(var(--c-wine) / <alpha-value>)', // великі бордові панелі (форма, результат калькулятора)
+        'on-wine': 'rgb(var(--c-on-wine) / <alpha-value>)', // текст на бордових панелях
         secondary: '#c98a2c', // акцентні заливки, не дрібний текст
         accent: '#7a8450', // маркери та великі акцентні елементи
         background: {
-          DEFAULT: '#f5ede1', // основне тло
-          alt: '#ede2d0', // вкладені та допоміжні області
+          DEFAULT: 'rgb(var(--c-background) / <alpha-value>)', // основне тло
+          alt: 'rgb(var(--c-background-alt) / <alpha-value>)', // вкладені та допоміжні області
         },
-        surface: '#fbf7f0', // картки, поля, панелі
-        border: '#e4d9c8', // структурні межі
+        surface: 'rgb(var(--c-surface) / <alpha-value>)', // картки, поля, панелі
+        border: 'rgb(var(--c-border) / <alpha-value>)', // структурні межі
         content: {
-          DEFAULT: '#2b211c', // заголовки та основний текст
-          muted: '#6b5d52', // другорядний текст і підказки
+          DEFAULT: 'rgb(var(--c-content) / <alpha-value>)', // заголовки та основний текст
+          muted: 'rgb(var(--c-content-muted) / <alpha-value>)', // другорядний текст і підказки
         },
       },
+
+      /* Самостійна робота — фонові фото сторінок (Unsplash, оброблені: кадрування, тонування, AVIF/WebP).
+         Для кожної сторінки 4 варіанти: світла / темна тема × телефон (960 px) / десктоп (1920 px).
+         Використання: bg-home-light lg:bg-home-light-lg dark:bg-home-dark lg:dark:bg-home-dark-lg —
+         браузер завантажує лише те фото, правило якого спрацювало. */
+      backgroundImage: Object.fromEntries(
+        ['home', 'collection', 'planner', 'about', 'contact', 'cta'].flatMap((page) =>
+          ['light', 'dark'].flatMap((theme) =>
+            [['', 960], ['-lg', 1920]].map(([suffix, size]) => {
+              const f = `../assets/images/bg/${page}-${theme}-${size}`;
+              return [`${page}-${theme}${suffix}`, `image-set(url("${f}.avif") type("image/avif"), url("${f}.webp") type("image/webp"))`];
+            }),
+          ),
+        ),
+      ),
 
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', '"Segoe UI"', 'Roboto', 'sans-serif'],
@@ -83,9 +106,9 @@ module.exports = {
 
       /* «Quiet depth»: стримані тіні кольору тексту */
       boxShadow: {
-        subtle: '0 1px 2px rgb(43 33 28 / 0.06)',
-        raised: '0 4px 12px rgb(43 33 28 / 0.08)',
-        overlay: '0 12px 32px rgb(43 33 28 / 0.12)',
+        subtle: '0 1px 2px rgb(var(--c-shadow) / 0.06)',
+        raised: '0 4px 12px rgb(var(--c-shadow) / 0.08)',
+        overlay: '0 12px 32px rgb(var(--c-shadow) / 0.12)',
       },
 
       transitionTimingFunction: {
