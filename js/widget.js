@@ -14,7 +14,9 @@
       Невалідний стан не рахується: замість суми — «—» і зрозуміле повідомлення біля поля.
    3. Вивід лише через textContent / createElement — дані ніколи не виконуються як HTML.
 
-   Каталог (CATALOG) — єдине джерело цін: пункти меню будуються з нього, у HTML цін сирів і вин немає.
+   Каталог (CATALOG) — єдине джерело цін: data.json (самостійна робота, async/await). Пункти меню будуються з нього,
+   у HTML цін сирів і вин немає. Поки файл завантажується — підказка «Завантажуємо…», помилка мережі — повідомлення й кнопка повтору.
+   Параметри адреси (з інших сторінок): ?pair=, ?cheese=, ?wine=, ?preset=, ?open=, ?topic=.
    Ізоляція: IIFE + 'use strict', жодних глобальних змінних; елементи шукаються всередині
    кореня [data-widget="cheese-board"] за data-cb, тому на сторінці може бути кілька віджетів.
    ========================================================================== */
@@ -40,45 +42,9 @@
 
   const IMG = (id, size) => `https://images.unsplash.com/${id}?w=${size}&h=${size}&fit=crop&auto=format&q=60`;
 
-  const CATALOG = deepFreeze({
-    levels: {
-      classic: { name: 'Класика', cheese: 'до 100 грн / 100 г', wine: 'до 500 грн' },
-      craft: { name: 'Крафт', cheese: '140–160 грн / 100 г', wine: '600–700 грн' },
-      premium: { name: 'Преміум', cheese: 'від 200 грн / 100 г', wine: 'від 1 000 грн' },
-    },
-    // price — грн за 100 г
-    cheeses: {
-      cheddar: { level: 'classic', name: 'Чедер', note: 'Англія · твердий, вершково-горіховий', price: 85, img: 'photo-1683314573422-649a3c6ad784' },
-      brie: { level: 'classic', name: 'Брі', note: 'Франція · м’який, з білою скоринкою', price: 95, img: 'photo-1743193144224-d2db90ea7784' },
-      goat: { level: 'classic', name: 'Козячий сир', note: 'Долина Луари · свіжий, з кислинкою', price: 98, img: 'photo-1691472898747-363d6d7409de' },
-      gouda: { level: 'craft', name: 'Витримана гауда', note: 'Нідерланди · карамельні кристали', price: 145, img: 'photo-1764207594001-32e4519ebf5d' },
-      camembert: { level: 'craft', name: 'Камамбер нормандський', note: 'Нормандія · грибний, вершковий', price: 150, img: 'photo-1730406928888-93e210f5ea4b' },
-      comte: { level: 'craft', name: 'Конте', note: 'Юра · горіховий, 12 місяців', price: 160, img: 'photo-1655662844300-e59c3d2e7587' },
-      parmesan: { level: 'premium', name: 'Пармезан 24 міс.', note: 'Емілія-Романья · солоний, умамі', price: 210, img: 'photo-1612544409881-b34e29453666' },
-      gruyere: { level: 'premium', name: 'Ґрюєр 18 міс.', note: 'Швейцарія · пряний, щільний', price: 225, img: 'photo-1654184750621-1110fe5afcdc' },
-      roquefort: { level: 'premium', name: 'Рокфор', note: 'Франція · блакитна пліснява, овече молоко', price: 240, img: 'photo-1626957341926-98752fc2ba90' },
-    },
-    // price — грн за пляшку 0,75 л
-    wines: {
-      lambrusco: { level: 'classic', name: 'Ламбруско', note: 'Емілія-Романья · ігристе червоне', price: 390, img: 'photo-1641759756543-20168fcab299' },
-      rose: { level: 'classic', name: 'Рожеве сухе', note: 'Прованс · легке, ягідне', price: 420, img: 'photo-1547595628-c61a29f496f0' },
-      sauvignon: { level: 'classic', name: 'Совіньйон блан', note: 'Луара · сухе біле, трав’яне', price: 450, img: 'photo-1597905722448-a1df7c00000a' },
-      pinot: { level: 'craft', name: 'Піно нуар', note: 'Бургундія · сухе червоне', price: 650, img: 'photo-1553361371-9b22f78e8b1d' },
-      chardonnay: { level: 'craft', name: 'Шардоне з Юри', note: 'Юра · біле, вершкове', price: 690, img: 'photo-1606767208159-1a5fb0a87841' },
-      port: { level: 'premium', name: 'Тоні-портвейн 10 років', note: 'Португалія · кріплене, горіхове', price: 1150, img: 'photo-1513958677372-385df7a6ba0c' },
-      sauternes: { level: 'premium', name: 'Сотерн', note: 'Бордо · солодке біле', price: 1290, img: 'photo-1621866908556-4f0a830707c9' },
-      champagne: { level: 'premium', name: 'Шампанське брют', note: 'Шампань · ігристе', price: 1590, img: 'photo-1580657274234-7339717f4541' },
-    },
-    // Ті самі 6 пар, що в секції «Перевірені пари для початку» (той самий порядок, бейджі й фото)
-    pairs: {
-      'gouda-port': { name: 'Витримана гауда + тоні-портвейн', badge: 'Вибір сомельє', cheese: 'gouda', wine: 'port', img: 'photo-1589881133595-a3c085cb731d' },
-      'brie-champagne': { name: 'Брі + шампанське брют', badge: 'Крафтове походження', cheese: 'brie', wine: 'champagne', img: 'photo-1700760933443-84ef4f5feac4' },
-      'parmesan-lambrusco': { name: 'Пармезан 24 міс. + ламбруско', badge: 'Регіональна пара', cheese: 'parmesan', wine: 'lambrusco', img: 'photo-1707037489765-1a12e1f90164' },
-      'roquefort-sauternes': { name: 'Рокфор + сотерн', badge: 'Вибір сомельє', cheese: 'roquefort', wine: 'sauternes', img: 'photo-1719996155228-bbac3f5a8843' },
-      'goat-sauvignon': { name: 'Козячий сир + совіньйон блан', badge: 'Регіональна пара', cheese: 'goat', wine: 'sauvignon', img: 'photo-1696081249685-dfaee74913a5' },
-      'comte-chardonnay': { name: 'Конте + шардоне з Юри', badge: 'Крафтове походження', cheese: 'comte', wine: 'chardonnay', img: 'photo-1598306442928-4d90f32c6866' },
-    },
-  });
+  // Самостійна робота: каталог (рівні, 9 сирів, 8 вин, 6 перевірених пар) — у data.json, завантажується fetch
+  // (js/data.js) перед запуском віджета і «заморожується»: ціни не змінити з консолі. Формат — як у ЛР №11.
+  let CATALOG = null;
 
   const MESSAGES = deepFreeze({
     empty: `Вкажіть кількість гостей від ${RULES.guests.min} до ${RULES.guests.max}.`,
@@ -584,17 +550,23 @@
         (parseGuests(el.guests.value).ok ? summaryOf(el.cheesePicker) : el.guests)?.focus();
         return;
       }
-      const form = document.getElementById('feedbackForm');
-      const topic = form && form.querySelector('#topic');
-      const message = form && form.querySelector('#message');
-      if (!topic || !message) return; // форми немає — звичайний перехід за посиланням
       const fmt = (el.formatSummary ? el.formatSummary.textContent : 'Дегустація').toLowerCase();
       const cheeses = last.result.cheeseLines.map((l) => `${l.name} ${weight(l.grams)}`).join(', ');
       const wines = last.result.wineLines.map((l) => `${l.name} × ${l.bottles}`).join(', ') || 'без вина';
       const opts = [last.extras && 'супровід', last.sommelier && 'сомельє'].filter(Boolean).join(', ');
-      if (!topic.value) topic.value = 'tasting'; // тему, обрану кнопкою «Обрати формат», не перезаписуємо
-      message.value = `Сирна тарілка: ${guestsWord(last.guests)}, ${fmt}. Сири: ${cheeses}. Вино: ${wines}.` +
+      const text = `Сирна тарілка: ${guestsWord(last.guests)}, ${fmt}. Сири: ${cheeses}. Вино: ${wines}.` +
         (opts ? ` Додатково: ${opts}.` : '') + ` Розрахунок калькулятора: ${uah(last.result.total)}.`;
+      const form = document.getElementById('feedbackForm');
+      const topic = form && form.querySelector('#topic');
+      const message = form && form.querySelector('#message');
+      if (!topic || !message) {
+        // Самостійна робота: форма — на іншій сторінці (contact.html). Склад тарілки передається через sessionStorage
+        // (лише в межах цієї вкладки, без сервера); js/validation.js підставить його в поле «Повідомлення»
+        try { sessionStorage.setItem('gourmet-board', text); } catch { /* без передачі — звичайний перехід */ }
+        return;
+      }
+      if (!topic.value) topic.value = 'tasting'; // тему, обрану кнопкою «Обрати формат», не перезаписуємо
+      message.value = text;
       // лічильник символів і стан полів оновлюють власні обробники форми
       topic.dispatchEvent(new Event('change', { bubbles: true }));
       message.dispatchEvent(new Event('input', { bubbles: true }));
@@ -620,35 +592,70 @@
       summaryOf(d).focus({ preventScroll: true });
     }
 
+    /* --- 4.8. Параметри адреси: перехід з інших сторінок (каталог, «Обрати формат», «Підібрати пару») --- */
+    function applyFromURL(params) {
+      const pair = params.get('pair');
+      const cheese = params.get('cheese');
+      const wine = params.get('wine');
+      if (has(CATALOG.pairs, pair)) {
+        setChecked('cheese', [CATALOG.pairs[pair].cheese]);
+        setChecked('wine', [CATALOG.pairs[pair].wine]);
+      }
+      // окремий сир / вино додається до тарілки за замовчуванням (не більше дозволеної кількості)
+      if (has(CATALOG.cheeses, cheese)) setChecked('cheese', cleanIds([...checkedIds('cheese'), cheese].reverse(), CATALOG.cheeses, RULES.cheeses.max));
+      if (has(CATALOG.wines, wine)) setChecked('wine', cleanIds([...checkedIds('wine'), wine], CATALOG.wines, RULES.wines.max));
+      const preset = params.get('preset');
+      if (preset) applyPreset(preset); // невідомий пресет ігнорується всередині applyPreset
+      // тема для форми контактів — у посиланні «Обговорити з сомельє»
+      const topic = params.get('topic');
+      if (el.cta && /^[a-z]{3,20}$/.test(topic || '')) el.cta.href = `contact.html?topic=${topic}#feedbackForm`;
+      render();
+      if (pair || cheese || wine) root.scrollIntoView({ block: 'start', behavior: 'instant' });
+      if (params.get('open')) setTimeout(() => openPicker(params.get('open')), 300);
+    }
+
     render();
     // Інтерфейс екземпляра — на корені віджета, без глобальних змінних (зручно для QA через Console)
-    return { calculate, parseGuests, rules: RULES, catalog: CATALOG, applyPreset, openPicker, get state() { return last; } };
+    return { calculate, parseGuests, rules: RULES, catalog: CATALOG, applyPreset, openPicker, applyFromURL, get state() { return last; } };
   }
 
-  /* ---------- 5. Запуск для кожного віджета на сторінці ---------- */
-  function start() {
-    document.querySelectorAll('[data-widget="cheese-board"]').forEach((root) => {
+  /* ---------- 5. Запуск: спершу каталог з data.json, потім кожен віджет на сторінці ---------- */
+  async function start() {
+    const roots = [...document.querySelectorAll('[data-widget="cheese-board"]')];
+    if (!roots.length) return;
+    try {
+      if (!window.GourmetData) throw new Error('js/data.js не підключено');
+      CATALOG = deepFreeze(structuredClone(await window.GourmetData.load()));
+    } catch {
+      // Без каталогу рахувати нічого: замість порожніх меню — пояснення й повтор запиту
+      roots.forEach((root) => {
+        const box = window.GourmetData
+          ? window.GourmetData.errorBox('Не вдалося завантажити каталог сирів і вин, тому калькулятор недоступний. Перевірте з’єднання з інтернетом.', () => { box.remove(); start(); })
+          : document.createTextNode('Калькулятор тимчасово недоступний.');
+        root.prepend(box);
+        root.querySelector('[data-cb="loading"]')?.remove();
+      });
+      return;
+    }
+    roots.forEach((root) => {
       if (root.cheeseBoard) return; // повторне підключення скрипту не створює дублікатів обробників
+      root.querySelectorAll('[role="alert"]').forEach((n) => n.remove());
       const api = initCheeseBoard(root);
-      if (api) Object.defineProperty(root, 'cheeseBoard', { value: Object.freeze(api) });
+      if (api) {
+        Object.defineProperty(root, 'cheeseBoard', { value: Object.freeze(api) });
+        api.applyFromURL(new URLSearchParams(location.search));
+      }
     });
     if (document.documentElement.dataset.plannerLinks) return; // один делегований обробник на сторінку
     document.documentElement.dataset.plannerLinks = 'on';
 
-    // «Підібрати пару» / «Обрати формат» ведуть до калькулятора (#planner) і налаштовують його;
-    // «Обрати формат» ще й обирає відповідну тему у формі зворотного зв'язку (ЛР №9)
+    // Посилання з data-planner-preset / data-planner-open у межах сторінки калькулятора налаштовують його без переходу
     document.addEventListener('click', (e) => {
-      const link = e.target instanceof Element ? e.target.closest('[data-planner-preset], [data-planner-open], [data-topic]') : null;
+      const link = e.target instanceof Element ? e.target.closest('[data-planner-preset], [data-planner-open]') : null;
       if (!link) return;
-      const topic = document.querySelector('#feedbackForm #topic');
-      if (topic && link.dataset.topic && [...topic.options].some((o) => o.value === link.dataset.topic)) {
-        topic.value = link.dataset.topic;
-        topic.dispatchEvent(new Event('change', { bubbles: true })); // знімає можливу помилку «Оберіть тему»
-      }
       const api = document.querySelector('[data-widget="cheese-board"]')?.cheeseBoard;
       if (!api) return;
       if (link.dataset.plannerPreset) api.applyPreset(link.dataset.plannerPreset);
-      // меню відкривається після плавного прокручування до секції
       if (link.dataset.plannerOpen) setTimeout(() => api.openPicker(link.dataset.plannerOpen), 500);
     });
   }

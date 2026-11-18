@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="uk" class="scroll-smooth motion-reduce:scroll-auto" data-hero-bg="contact">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Контакти та запит на консультацію | Гурман-Інфо</title>
+  <meta name="description" content="Залиште запит на підбір пари сиру та вина, дегустацію чи консультацію. Дегустаційна зала — Львів, площа Ринок.">
+  <meta name="theme-color" content="#6b1e2b">
+  <meta name="color-scheme" content="light dark">
+  <!-- Самостійна робота: тема обирається ДО відмальовування (без «блимання» світлої теми).
+       Збережений вибір (localStorage) → інакше налаштування системи. Тут же — preload фонового фото першого екрана
+       саме для активної теми й ширини екрана (CSS-фон браузер інакше знайшов би лише після розбору стилів) -->
+  <script>
+    (function () {
+      var d = document.documentElement, t = null;
+      try { t = localStorage.getItem('theme'); } catch (e) {}
+      var dark = t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      d.classList.toggle('dark', dark);
+      d.style.colorScheme = dark ? 'dark' : 'light';
+      var bg = d.getAttribute('data-hero-bg');
+      if (bg) {
+        var l = document.createElement('link');
+        l.rel = 'preload'; l.as = 'image'; l.type = 'image/avif'; l.setAttribute('fetchpriority', 'high');
+        l.href = 'assets/images/bg/' + bg + '-' + (dark ? 'dark' : 'light') + '-' + (window.matchMedia('(min-width: 64rem)').matches ? 1920 : 960) + '.avif';
+        document.head.appendChild(l);
+      }
+    })();
+  </script>
+  <!-- Open Graph: картка сторінки при поширенні посилання в месенджерах і соцмережах -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="uk_UA">
+  <meta property="og:site_name" content="Гурман-Інфо">
+  <meta property="og:title" content="Контакти та запит на консультацію | Гурман-Інфо">
+  <meta property="og:description" content="Залиште запит на підбір пари сиру та вина, дегустацію чи консультацію. Дегустаційна зала — Львів, площа Ринок.">
+  <meta property="og:url" content="https://gourmet-info.vercel.app/contact.html">
+  <meta property="og:image" content="https://gourmet-info.vercel.app/assets/images/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Сири, келихи вина та логотип Гурман-Інфо">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://gourmet-info.vercel.app/contact.html">
+  <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/inter-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/tailwind.css">
+  <script src="js/theme.js" defer></script>
+  <script src="js/menu.js" defer></script>
+  <script src="js/validation.js" defer></script>
+  <script src="js/lazy-embeds.js" defer></script>
+  <script src="js/analytics.js" defer></script>
+</head>
+<body class="flex min-h-screen flex-col bg-background font-sans text-base text-content antialiased">
+
+  <a class="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-[60] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-on-primary" href="#main">Перейти до основного вмісту</a>
+
+  <!-- ===== Header: спільний для 5 сторінок; поточна сторінка — aria-current="page" ===== -->
+  <header class="sticky top-0 z-50 border-b border-border bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/85">
+    <div class="mx-auto flex min-h-20 max-w-container items-center justify-between gap-3 px-4 py-2 md:min-h-24 md:px-8 lg:gap-6 lg:px-12">
+      <a class="shrink-0" href="./">
+        <img class="h-15 w-auto dark:hue-rotate-180 dark:invert lg:h-19" src="assets/images/logo.svg" alt="Гурман-Інфо — на головну" width="830" height="608">
+      </a>
+
+      <nav class="hidden md:block" aria-label="Основна навігація">
+        <ul class="flex items-center gap-4 whitespace-nowrap lg:gap-7">
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline aria-[current=page]:font-semibold aria-[current=page]:underline" href="./">Головна</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline aria-[current=page]:font-semibold aria-[current=page]:underline" href="collection.html">Колекція</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline aria-[current=page]:font-semibold aria-[current=page]:underline" href="planner.html">Калькулятор</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline aria-[current=page]:font-semibold aria-[current=page]:underline" href="about.html">Про нас</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 hover:underline aria-[current=page]:font-semibold aria-[current=page]:underline" href="contact.html" aria-current="page">Контакти</a></li>
+        </ul>
+      </nav>
+
+      <div class="flex items-center gap-1 md:gap-3">
+        <a class="inline-flex min-h-12 items-center justify-center rounded-lg bg-primary px-6 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none hidden shrink-0 lg:inline-flex" href="planner.html?open=pair">Підібрати пару</a>
+        <button class="inline-flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-lg text-primary transition-colors duration-150 ease-standard hover:bg-background-alt" type="button" aria-pressed="false" data-theme-toggle><span class="sr-only">Темна тема</span><svg class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="hidden h-5 w-5 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
+        <button class="inline-flex h-12 w-12 items-center justify-center rounded-lg text-primary transition-colors duration-150 ease-standard hover:bg-background-alt md:hidden" type="button" aria-label="Відкрити меню" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle>
+          <span data-icon="open"><svg class="h-6 w-6 shrink-0 fill-current" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z"/></svg></span>
+          <span data-icon="close" hidden><svg class="h-6 w-6 shrink-0 fill-current" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Мобільне меню (до md): 5 сторінок, CTA і блок «Потрібна порада?» -->
+    <div class="mobile-menu max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-border bg-surface md:hidden" id="mobile-menu" hidden>
+      <nav class="mx-auto max-w-container px-4 pb-6 pt-2" aria-label="Мобільна навігація">
+        <ul class="divide-y divide-border">
+          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4 aria-[current=page]:font-semibold" href="./">Головна</a></li>
+          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4 aria-[current=page]:font-semibold" href="collection.html">Колекція</a></li>
+          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4 aria-[current=page]:font-semibold" href="planner.html">Калькулятор</a></li>
+          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4 aria-[current=page]:font-semibold" href="about.html">Про нас</a></li>
+          <li><a class="flex min-h-12 items-center text-primary transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline hover:underline-offset-4 aria-[current=page]:font-semibold" href="contact.html" aria-current="page">Контакти</a></li>
+        </ul>
+        <a class="inline-flex min-h-12 items-center justify-center rounded-lg bg-primary px-6 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none mt-4 flex w-full" href="planner.html?open=pair">Підібрати пару</a>
+        <div class="mt-4 rounded-lg bg-background-alt p-4">
+          <p class="font-semibold">Потрібна порада?</p>
+          <p class="mt-1 text-sm text-content-muted">Розкажіть про нагоду й ваші смаки у <a class="text-primary underline underline-offset-2" href="contact.html">запиті на консультацію</a>.</p>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1" id="main">
+
+    <!-- ===== Перший екран сторінки: фонове фото теми (світле / темно-бордове) + шар кольору тла для контрасту тексту.
+         Класи bg-contact-* згенеровано з tailwind.config.js (backgroundImage); dark: і lg: обирають файл ===== -->
+    <section class="relative isolate overflow-hidden bg-cover bg-center bg-contact-light lg:bg-contact-light-lg dark:bg-contact-dark lg:dark:bg-contact-dark-lg" aria-labelledby="page-title">
+      <div class="absolute inset-0 -z-10 bg-background/90 md:bg-transparent md:bg-gradient-to-r md:from-background md:via-background/85 md:to-background/10 dark:bg-background/85 md:dark:bg-transparent md:dark:via-background/85 md:dark:to-wine/30" aria-hidden="true"></div>
+      <div class="mx-auto max-w-container px-4 py-10 md:px-8 md:py-16 lg:px-12 lg:py-20">
+        <nav class="mb-4 text-sm" aria-label="Хлібні крихти">
+          <ol class="flex flex-wrap items-center gap-2 text-content">
+            <li><a class="inline-flex min-h-12 items-center text-primary underline-offset-4 hover:underline" href="./">Головна</a></li>
+            <li aria-hidden="true">/</li>
+            <li><span aria-current="page">Контакти</span></li>
+          </ol>
+        </nav>
+        <div class="max-w-xl">
+          <p class="mb-3 text-caption font-medium uppercase tracking-caps text-primary">Контакти</p>
+          <h1 class="font-heading text-h1 font-semibold lg:text-h1-lg" id="page-title">Зв’яжіться з сомельє</h1>
+          <p class="mt-4 text-content lg:text-lg">Залиште запит — ми зателефонуємо або напишемо, щоб обговорити формат. Дегустаційна зала — у Львові, на площі Ринок.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CTA + Контакти ===== -->
+    <section class="scroll-mt-20 py-12 lg:py-16" id="contact" aria-labelledby="cta-title">
+      <div class="mx-auto flex max-w-container flex-col gap-6 px-4 md:gap-8 md:px-8 lg:px-12">
+
+        <!-- ===== ФОРМА ЗВОРОТНОГО ЗВ'ЯЗКУ (ЛР №9) =====
+             Цільова дія сайту. Тему (?topic=) і склад тарілки з калькулятора підставляє js/validation.js. novalidate вимикає стандартні підказки браузера:
+             перевірку виконує js/validation.js при натисканні «Надіслати».
+             Реального надсилання на сервер немає — після успішної клієнтської валідації
+             показується модальне вікно «Демонстрація успішного надсилання».
+             mobile: заголовок над формою, поля в одну колонку → md: поля попарно → lg: текст 2/5 + форма 3/5 -->
+        <div class="grid grid-cols-1 gap-8 rounded-panel bg-wine p-6 text-on-wine md:p-10 lg:grid-cols-5 lg:gap-12 lg:p-12">
+          <div class="lg:col-span-2">
+            <h2 class="font-heading text-h2 font-semibold lg:text-h2-lg" id="cta-title">Знайдіть свій ідеальний дует</h2>
+            <p class="mt-2 max-w-2xl">Ви вказуєте страву, бюджет чи настрій — ми підбираємо безпрограшну пару сиру та вина.</p>
+            <ul class="mt-6 flex flex-col gap-3 text-sm">
+              <li class="flex gap-3"><span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-on-wine text-caption font-semibold text-wine" aria-hidden="true">1</span>Заповніть форму — це займе хвилину.</li>
+              <li class="flex gap-3"><span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-on-wine text-caption font-semibold text-wine" aria-hidden="true">2</span>Сомельє уточнить деталі телефоном або листом.</li>
+              <li class="flex gap-3"><span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-on-wine text-caption font-semibold text-wine" aria-hidden="true">3</span>Ви отримуєте підбір пари та рекомендації до подачі.</li>
+            </ul>
+          </div>
+
+          <form class="scroll-mt-28 rounded-xl bg-surface p-5 text-content shadow-overlay md:p-8 lg:col-span-3" id="feedbackForm" name="feedback" method="post" novalidate aria-labelledby="form-title">
+            <h3 class="font-heading text-h3 font-semibold" id="form-title">Форма зворотного зв’язку</h3>
+            <p class="mt-1 text-sm text-content-muted">Обов’язкові для заповнення всі поля, крім повідомлення.</p>
+
+            <div class="mt-6 grid grid-cols-1 gap-x-4 gap-y-5 md:grid-cols-2">
+              <!-- Ім'я -->
+              <div class="flex flex-col gap-2" data-field>
+                <label class="text-sm font-medium" for="username">Ім’я</label>
+                <div class="relative">
+                  <input class="form-control" type="text" id="username" name="name" autocomplete="name" required aria-describedby="usernameError">
+                  <svg class="form-success-icon hidden" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.7 5.3a1 1 0 0 1 0 1.4l-8 8a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.4L8 12.6l7.3-7.3a1 1 0 0 1 1.4 0z"/></svg>
+                </div>
+                <p class="form-error hidden" id="usernameError"></p>
+              </div>
+
+              <!-- Емейл -->
+              <div class="flex flex-col gap-2" data-field>
+                <label class="text-sm font-medium" for="email">Електронна пошта</label>
+                <div class="relative">
+                  <input class="form-control" type="email" id="email" name="email" autocomplete="email" inputmode="email" spellcheck="false" required aria-describedby="emailError">
+                  <svg class="form-success-icon hidden" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.7 5.3a1 1 0 0 1 0 1.4l-8 8a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.4L8 12.6l7.3-7.3a1 1 0 0 1 1.4 0z"/></svg>
+                </div>
+                <p class="form-error hidden" id="emailError"></p>
+              </div>
+
+              <!-- Телефон: type="tel" відкриває цифрову клавіатуру на смартфоні -->
+              <div class="flex flex-col gap-2" data-field>
+                <label class="text-sm font-medium" for="phone">Телефон</label>
+                <div class="relative">
+                  <input class="form-control" type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" required aria-describedby="phoneHint phoneError">
+                  <svg class="form-success-icon hidden" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.7 5.3a1 1 0 0 1 0 1.4l-8 8a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.4L8 12.6l7.3-7.3a1 1 0 0 1 1.4 0z"/></svg>
+                </div>
+                <p class="text-caption text-content-muted" id="phoneHint">Формат: +380XXXXXXXXX. Можна ввести 0501234567 — код країни додасться автоматично.</p>
+                <p class="form-error hidden" id="phoneError"></p>
+                <button class="hidden min-h-12 self-start rounded-lg border border-primary px-3 text-sm font-medium text-primary transition-colors duration-150 ease-standard hover:bg-background-alt" type="button" id="phoneFix">Підставити номер</button>
+              </div>
+
+              <!-- Тема звернення -->
+              <div class="flex flex-col gap-2" data-field>
+                <label class="text-sm font-medium" for="topic">Тема звернення</label>
+                <div class="relative">
+                  <select class="form-control cursor-pointer pr-3" id="topic" name="topic" required aria-describedby="topicError">
+                    <option value="">Оберіть тему</option>
+                    <option value="consultation">Персональна консультація</option>
+                    <option value="pairing">Підбір пари до страви</option>
+                    <option value="tasting">Дегустація для компанії</option>
+                    <option value="gift">Подарунковий набір</option>
+                    <option value="other">Інше питання</option>
+                  </select>
+                </div>
+                <p class="form-error hidden" id="topicError"></p>
+              </div>
+
+              <!-- Повідомлення -->
+              <div class="flex flex-col gap-2 md:col-span-2" data-field>
+                <div class="flex items-baseline justify-between gap-4">
+                  <label class="text-sm font-medium" for="message">Повідомлення <span class="font-normal text-content-muted">(необов’язково)</span></label>
+                  <span class="text-caption text-content-muted" id="messageCounter" aria-hidden="true">0 / 1000</span>
+                </div>
+                <textarea class="form-control min-h-32 resize-y py-3" id="message" name="message" rows="4" maxlength="1000" aria-describedby="messageHint messageError"></textarea>
+                <p class="text-caption text-content-muted" id="messageHint">Страва, бюджет чи настрій. Якщо пишете — щонайменше 10 символів.</p>
+                <p class="form-error hidden" id="messageError"></p>
+              </div>
+
+              <!-- Згода: увесь рядок — зона натискання (label обгортає чекбокс) -->
+              <div class="flex flex-col gap-2 md:col-span-2" data-field>
+                <label class="flex min-h-12 cursor-pointer items-start gap-3 text-sm">
+                  <input class="mt-0.5 h-5 w-5 shrink-0 cursor-pointer rounded accent-primary" type="checkbox" id="agreement" name="agreement" value="yes" required aria-describedby="agreementError">
+                  <span>Погоджуюся з обробкою персональних даних відповідно до політики конфіденційності «Гурман-Інфо».</span>
+                </label>
+                <p class="form-error hidden" id="agreementError"></p>
+              </div>
+            </div>
+
+            <div class="mt-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <p class="text-caption text-content-muted">Навчальна демонстрація: дані не передаються на сервер.</p>
+              <button class="inline-flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary px-8 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none disabled:cursor-wait disabled:opacity-70 md:w-auto" type="submit" id="submitBtn">Надіслати</button>
+            </div>
+            <!-- Підсумок перевірки для програм читання з екрана -->
+            <p class="sr-only" id="formStatus" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+
+        <!-- mobile: карта, потім інформер; lg: карта 2/3 + інформер 1/3 -->
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
+
+          <!-- ===== МЕДІА: карта Google Maps =====
+               Embed за адресою (output=embed). Умовна адреса навчального проєкту.
+               src підставляє js/lazy-embeds.js, коли карта наближається до області перегляду (без сторонніх cookie до прокрутки).
+               Адаптивність — модифікатор media-frame (map) у css/style.css (4/3 на телефоні, 16/9 з 768 px). -->
+          <figure class="lg:col-span-2">
+            <div class="media-frame media-frame--map dark:[&amp;_iframe]:[filter:invert(0.9)_hue-rotate(180deg)]">
+              <iframe data-lazy-src="https://maps.google.com/maps?q=%D0%BF%D0%BB%D0%BE%D1%89%D0%B0+%D0%A0%D0%B8%D0%BD%D0%BE%D0%BA,+%D0%9B%D1%8C%D0%B2%D1%96%D0%B2&amp;z=16&amp;output=embed" title="Карта: дегустаційна зала Гурман-Інфо, площа Ринок, Львів" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+            </div>
+            <figcaption class="mt-3 text-sm text-content-muted">
+              <address class="not-italic">Дегустаційна зала «Гурман-Інфо»: м. Львів, площа Ринок</address>
+            </figcaption>
+          </figure>
+
+          <!-- ===== ІНФОРМЕР: погода (weatherwidget.io) =====
+               Сторонній динамічний віджет у <aside>: доповнює контакти, але не є основним вмістом.
+               Скрипт (async) підключає js/lazy-embeds.js біля області перегляду; посилання — запасний вміст. -->
+          <aside class="flex flex-col gap-3 rounded-xl border border-border bg-surface p-6" aria-labelledby="weather-title" data-lazy-script="https://weatherwidget.io/js/widget.min.js" data-script-id="weatherwidget-io-js">
+            <h3 class="font-heading text-h3 font-semibold" id="weather-title">Погода для дегустації</h3>
+            <p class="text-sm text-content-muted">Плануєте вечір на терасі? Прогноз у Львові на найближчі дні.</p>
+            <a class="weatherwidget-io" href="https://forecast7.com/uk/49d8424d03/lviv/" data-label_1="ЛЬВІВ" data-label_2="Погода" data-days="3" data-theme="pure" data-basecolor="#FBF7F0" data-textcolor="#2B211C" data-highcolor="#6B1E2B" data-lowcolor="#6B5D52" data-suncolor="#C98A2C" data-raincolor="#7A8450">Прогноз погоди у Львові</a>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="border-t border-border bg-background-alt">
+    <div class="mx-auto grid max-w-container grid-cols-1 gap-10 px-4 py-12 md:grid-cols-2 md:px-8 lg:grid-cols-4 lg:px-12">
+      <div>
+        <a class="inline-block" href="./">
+          <img class="h-15 w-auto dark:hue-rotate-180 dark:invert" src="assets/images/logo.svg" alt="Гурман-Інфо — на головну" width="830" height="608" loading="lazy">
+        </a>
+        <p class="mt-4 max-w-xs text-sm text-content-muted">Каталог крафтових сирів та вин з онлайн-підбором гастрономічних пар під ваш смак.</p>
+      </div>
+
+      <nav aria-labelledby="footer-nav-title">
+        <h2 class="text-caption font-semibold uppercase tracking-caps text-content" id="footer-nav-title">Сторінки</h2>
+        <ul class="mt-3">
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="./">Головна</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="collection.html">Колекція</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="planner.html">Калькулятор</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="about.html">Про нас</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="contact.html">Контакти</a></li>
+        </ul>
+      </nav>
+
+      <section aria-labelledby="footer-services-title">
+        <h2 class="text-caption font-semibold uppercase tracking-caps text-content" id="footer-services-title">Послуги</h2>
+        <ul class="mt-3">
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="contact.html?topic=consultation#feedbackForm">Персональна консультація</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="contact.html?topic=tasting#feedbackForm">Дегустація для компанії</a></li>
+          <li><a class="inline-flex min-h-12 items-center text-sm text-primary underline-offset-4 transition-colors duration-150 ease-standard hover:text-primary-hover hover:underline" href="contact.html?topic=pairing#feedbackForm">Підбір до вашого меню</a></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="footer-contact-title">
+        <h2 class="text-caption font-semibold uppercase tracking-caps text-content" id="footer-contact-title">Зв’язатися</h2>
+        <p class="mt-3 text-sm text-content-muted">Розкажіть про нагоду й ваші смаки — ми зв’яжемося, щоб обговорити формат.</p>
+        <a class="inline-flex min-h-12 items-center justify-center rounded-lg bg-primary px-6 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover hover:shadow-raised active:bg-primary-pressed active:shadow-none mt-4 w-full md:w-auto" href="contact.html#feedbackForm">Залишити запит</a>
+      </section>
+    </div>
+
+    <div class="border-t border-border">
+      <div class="mx-auto flex max-w-container flex-col gap-2 px-4 py-6 text-caption text-content-muted sm:flex-row sm:items-center sm:justify-between md:px-8 lg:px-12">
+        <p>© 2026 Гурман-Інфо. Навчальний проєкт.</p>
+        <p>Фото: <a class="inline-flex min-h-12 items-center underline underline-offset-2 hover:text-primary sm:min-h-0" href="https://unsplash.com/license" rel="noopener">Unsplash (Unsplash License)</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== МОДАЛЬНЕ ВІКНО: імітація успішного надсилання (ЛР №9) =====
+       fixed inset-0 + затемнений оверлей перекривають сторінку; header/main/footer отримують inert,
+       тож під вікном нічого не можна натиснути чи сфокусувати. Закриття: кнопка, Escape, клік по оверлею.
+       Оверлей і картка — сусідні елементи, тому клік усередині картки не доходить до оверлею. -->
+  <div class="fixed inset-0 z-[60] hidden items-center justify-center p-4" id="successModal">
+    <div class="absolute inset-0 bg-content/60 backdrop-blur-sm" data-modal-overlay></div>
+    <div class="relative w-full max-w-md rounded-xl bg-surface p-6 text-center text-content shadow-overlay md:p-8" role="dialog" aria-modal="true" aria-labelledby="successTitle" aria-describedby="successText">
+      <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300" aria-hidden="true">
+        <svg class="h-7 w-7 fill-current" viewBox="0 0 20 20" focusable="false"><path d="M16.7 5.3a1 1 0 0 1 0 1.4l-8 8a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.4L8 12.6l7.3-7.3a1 1 0 0 1 1.4 0z"/></svg>
+      </span>
+      <h2 class="mt-4 font-heading text-h3 font-semibold" id="successTitle">Дякуємо!</h2>
+      <p class="mt-2 text-content-muted" id="successText">Форма успішно пройшла клієнтську валідацію. Це демонстрація успішного надсилання: дані не передаються на сервер.</p>
+      <button class="mt-6 inline-flex min-h-12 w-full cursor-pointer items-center justify-center rounded-lg bg-primary px-8 text-sm font-semibold text-on-primary transition duration-150 ease-standard hover:bg-primary-hover active:bg-primary-pressed sm:w-auto" type="button" data-modal-close>Закрити</button>
+    </div>
+  </div>
+</body>
+</html>

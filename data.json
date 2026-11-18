@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "updated": "2026-11-18",
+  "levels": {
+    "classic": { "name": "Класика", "cheese": "до 100 грн / 100 г", "wine": "до 500 грн" },
+    "craft": { "name": "Крафт", "cheese": "140–160 грн / 100 г", "wine": "600–700 грн" },
+    "premium": { "name": "Преміум", "cheese": "від 200 грн / 100 г", "wine": "від 1 000 грн" }
+  },
+  "cheeses": {
+    "cheddar": { "level": "classic", "name": "Чедер", "note": "Англія · твердий, вершково-горіховий", "price": 85, "img": "photo-1683314573422-649a3c6ad784" },
+    "brie": { "level": "classic", "name": "Брі", "note": "Франція · м’який, з білою скоринкою", "price": 95, "img": "photo-1743193144224-d2db90ea7784" },
+    "goat": { "level": "classic", "name": "Козячий сир", "note": "Долина Луари · свіжий, з кислинкою", "price": 98, "img": "photo-1691472898747-363d6d7409de" },
+    "gouda": { "level": "craft", "name": "Витримана гауда", "note": "Нідерланди · карамельні кристали", "price": 145, "img": "photo-1764207594001-32e4519ebf5d" },
+    "camembert": { "level": "craft", "name": "Камамбер нормандський", "note": "Нормандія · грибний, вершковий", "price": 150, "img": "photo-1730406928888-93e210f5ea4b" },
+    "comte": { "level": "craft", "name": "Конте", "note": "Юра · горіховий, 12 місяців", "price": 160, "img": "photo-1655662844300-e59c3d2e7587" },
+    "parmesan": { "level": "premium", "name": "Пармезан 24 міс.", "note": "Емілія-Романья · солоний, умамі", "price": 210, "img": "photo-1612544409881-b34e29453666" },
+    "gruyere": { "level": "premium", "name": "Ґрюєр 18 міс.", "note": "Швейцарія · пряний, щільний", "price": 225, "img": "photo-1654184750621-1110fe5afcdc" },
+    "roquefort": { "level": "premium", "name": "Рокфор", "note": "Франція · блакитна пліснява, овече молоко", "price": 240, "img": "photo-1626957341926-98752fc2ba90" }
+  },
+  "wines": {
+    "lambrusco": { "level": "classic", "name": "Ламбруско", "note": "Емілія-Романья · ігристе червоне", "price": 390, "img": "photo-1641759756543-20168fcab299" },
+    "rose": { "level": "classic", "name": "Рожеве сухе", "note": "Прованс · легке, ягідне", "price": 420, "img": "photo-1547595628-c61a29f496f0" },
+    "sauvignon": { "level": "classic", "name": "Совіньйон блан", "note": "Луара · сухе біле, трав’яне", "price": 450, "img": "photo-1597905722448-a1df7c00000a" },
+    "pinot": { "level": "craft", "name": "Піно нуар", "note": "Бургундія · сухе червоне", "price": 650, "img": "photo-1553361371-9b22f78e8b1d" },
+    "chardonnay": { "level": "craft", "name": "Шардоне з Юри", "note": "Юра · біле, вершкове", "price": 690, "img": "photo-1606767208159-1a5fb0a87841" },
+    "port": { "level": "premium", "name": "Тоні-портвейн 10 років", "note": "Португалія · кріплене, горіхове", "price": 1150, "img": "photo-1513958677372-385df7a6ba0c" },
+    "sauternes": { "level": "premium", "name": "Сотерн", "note": "Бордо · солодке біле", "price": 1290, "img": "photo-1621866908556-4f0a830707c9" },
+    "champagne": { "level": "premium", "name": "Шампанське брют", "note": "Шампань · ігристе", "price": 1590, "img": "photo-1580657274234-7339717f4541" }
+  },
+  "pairs": {
+    "gouda-port": { "name": "Витримана гауда + тоні-портвейн", "badge": "Вибір сомельє", "icon": "icon-2-expert-matched-flavor", "cheese": "gouda", "wine": "port", "img": "photo-1589881133595-a3c085cb731d", "alt": "Скибочки витриманого сиру на тарілці поруч із келихом вина", "text": "Карамельні кристали сиру й горіхові тони портвейну підсилюють одне одного." },
+    "brie-champagne": { "name": "Брі + шампанське брют", "badge": "Крафтове походження", "icon": "icon-3-verified-craft-origin", "cheese": "brie", "wine": "champagne", "img": "photo-1700760933443-84ef4f5feac4", "alt": "Дерев’яна дошка з сирами та виноградом", "text": "Бульбашки й кислотність «очищують» смак після вершкової текстури." },
+    "parmesan-lambrusco": { "name": "Пармезан 24 міс. + ламбруско", "badge": "Регіональна пара", "icon": "icon-1-regional-pairing", "cheese": "parmesan", "wine": "lambrusco", "img": "photo-1707037489765-1a12e1f90164", "alt": "Стіл з різними видами сиру", "text": "Обидва з Емілії-Романьї: легке ігристе червоне врівноважує солоність і умами." },
+    "roquefort-sauternes": { "name": "Рокфор + сотерн", "badge": "Вибір сомельє", "icon": "icon-2-expert-matched-flavor", "cheese": "roquefort", "wine": "sauternes", "img": "photo-1719996155228-bbac3f5a8843", "alt": "Дошка з сирами, серед них — блакитний сир, і келих червоного вина", "text": "Класика контрасту: солодке вино проти пікантної блакитної плісняви." },
+    "goat-sauvignon": { "name": "Козячий сир + совіньйон блан", "badge": "Регіональна пара", "icon": "icon-1-regional-pairing", "cheese": "goat", "wine": "sauvignon", "img": "photo-1696081249685-dfaee74913a5", "alt": "Келих білого вина поруч із м’яким білим сиром і виноградом", "text": "Обидва з долини Луари: трав’яна свіжість вина повторює кислинку молодого сиру." },
+    "comte-chardonnay": { "name": "Конте + шардоне з Юри", "badge": "Крафтове походження", "icon": "icon-3-verified-craft-origin", "cheese": "comte", "wine": "chardonnay", "img": "photo-1598306442928-4d90f32c6866", "alt": "Келихи вина, сир і крекери на дошці у виноградниках", "text": "Горіхова глибина сиру й вершкова текстура вина з того самого регіону." }
+  }
+}

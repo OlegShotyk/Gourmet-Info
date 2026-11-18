@@ -299,6 +299,20 @@
   const updateCounter = () => { counter.textContent = `${fields.message.value.length} / ${MESSAGE_MAX}`; };
   fields.message.addEventListener('input', updateCounter);
 
+  /* ---------- 9a. Самостійна робота: дані з інших сторінок ----------
+     ?topic= — тема з посилань «Персональна консультація», «Дегустація для компанії» тощо;
+     склад тарілки — з калькулятора (planner.html), переданий через sessionStorage тієї самої вкладки. */
+  const params = new URLSearchParams(location.search);
+  const topicParam = params.get('topic');
+  if (topicParam && [...fields.topic.options].some((o) => o.value === topicParam)) fields.topic.value = topicParam;
+  let draft = null;
+  try { draft = sessionStorage.getItem('gourmet-board'); sessionStorage.removeItem('gourmet-board'); } catch { /* сховище недоступне */ }
+  if (draft && !fields.message.value) {
+    fields.message.value = draft.slice(0, MESSAGE_MAX);
+    if (!fields.topic.value) fields.topic.value = 'tasting';
+    updateCounter();
+  }
+
   /* ---------- 10. Модальне вікно ---------- */
 
   const modal = document.getElementById('successModal');
